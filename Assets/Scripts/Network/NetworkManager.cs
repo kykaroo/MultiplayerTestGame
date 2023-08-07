@@ -27,6 +27,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public TextMeshProUGUI roomInfoText;
     public GameObject playerListPrefab;
     public GameObject playerListContent;
+    public GameObject startGameButton;
 
     [Header("Room List UI Panel")] public GameObject RoomListUIPanel;
     public GameObject roomListEntryPrefab;
@@ -119,6 +120,15 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         print(PhotonNetwork.LocalPlayer.NickName + " joined to " + PhotonNetwork.CurrentRoom.Name);
         ActivePanel(InsideRoomUIPanel.name);
 
+        if (PhotonNetwork.LocalPlayer.IsMasterClient)
+        {
+            startGameButton.SetActive(true);
+        }
+        else
+        {
+            startGameButton.SetActive(false);
+        }
+
         roomInfoText.text =
             $"Room name: {PhotonNetwork.CurrentRoom.Name} \n\r  Players: {PhotonNetwork.CurrentRoom.PlayerCount}/{PhotonNetwork.CurrentRoom.MaxPlayers}";
 
@@ -126,6 +136,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         {
             playerListGameObjects = new Dictionary<int, GameObject>();
         }
+        
 
         foreach (Player player in PhotonNetwork.PlayerList)
         {
@@ -246,6 +257,32 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         }
 
         PhotonNetwork.JoinRoom(roomName);
+    }
+
+    public void OnLeaveGameButtonClicked()
+    {
+        PhotonNetwork.LeaveRoom();
+    }
+
+    public void OnBackButtonClicked()
+    {
+        if (PhotonNetwork.InLobby)
+        {
+            PhotonNetwork.LeaveLobby();
+        }
+
+        ActivePanel(mainMenuUIPanel.name);
+    }
+
+    public void OnJoinByIDButtonClicked()
+    {
+        if (!PhotonNetwork.InLobby)
+            PhotonNetwork.JoinLobby();
+
+        if (_cachedRoomList.ContainsKey(roomInfoText.text))
+            OnJoinRoomButtonClicked(roomInfoText.text);
+        else
+            print("Invalid room ID");
     }
 
     void ClearRoomListView()

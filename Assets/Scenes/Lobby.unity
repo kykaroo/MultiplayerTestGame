@@ -2874,7 +2874,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 638402131}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2055701308}
+        m_TargetAssemblyTypeName: NetworkManager, Assembly-CSharp
+        m_MethodName: OnJoinByIDButtonClicked
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &638402131
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3158,7 +3170,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 721899341}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2055701307}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &721899341
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5661,7 +5685,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2055701308}
         m_TargetAssemblyTypeName: NetworkManager, Assembly-CSharp
-        m_MethodName: OnCancelButtonClicked
+        m_MethodName: OnBackButtonClicked
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6004,10 +6028,10 @@ MonoBehaviour:
     m_Top: 50
     m_Bottom: 50
   m_ChildAlignment: 4
-  m_Spacing: 150
-  m_ChildForceExpandWidth: 0
+  m_Spacing: 70
+  m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1
-  m_ChildControlWidth: 0
+  m_ChildControlWidth: 1
   m_ChildControlHeight: 1
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
@@ -6068,10 +6092,10 @@ MonoBehaviour:
     m_Top: 50
     m_Bottom: 50
   m_ChildAlignment: 4
-  m_Spacing: 150
-  m_ChildForceExpandWidth: 0
+  m_Spacing: 70
+  m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1
-  m_ChildControlWidth: 0
+  m_ChildControlWidth: 1
   m_ChildControlHeight: 1
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
@@ -6279,7 +6303,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2055701308}
         m_TargetAssemblyTypeName: NetworkManager, Assembly-CSharp
-        m_MethodName: OnCancelButtonClicked
+        m_MethodName: OnLeaveGameButtonClicked
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -8246,6 +8270,7 @@ MonoBehaviour:
   roomInfoText: {fileID: 210924427}
   playerListPrefab: {fileID: 2879970793734238880, guid: ce72e77872270c5448e4df4d32656ce3, type: 3}
   playerListContent: {fileID: 1339352736}
+  startGameButton: {fileID: 721899338}
   RoomListUIPanel: {fileID: 2109261296}
   roomListEntryPrefab: {fileID: 2879970793734238880, guid: 873972ecb3164c84ea6bfac0427d8ac2, type: 3}
   roomListParentGameObject: {fileID: 1340133343}
