@@ -45,12 +45,14 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         var prefab = Resources.Load<InsideRoomPanel>("Prefabs/InsideRoomPanel");
         _insideRoomPanel = Instantiate(prefab, rootForUI);
         _insideRoomPanel.OnClickLeave += OnLeaveGameButtonClicked;
-        // _insideRoomPanel.OnClickStartGame
+        _insideRoomPanel.OnClickStartGame += OnStartGameButtonClicked;
         
         _cachedRoomList = new Dictionary<string, RoomInfo>();
         roomListGameObjects = new Dictionary<string, GameObject>();
         
         ActivePanel(LoginUIPanel.name);
+
+        PhotonNetwork.AutomaticallySyncScene = true;
     }
 
     private void Update()
@@ -235,15 +237,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         _insideRoomPanel.roomInfoText.text =
             $"Room name: {PhotonNetwork.CurrentRoom.Name} \n\r  Players: {PhotonNetwork.CurrentRoom.PlayerCount}/{PhotonNetwork.CurrentRoom.MaxPlayers}";
-
-        if (otherPlayer.IsMasterClient)
-        {
-            if (PhotonNetwork.LocalPlayer.IsMasterClient)
-            {
-                _insideRoomPanel.startGameButton.SetActive(true);
-            }
-        }
-
+        
         Destroy(playerListGameObjects[otherPlayer.ActorNumber].gameObject);
         playerListGameObjects.Remove(otherPlayer.ActorNumber);
     }
@@ -270,6 +264,11 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         RoomOptions roomOptions = new RoomOptions();
         roomOptions.MaxPlayers = 20;
         PhotonNetwork.CreateRoom(roomName, roomOptions);
+    }
+
+    public override void OnMasterClientSwitched(Player newMaserClient)
+    {
+        _insideRoomPanel.startGameButton.SetActive(PhotonNetwork.IsMasterClient);
     }
 
     public void OnJoinRoomButtonClicked(string roomName)
@@ -312,6 +311,14 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         ActivePanel(JoinRandomRoomUIPanel.name);
         PhotonNetwork.JoinRandomRoom();
+    }
+
+    public void OnStartGameButtonClicked()
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            PhotonNetwork.LoadLevel("Game");
+        }
     }
     
     void ClearRoomListView()
