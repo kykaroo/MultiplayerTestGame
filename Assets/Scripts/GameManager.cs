@@ -5,8 +5,7 @@ using Photon.Pun;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField]
-    GameObject playerPrefab;
+    [SerializeField] GameObject playerPrefab;
     
     void Start()
     {

@@ -12,98 +12,87 @@ using Random = UnityEngine.Random;
 
 public class NetworkManager : MonoBehaviourPunCallbacks
 {
-    [Header(("Connection Status"))] public TextMeshProUGUI ConnectionStatusText;
+    public static NetworkManager Instance;
     
-    [Header("Login UI Panel")] public TMP_InputField playerNameInput;
-    public GameObject LoginUIPanel;
-
-    [Header("Main Menu UI Panel")] public GameObject mainMenuUIPanel;
-
-    [Header("Create Room UI Panel")] public GameObject CreateRoomUIPanel;
-    public TMP_InputField roomNameInputField;
-    public TMP_InputField maxPlayersInputField;
-
-    [Header("Room List UI Panel")] public GameObject RoomListUIPanel;
-    public GameObject roomListEntryPrefab;
-    public GameObject roomListParentGameObject;
-
-    [Header("Join Random Room UI Panel")] public GameObject JoinRandomRoomUIPanel;
-
-    [Header("Join By ID Panel")] public GameObject JoinByIdUIPanel;
-    public TMP_InputField roomIDInputField;
-
+    private void Awake()
+    {
+        Instance = this;
+    }
+    
+    public TextMeshProUGUI ConnectionStatusText;
+    
     private Dictionary<string, RoomInfo> _cachedRoomList;
     private Dictionary<string, GameObject> roomListGameObjects;
     private Dictionary<int, GameObject> playerListGameObjects;
-    
-    private InsideRoomPanel _insideRoomPanel;
 
-    public Transform rootForUI;
+    private CreateRoomMenu _createRoomMenu;
+    private InsideRoomMenu _insideRoomMenu;
+    private JoinByIDMenu _joinByIDMenu;
+    private JoinRandomRoomMenu _joinRandomRoomMenu;
+    private LoginMenu _loginMenu;
+    private MainMenu _mainMenu;
+    private RoomListMenu _roomListMenu;
+
+    [SerializeField] private Transform rootForUI;
+
+    [SerializeField] private MenuManager MenuManager;
 
     private void Start()
     {
-        var prefab = Resources.Load<InsideRoomPanel>("Prefabs/InsideRoomPanel");
-        _insideRoomPanel = Instantiate(prefab, rootForUI);
-        _insideRoomPanel.OnClickLeave += OnLeaveGameButtonClicked;
-        _insideRoomPanel.OnClickStartGame += OnStartGameButtonClicked;
-        
-        _cachedRoomList = new Dictionary<string, RoomInfo>();
-        roomListGameObjects = new Dictionary<string, GameObject>();
-        
-        ActivePanel(LoginUIPanel.name);
+        CreateRoomMenu createRoomMenuPrefab = Resources.Load<CreateRoomMenu>("MenuPrefabs/CreateRoomMenu");
+        _createRoomMenu = Instantiate(createRoomMenuPrefab, rootForUI);
+        _createRoomMenu.OnClickCreateRoom += OnRoomCreateButtonClicked;
+        _createRoomMenu.OnClickBack += OnBackButtonClicked;
+        MenuManager.AddMenu(_createRoomMenu.Menu);
 
-        PhotonNetwork.AutomaticallySyncScene = true;
+        InsideRoomMenu insideRoomMenuPrefab = Resources.Load<InsideRoomMenu>("MenuPrefabs/InsideRoomMenu");  
+        _insideRoomMenu = Instantiate(insideRoomMenuPrefab, rootForUI);  
+        _insideRoomMenu.OnClickLeave += OnLeaveGameButtonClicked;
+        _insideRoomMenu.OnClickStartGame += OnStartGameButtonClicked;
+        MenuManager.AddMenu(_insideRoomMenu.Menu);
+        
+        JoinByIDMenu joinByIDMenuPrefab = Resources.Load<JoinByIDMenu>("MenuPrefabs/JoinByIDMenu");
+        _joinByIDMenu = Instantiate(joinByIDMenuPrefab, rootForUI);
+        _joinByIDMenu.OnClickJoin += () => OnJoinRoomButtonClicked(_joinByIDMenu.roomName);
+        _joinByIDMenu.OnClickBack += OnBackButtonClicked;
+        MenuManager.AddMenu(_joinByIDMenu.Menu);
+        
+        JoinRandomRoomMenu joinRandomRoomMenuPrefab = Resources.Load<JoinRandomRoomMenu>("MenuPrefabs/JoinRandomRoomMenu");
+        _joinRandomRoomMenu = Instantiate(joinRandomRoomMenuPrefab, rootForUI);
+        _joinRandomRoomMenu.OnClickBack += OnBackButtonClicked;
+        MenuManager.AddMenu(_joinRandomRoomMenu.Menu);
+
+        LoginMenu loginMenuPrefab = Resources.Load<LoginMenu>("MenuPrefabs/LoginMenu");
+        _loginMenu = Instantiate(loginMenuPrefab, rootForUI);
+        _loginMenu.OnClickLogin += OnLoginButtonClicked;
+        MenuManager.AddMenu(_loginMenu.Menu);
+        
+        
+        MainMenu mainMenuPrefab = Resources.Load<MainMenu>("MenuPrefabs/MainMenu");
+        _mainMenu = Instantiate(mainMenuPrefab, rootForUI);
+        _mainMenu.OnClickCreateRoom += OnMainMenuCreateRoomButtonClicked;
+        _mainMenu.OnClickExit += Application.Quit;
+        _mainMenu.OnClickRoomList += OnShowRoomListButtonClicked;
+        _mainMenu.OnClickRandomRoom += OnJoinRandomRoomButtonClicked;
+        _mainMenu.OnClickJoinById += () => MenuManager.OpenMenu(_joinByIDMenu.Menu);
+        MenuManager.AddMenu(_mainMenu.Menu);
+
+        RoomListMenu roomListMenuPrefab = Resources.Load<RoomListMenu>("MenuPrefabs/RoomListMenu");
+        _roomListMenu = Instantiate(roomListMenuPrefab, rootForUI);
+        _roomListMenu.OnClickBackButton += OnBackButtonClicked;
+        MenuManager.AddMenu(_roomListMenu.Menu);
+        
+        _cachedRoomList = new Dictionary<string, RoomInfo>();  
+        roomListGameObjects = new Dictionary<string, GameObject>();  
+	  
+        MenuManager.OpenMenu(_loginMenu.Menu);
     }
 
     private void Update()
     {
         ConnectionStatusText.text = "Connection status: " + PhotonNetwork.NetworkClientState;
     }
-
-    public void OnLoginButtonClicked()
-    {
-        string playerName = playerNameInput.text;
-        if (!string.IsNullOrEmpty(playerName))
-        {
-            PhotonNetwork.LocalPlayer.NickName = playerName;
-            PhotonNetwork.ConnectUsingSettings();
-        }
-        else
-        {
-            print("Player name is invalid!");
-        }
-    }
-
-    public void OnRoomCreateButtonClicked()
-    {
-        string roomName = roomNameInputField.text;
-
-        if (string.IsNullOrEmpty(roomName))
-        {
-            roomName = "Room " + Random.Range(1000, 9999);
-        }
-
-        RoomOptions roomOptions = new RoomOptions();
-        roomOptions.MaxPlayers = (byte)int.Parse(maxPlayersInputField.text);
-
-        PhotonNetwork.CreateRoom(roomName, roomOptions);
-    }
-
-    public void OnCancelButtonClicked()
-    {
-        ActivePanel(mainMenuUIPanel.name);
-    }
-
-    public void OnShowRoomListButtonClicked()
-    {
-        if (!PhotonNetwork.InLobby)
-        {
-            PhotonNetwork.JoinLobby();
-        }
-        
-        ActivePanel(RoomListUIPanel.name);
-    }
-
+    
     public override void OnConnected()
     {
         print("Connected to internet");
@@ -112,7 +101,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public override void OnConnectedToMaster()
     {
         print(PhotonNetwork.LocalPlayer.NickName + " is connected to photon");
-        ActivePanel(mainMenuUIPanel.name);
+        MenuManager.OpenMenu(_mainMenu.Menu);
     }
 
     public override void OnCreatedRoom()
@@ -123,19 +112,19 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         print(PhotonNetwork.LocalPlayer.NickName + " joined to " + PhotonNetwork.CurrentRoom.Name);
-        ActivePanel(_insideRoomPanel.InsideRoomUIPanel.name);
+        MenuManager.OpenMenu(_insideRoomMenu.Menu);
 
         if (PhotonNetwork.LocalPlayer.IsMasterClient)
         {
-            _insideRoomPanel.startGameButton.SetActive(true);
+            _insideRoomMenu.startGameButton.SetActive(true);
         }
         else
         if (!PhotonNetwork.LocalPlayer.IsMasterClient)
         {
-            _insideRoomPanel.startGameButton.SetActive(false);
+            _insideRoomMenu.startGameButton.SetActive(false);
         }
 
-        _insideRoomPanel.roomInfoText.text =
+        _insideRoomMenu.roomInfoText.text =
             $"Room name: {PhotonNetwork.CurrentRoom.Name} \n\r  Players: {PhotonNetwork.CurrentRoom.PlayerCount}/{PhotonNetwork.CurrentRoom.MaxPlayers}";
 
         if (playerListGameObjects == null)
@@ -146,10 +135,10 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
         foreach (Player player in PhotonNetwork.PlayerList)
         {
-            GameObject playerListGameObject = Instantiate(_insideRoomPanel.playerListPrefab);
-            playerListGameObject.transform.SetParent(_insideRoomPanel.playerListContent.transform);
+            GameObject playerListGameObject = Instantiate(_insideRoomMenu.PlayerListPrefab);
+            playerListGameObject.transform.SetParent(_insideRoomMenu.playerListContent.transform);
             playerListGameObject.transform.localScale = Vector3.one;
-            playerListGameObject.transform.position = _insideRoomPanel.playerListContent.transform.position;
+            playerListGameObject.transform.position = _insideRoomMenu.playerListContent.transform.position;
 
             playerListGameObject.transform.Find("PlayerNameText").GetComponent<TextMeshProUGUI>().text =
                 player.NickName;
@@ -196,10 +185,10 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
         foreach (RoomInfo room in _cachedRoomList.Values)
         {
-            GameObject roomListEntryGameObject = Instantiate(roomListEntryPrefab);
-            roomListEntryGameObject.transform.SetParent(roomListParentGameObject.transform);
+            GameObject roomListEntryGameObject = Instantiate(_roomListMenu.RoomListEntryPrefab);
+            roomListEntryGameObject.transform.SetParent(_roomListMenu.roomListContent.transform);
             roomListEntryGameObject.transform.localScale = Vector3.one;
-            roomListEntryGameObject.transform.localPosition = roomListParentGameObject.transform.position;
+            roomListEntryGameObject.transform.localPosition = _roomListMenu.roomListContent.transform.position;
 
             roomListEntryGameObject.transform.Find("RoomNameText").GetComponent<TextMeshProUGUI>().text = room.Name;
             roomListEntryGameObject.transform.Find("RoomPlayersText").GetComponent<TextMeshProUGUI>().text = room.PlayerCount + " / " + room.MaxPlayers;
@@ -211,13 +200,13 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
-        _insideRoomPanel.roomInfoText.text =
+        _insideRoomMenu.roomInfoText.text =
             $"Room name: {PhotonNetwork.CurrentRoom.Name} \n\r  Players: {PhotonNetwork.CurrentRoom.PlayerCount}/{PhotonNetwork.CurrentRoom.MaxPlayers}";
 
-        GameObject playerListGameObject = Instantiate(_insideRoomPanel.playerListPrefab);
-        playerListGameObject.transform.SetParent(_insideRoomPanel.playerListContent.transform);
+        GameObject playerListGameObject = Instantiate(_insideRoomMenu.PlayerListPrefab);
+        playerListGameObject.transform.SetParent(_insideRoomMenu.playerListContent.transform);
         playerListGameObject.transform.localScale = Vector3.one;
-        playerListGameObject.transform.localPosition = _insideRoomPanel.playerListContent.transform.position;
+        playerListGameObject.transform.localPosition = _insideRoomMenu.playerListContent.transform.position;
 
         playerListGameObject.transform.Find("PlayerNameText").GetComponent<TextMeshProUGUI>().text = newPlayer.NickName;
 
@@ -235,7 +224,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        _insideRoomPanel.roomInfoText.text =
+        _insideRoomMenu.roomInfoText.text =
             $"Room name: {PhotonNetwork.CurrentRoom.Name} \n\r  Players: {PhotonNetwork.CurrentRoom.PlayerCount}/{PhotonNetwork.CurrentRoom.MaxPlayers}";
         
         Destroy(playerListGameObjects[otherPlayer.ActorNumber].gameObject);
@@ -244,7 +233,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public override void OnLeftRoom()
     {
-        ActivePanel(mainMenuUIPanel.name);
+        MenuManager.OpenMenu(_mainMenu.Menu);
 
         foreach (GameObject playerListGameObject in playerListGameObjects.Values)
         {
@@ -268,16 +257,31 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public override void OnMasterClientSwitched(Player newMaserClient)
     {
-        _insideRoomPanel.startGameButton.SetActive(PhotonNetwork.IsMasterClient);
+        _insideRoomMenu.startGameButton.SetActive(PhotonNetwork.IsMasterClient);
     }
 
+    public override void OnJoinRoomFailed(short s, string room)
+    {
+        print($"Room \"{room}\" does not exist");
+    }
+    
+    void ClearRoomListView()
+    {
+        foreach (GameObject roomListGameObject in roomListGameObjects.Values)
+        {
+            Destroy(roomListGameObject);
+        }
+        
+        roomListGameObjects.Clear();
+    }
+    
     public void OnJoinRoomButtonClicked(string roomName)
     {
         if (PhotonNetwork.InLobby)
         {
             PhotonNetwork.LeaveLobby();
         }
-
+        
         PhotonNetwork.JoinRoom(roomName);
     }
 
@@ -293,23 +297,17 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             PhotonNetwork.LeaveLobby();
         }
 
-        ActivePanel(mainMenuUIPanel.name);
+        MenuManager.OpenMenu(_mainMenu.Menu);
     }
 
     public void OnJoinByIDButtonClicked()
     {
-        if (!PhotonNetwork.InLobby)
-            PhotonNetwork.JoinLobby();
-
-        if (_cachedRoomList.ContainsKey(_insideRoomPanel.roomInfoText.text))
-            OnJoinRoomButtonClicked(_insideRoomPanel.roomInfoText.text);
-        else
-            print("Invalid room ID");
+        
     }
 
     public void OnJoinRandomRoomButtonClicked()
     {
-        ActivePanel(JoinRandomRoomUIPanel.name);
+        MenuManager.OpenMenu(_joinRandomRoomMenu.Menu);
         PhotonNetwork.JoinRandomRoom();
     }
 
@@ -320,25 +318,53 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             PhotonNetwork.LoadLevel("Game");
         }
     }
-    
-    void ClearRoomListView()
+
+    public void OnLoginButtonClicked()
     {
-        foreach (GameObject roomListGameObject in roomListGameObjects.Values)
+        string playerName = _loginMenu.playerName;
+        if (!string.IsNullOrEmpty(playerName))
         {
-            Destroy(roomListGameObject);
+            PhotonNetwork.LocalPlayer.NickName = playerName;
+            PhotonNetwork.ConnectUsingSettings();
         }
-        
-        roomListGameObjects.Clear();
+        else
+        {
+            print("Player name is invalid!");
+        }
     }
 
-    public void ActivePanel(string panelToBeActivated)
+    public void OnRoomCreateButtonClicked()
     {
-        LoginUIPanel.SetActive(panelToBeActivated.Equals(LoginUIPanel.name));
-        mainMenuUIPanel.SetActive(panelToBeActivated.Equals(mainMenuUIPanel.name));
-        CreateRoomUIPanel.SetActive(panelToBeActivated.Equals(CreateRoomUIPanel.name));
-        _insideRoomPanel.InsideRoomUIPanel.SetActive(panelToBeActivated.Equals(_insideRoomPanel.InsideRoomUIPanel.name));
-        RoomListUIPanel.SetActive(panelToBeActivated.Equals(RoomListUIPanel.name));
-        JoinByIdUIPanel.SetActive(panelToBeActivated.Equals(JoinByIdUIPanel.name));
-        JoinRandomRoomUIPanel.SetActive(panelToBeActivated.Equals(JoinRandomRoomUIPanel.name));
+        string roomName = _createRoomMenu.roomName;
+
+        if (string.IsNullOrEmpty(roomName))
+        {
+            roomName = "Room " + Random.Range(1000, 9999);
+        }
+
+        RoomOptions roomOptions = new RoomOptions();
+        roomOptions.MaxPlayers = (byte)int.Parse(_createRoomMenu.maxPlayer);
+
+        PhotonNetwork.CreateRoom(roomName, roomOptions);
+    }
+
+    public void OnCancelButtonClicked()
+    {
+        MenuManager.OpenMenu(_mainMenu.Menu);
+    }
+
+    public void OnShowRoomListButtonClicked()
+    {
+        if (!PhotonNetwork.InLobby)
+        {
+            PhotonNetwork.JoinLobby();
+        }
+        
+        MenuManager.OpenMenu(_roomListMenu.Menu);
+    }
+    
+    public void OnMainMenuCreateRoomButtonClicked()
+    {
+        MenuManager.OpenMenu(_createRoomMenu.Menu);
     }
 }
