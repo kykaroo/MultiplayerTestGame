@@ -882,5 +882,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   backButton: {fileID: 8938310701780346198}
-  roomListContent: {fileID: 8938310701632058013}
+  roomListContent: {fileID: 8938310701632058018}
   menu: {fileID: 8938310701861173430}

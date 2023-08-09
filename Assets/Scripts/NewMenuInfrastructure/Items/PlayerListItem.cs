@@ -20,10 +20,7 @@ public class PlayerListItem : MonoBehaviourPunCallbacks
     {
         _player = player;
         playerName.text = player.NickName;
-        if (player.ActorNumber == PhotonNetwork.LocalPlayer.ActorNumber)
-            playerIndicator.SetActive(true);
-        else
-            playerIndicator.SetActive(false);
+        playerIndicator.SetActive(player.ActorNumber == PhotonNetwork.LocalPlayer.ActorNumber);
     }
     
     public override void OnLeftRoom()

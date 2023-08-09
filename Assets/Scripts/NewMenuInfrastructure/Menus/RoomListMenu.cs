@@ -7,11 +7,11 @@ public class RoomListMenu : MonoBehaviour
 {
     [SerializeField] private Button backButton;
 
-    [SerializeField] private GameObject roomListContent;
+    [SerializeField] private Transform roomListContent;
     
     [SerializeField] private Menu menu;
     
-    private GameObject _roomListEntryPrefab;
+    private RoomListItem _roomListEntryPrefab;
 
     // public GameObject roomListContent => RoomListContent;
     // public GameObject RoomListEntryPrefab => _roomListEntryPrefab;
@@ -31,14 +31,14 @@ public class RoomListMenu : MonoBehaviour
 
     private void Awake()
     {
-        _roomListEntryPrefab = Resources.Load<GameObject>("ItemForListPrefabs/RoomListItemPrefab");
+        _roomListEntryPrefab = Resources.Load<RoomListItem>("ItemForListPrefabs/RoomListItemPrefab");
     }
 
-    public GameObject CreateRoomListItem()
+    public RoomListItem CreateRoomListItem()
     {
-        GameObject roomListEntryGameObject = Instantiate(_roomListEntryPrefab, roomListContent.transform, true);
+        RoomListItem roomListEntryGameObject = Instantiate(_roomListEntryPrefab, roomListContent, true);
         roomListEntryGameObject.transform.localScale = Vector3.one;
-        roomListEntryGameObject.transform.localPosition = roomListContent.transform.position;
+        roomListEntryGameObject.transform.localPosition = roomListContent.position;
         return roomListEntryGameObject;
     }
 }

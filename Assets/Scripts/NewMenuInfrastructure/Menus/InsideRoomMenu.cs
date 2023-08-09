@@ -6,8 +6,8 @@ using UnityEngine.UI;
 
 public class InsideRoomMenu : MonoBehaviour
 {
-    private GameObject _playerListPrefab;
-    [SerializeField] public GameObject playerListContent;
+    private PlayerListItem _playerListPrefab;
+    [SerializeField] public Transform playerListContent;
     [SerializeField] public GameObject startGameButton;
 
     [SerializeField] private Button leaveButton;
@@ -44,14 +44,14 @@ public class InsideRoomMenu : MonoBehaviour
 
     private void Awake()
     {
-        _playerListPrefab = Resources.Load<GameObject>("ItemForListPrefabs/PlayerListItemPrefab");
+        _playerListPrefab = Resources.Load<PlayerListItem>("ItemForListPrefabs/PlayerListItemPrefab");
     }
 
-    public GameObject CreatePlayerListItem()
+    public PlayerListItem CreatePlayerListItem()
     {
-        GameObject playerListGameObject = Instantiate(_playerListPrefab, playerListContent.transform, true);
+        PlayerListItem playerListGameObject = Instantiate(_playerListPrefab, playerListContent, true);
         playerListGameObject.transform.localScale = Vector3.one;
-        playerListGameObject.transform.localPosition = playerListContent.transform.position;
+        playerListGameObject.transform.localPosition = playerListContent.position;
         return playerListGameObject;
     }
 

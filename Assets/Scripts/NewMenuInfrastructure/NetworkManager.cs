@@ -17,7 +17,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public TextMeshProUGUI connectionStatusText;
     
     private Dictionary<string, RoomInfo> _cachedRoomList;
-    private Dictionary<string, GameObject> _roomListGameObjects;
+    private Dictionary<string, RoomListItem> _roomListGameObjects;
 
     [SerializeField] private MenuManager menuManager;
     private CreateRoomMenu _createRoomMenu;
@@ -107,9 +107,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         
         foreach (Player player in PhotonNetwork.PlayerList)
         {
-            GameObject playerListGameObject = _insideRoomMenu.CreatePlayerListItem();
-
-            PlayerListItem playerListItem = playerListGameObject.GetComponent<PlayerListItem>();
+            PlayerListItem playerListItem = _insideRoomMenu.CreatePlayerListItem();
             playerListItem.SetUp(player);
         }
     }
@@ -129,27 +127,18 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             }
             else
             {
-                if (_cachedRoomList.ContainsKey(room.Name))
-                {
-                    _cachedRoomList[room.Name] = room;
-                }
-                else
-                {
-                    _cachedRoomList.Add(room.Name, room);
-                }
+                _cachedRoomList[room.Name] = room;
             }
         }
 
         foreach (RoomInfo room in _cachedRoomList.Values)
         {
-            GameObject roomListEntryGameObject = _roomListMenu.CreateRoomListItem();
-            
-            RoomListItem roomListItem = roomListEntryGameObject.GetComponent<RoomListItem>();
+            RoomListItem roomListItem = _roomListMenu.CreateRoomListItem();
             roomListItem.SetUp(room);
             
             roomListItem.OnClickJoinRoom += () => OnJoinRoomButtonClicked(room.Name);
 
-            _roomListGameObjects.Add(room.Name, roomListEntryGameObject);
+            _roomListGameObjects.Add(room.Name, roomListItem);
         }
     }
 
@@ -158,9 +147,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         _insideRoomMenu.roomInfoText.text =
             $"Room name: {PhotonNetwork.CurrentRoom.Name} \n\r  Players: {PhotonNetwork.CurrentRoom.PlayerCount}/{PhotonNetwork.CurrentRoom.MaxPlayers}";
 
-        GameObject playerListGameObject = _insideRoomMenu.CreatePlayerListItem();
-
-        PlayerListItem playerListItem = playerListGameObject.GetComponent<PlayerListItem>();
+        PlayerListItem playerListItem = _insideRoomMenu.CreatePlayerListItem();
         playerListItem.SetUp(newPlayer);
     }
 
@@ -200,9 +187,9 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     
     void ClearRoomListView()
     {
-        foreach (GameObject roomListGameObject in _roomListGameObjects.Values)
+        foreach (RoomListItem roomListGameObject in _roomListGameObjects.Values)
         {
-            Destroy(roomListGameObject);
+            Destroy(roomListGameObject.gameObject);
         }
         
         _roomListGameObjects.Clear();
