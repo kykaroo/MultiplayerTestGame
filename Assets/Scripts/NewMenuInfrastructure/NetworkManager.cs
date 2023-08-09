@@ -18,7 +18,6 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     
     private Dictionary<string, RoomInfo> _cachedRoomList;
     private Dictionary<string, GameObject> _roomListGameObjects;
-    private Dictionary<int, GameObject> _playerListGameObjects;
 
     [SerializeField] private MenuManager menuManager;
     private CreateRoomMenu _createRoomMenu;
@@ -105,18 +104,13 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
         _insideRoomMenu.roomInfoText.text =
             $"Room name: {PhotonNetwork.CurrentRoom.Name} \n\r  Players: {PhotonNetwork.CurrentRoom.PlayerCount}/{PhotonNetwork.CurrentRoom.MaxPlayers}";
-
-        _playerListGameObjects ??= new();
         
-
         foreach (Player player in PhotonNetwork.PlayerList)
         {
             GameObject playerListGameObject = _insideRoomMenu.CreatePlayerListItem();
 
             PlayerListItem playerListItem = playerListGameObject.GetComponent<PlayerListItem>();
             playerListItem.SetUp(player);
-
-            _playerListGameObjects.Add(player.ActorNumber, playerListGameObject);
         }
     }
 
@@ -126,7 +120,6 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
         foreach (var room in roomList)
         {
-            print(room.Name);
             if (!room.IsOpen || !room.IsVisible || room.RemovedFromList)
             {
                 if (_cachedRoomList.ContainsKey(room.Name))
@@ -169,32 +162,14 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
         PlayerListItem playerListItem = playerListGameObject.GetComponent<PlayerListItem>();
         playerListItem.SetUp(newPlayer);
-
-        _playerListGameObjects.Add(newPlayer.ActorNumber, playerListGameObject);
     }
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
         _insideRoomMenu.roomInfoText.text =
             $"Room name: {PhotonNetwork.CurrentRoom.Name} \n\r  Players: {PhotonNetwork.CurrentRoom.PlayerCount}/{PhotonNetwork.CurrentRoom.MaxPlayers}";
-        
-        Destroy(_playerListGameObjects[otherPlayer.ActorNumber].gameObject);
-        _playerListGameObjects.Remove(otherPlayer.ActorNumber);
     }
-
-    public override void OnLeftRoom()
-    {
-        menuManager.OpenMenu(_mainMenu.Menu);
-
-        foreach (GameObject playerListGameObject in _playerListGameObjects.Values)
-        {
-            Destroy(playerListGameObject);
-        }
-        
-        _playerListGameObjects.Clear();
-        _playerListGameObjects = null;
-    }
-
+    
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
         print(message);
@@ -206,6 +181,11 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             MaxPlayers = 20
         };
         PhotonNetwork.CreateRoom(roomName, roomOptions);
+    }
+    
+    public override void OnLeftRoom()
+    {
+        menuManager.OpenMenu(_mainMenu.Menu);
     }
 
     public override void OnMasterClientSwitched(Player newMaserClient)
