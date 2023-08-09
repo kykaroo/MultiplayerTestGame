@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Realtime;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -31,5 +32,11 @@ public class RoomListItem : MonoBehaviour
     private void Start()
     {
         joinRoomButton.onClick.AddListener(JoinRoom);
+    }
+
+    public void SetUp(RoomInfo roomInfo)
+    {
+        roomName.text = roomInfo.Name;
+        roomPlayers.text = $"{roomInfo.PlayerCount} / {roomInfo.MaxPlayers}";
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -46,5 +47,28 @@ public class InsideRoomMenu : MonoBehaviour
     private void Awake()
     {
         playerListPrefab = Resources.Load<GameObject>("ItemForListPrefabs/PlayerListItemPrefab");
+    }
+
+    public GameObject CreatePlayerListItem()
+    {
+        GameObject playerListGameObject = Instantiate(playerListPrefab);
+        playerListGameObject.transform.SetParent(playerListContent.transform);
+        playerListGameObject.transform.localScale = Vector3.one;
+        playerListGameObject.transform.localPosition = playerListContent.transform.position;
+        return playerListGameObject;
+    }
+
+    public bool TryActivateStartButton()
+    {
+        if (PhotonNetwork.LocalPlayer.IsMasterClient)
+        {
+            startGameButton.SetActive(true);
+            return true;
+        }
+        else
+        {
+            startGameButton.SetActive(false);
+            return false;
+        }
     }
 }

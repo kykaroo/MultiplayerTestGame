@@ -34,4 +34,13 @@ public class RoomListMenu : MonoBehaviour
     {
         roomListEntryPrefab = Resources.Load<GameObject>("ItemForListPrefabs/RoomListItemPrefab");
     }
+
+    public GameObject CreateRoomListItem()
+    {
+        GameObject roomListEntryGameObject = Instantiate(roomListEntryPrefab);
+        roomListEntryGameObject.transform.SetParent(RoomListContent.transform);
+        roomListEntryGameObject.transform.localScale = Vector3.one;
+        roomListEntryGameObject.transform.localPosition = RoomListContent.transform.position;
+        return roomListEntryGameObject;
+    }
 }

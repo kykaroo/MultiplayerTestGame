@@ -107,16 +107,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         print(PhotonNetwork.LocalPlayer.NickName + " joined to " + PhotonNetwork.CurrentRoom.Name);
         _menuManager.OpenMenu(_insideRoomMenu.Menu);
-
-        if (PhotonNetwork.LocalPlayer.IsMasterClient)
-        {
-            _insideRoomMenu.startGameButton.SetActive(true);
-        }
-        else
-        if (!PhotonNetwork.LocalPlayer.IsMasterClient)
-        {
-            _insideRoomMenu.startGameButton.SetActive(false);
-        }
+        
+        _insideRoomMenu.TryActivateStartButton();
 
         _insideRoomMenu.roomInfoText.text =
             $"Room name: {PhotonNetwork.CurrentRoom.Name} \n\r  Players: {PhotonNetwork.CurrentRoom.PlayerCount}/{PhotonNetwork.CurrentRoom.MaxPlayers}";
@@ -129,22 +121,10 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
         foreach (Player player in PhotonNetwork.PlayerList)
         {
-            GameObject playerListGameObject = Instantiate(_insideRoomMenu.PlayerListPrefab);
-            playerListGameObject.transform.SetParent(_insideRoomMenu.playerListContent.transform);
-            playerListGameObject.transform.localScale = Vector3.one;
-            playerListGameObject.transform.position = _insideRoomMenu.playerListContent.transform.position;
+            GameObject playerListGameObject = _insideRoomMenu.CreatePlayerListItem();
 
             PlayerListItem playerListItem = playerListGameObject.GetComponent<PlayerListItem>();
-            playerListItem.PlayerName = player.NickName;
-
-            if (player.ActorNumber == PhotonNetwork.LocalPlayer.ActorNumber)
-            {
-                playerListItem.PlayerIndicator.SetActive(true);
-            }
-            else
-            {
-                playerListItem.PlayerIndicator.SetActive(false);
-            }
+            playerListItem.SetUp(player);
 
             playerListGameObjects.Add(player.ActorNumber, playerListGameObject);
         }
@@ -179,15 +159,11 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
         foreach (RoomInfo room in _cachedRoomList.Values)
         {
-            GameObject roomListEntryGameObject = Instantiate(_roomListMenu.RoomListEntryPrefab);
-            roomListEntryGameObject.transform.SetParent(_roomListMenu.roomListContent.transform);
-            roomListEntryGameObject.transform.localScale = Vector3.one;
-            roomListEntryGameObject.transform.localPosition = _roomListMenu.roomListContent.transform.position;
-
+            GameObject roomListEntryGameObject = _roomListMenu.CreateRoomListItem();
+            
             RoomListItem roomListItem = roomListEntryGameObject.GetComponent<RoomListItem>();
-
-            roomListItem.RoomName = room.Name;
-            roomListItem.RoomPlayers = room.PlayerCount + " / " + room.MaxPlayers;
+            roomListItem.SetUp(room);
+            
             roomListItem.OnClickJoinRoom += () => OnJoinRoomButtonClicked(room.Name);
 
             roomListGameObjects.Add(room.Name, roomListEntryGameObject);
@@ -199,22 +175,11 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         _insideRoomMenu.roomInfoText.text =
             $"Room name: {PhotonNetwork.CurrentRoom.Name} \n\r  Players: {PhotonNetwork.CurrentRoom.PlayerCount}/{PhotonNetwork.CurrentRoom.MaxPlayers}";
 
-        GameObject playerListGameObject = Instantiate(_insideRoomMenu.PlayerListPrefab);
-        playerListGameObject.transform.SetParent(_insideRoomMenu.playerListContent.transform);
-        playerListGameObject.transform.localScale = Vector3.one;
-        playerListGameObject.transform.localPosition = _insideRoomMenu.playerListContent.transform.position;
+        GameObject playerListGameObject = _insideRoomMenu.CreatePlayerListItem();
 
-        playerListGameObject.transform.Find("PlayerNameText").GetComponent<TextMeshProUGUI>().text = newPlayer.NickName;
+        PlayerListItem playerListItem = playerListGameObject.GetComponent<PlayerListItem>();
+        playerListItem.SetUp(newPlayer);
 
-        if (newPlayer.ActorNumber == PhotonNetwork.LocalPlayer.ActorNumber)
-        {
-            playerListGameObject.transform.Find("PlayerIndicator").gameObject.SetActive(true);
-        }
-        else
-        {
-            playerListGameObject.transform.Find("PlayerIndicator").gameObject.SetActive(false);
-        }
-        
         playerListGameObjects.Add(newPlayer.ActorNumber, playerListGameObject);
     }
 
