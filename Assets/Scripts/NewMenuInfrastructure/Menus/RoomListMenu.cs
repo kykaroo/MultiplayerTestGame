@@ -1,21 +1,20 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class RoomListMenu : MonoBehaviour
 {
-    [SerializeField] private Button BackButton;
+    [SerializeField] private Button backButton;
 
-    [SerializeField] private GameObject RoomListContent;
+    [SerializeField] private GameObject roomListContent;
     
     [SerializeField] private Menu menu;
     
-    private GameObject roomListEntryPrefab;
+    private GameObject _roomListEntryPrefab;
 
-    public GameObject roomListContent => RoomListContent;
-    public GameObject RoomListEntryPrefab => roomListEntryPrefab;
+    // public GameObject roomListContent => RoomListContent;
+    // public GameObject RoomListEntryPrefab => _roomListEntryPrefab;
     public Menu Menu => menu;
 
     public event Action OnClickBackButton;
@@ -27,20 +26,19 @@ public class RoomListMenu : MonoBehaviour
 
     private void Start()
     {
-        BackButton.onClick.AddListener(Back);
+        backButton.onClick.AddListener(Back);
     }
 
     private void Awake()
     {
-        roomListEntryPrefab = Resources.Load<GameObject>("ItemForListPrefabs/RoomListItemPrefab");
+        _roomListEntryPrefab = Resources.Load<GameObject>("ItemForListPrefabs/RoomListItemPrefab");
     }
 
     public GameObject CreateRoomListItem()
     {
-        GameObject roomListEntryGameObject = Instantiate(roomListEntryPrefab);
-        roomListEntryGameObject.transform.SetParent(RoomListContent.transform);
+        GameObject roomListEntryGameObject = Instantiate(_roomListEntryPrefab, roomListContent.transform, true);
         roomListEntryGameObject.transform.localScale = Vector3.one;
-        roomListEntryGameObject.transform.localPosition = RoomListContent.transform.position;
+        roomListEntryGameObject.transform.localPosition = roomListContent.transform.position;
         return roomListEntryGameObject;
     }
 }

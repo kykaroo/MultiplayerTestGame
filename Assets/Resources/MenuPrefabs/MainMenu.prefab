@@ -649,11 +649,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34ee77cfacc417f4ea79285131f58386, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CreateRoomButton: {fileID: 1233040855047315392}
-  RandomRoomButton: {fileID: 1233040855080293892}
-  JoinByIdButton: {fileID: 1233040854892618650}
-  ExitButton: {fileID: 1233040854807758915}
-  RoomListButton: {fileID: 1233040854957935349}
+  createRoomButton: {fileID: 1233040855047315392}
+  randomRoomButton: {fileID: 1233040855080293892}
+  joinByIdButton: {fileID: 1233040854892618650}
+  exitButton: {fileID: 1233040854807758915}
+  roomListButton: {fileID: 1233040854957935349}
   menu: {fileID: 1233040854650744643}
 --- !u!1 &1233040854807758913
 GameObject:

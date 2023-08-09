@@ -1,22 +1,19 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class CreateRoomMenu : MonoBehaviour
 {
-    [SerializeField] private Button CreateRoomButton;
-    [SerializeField] private Button BackButton;
+    [SerializeField] private Button createRoomButton;
+    [SerializeField] private Button backButton;
 
-    [SerializeField] private TMP_InputField RoomNameInputField;
-    [SerializeField] private TMP_InputField MaxPlayersInputField;
+    [SerializeField] private TMP_InputField roomNameInputField; [SerializeField] private TMP_InputField maxPlayersInputField;
     
     [SerializeField] private Menu menu;
 
-    public string roomName => RoomNameInputField.text;
-    public string maxPlayer => MaxPlayersInputField.text;
+    public string RoomName => roomNameInputField.text;
+    public string MaxPlayer => maxPlayersInputField.text;
     public Menu Menu => menu;
 
     public event Action OnClickCreateRoom;
@@ -34,7 +31,7 @@ public class CreateRoomMenu : MonoBehaviour
 
     private void Start()
     {
-        CreateRoomButton.onClick.AddListener(CreateRoom);
-        BackButton.onClick.AddListener(Back);
+        createRoomButton.onClick.AddListener(CreateRoom);
+        backButton.onClick.AddListener(Back);
     }
 }

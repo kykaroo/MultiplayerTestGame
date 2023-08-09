@@ -1,16 +1,14 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour
 {
-    [SerializeField] private Button CreateRoomButton;
-    [SerializeField] private Button RandomRoomButton;
-    [SerializeField] private Button JoinByIdButton;
-    [SerializeField] private Button ExitButton;
-    [SerializeField] private Button RoomListButton;
+    [SerializeField] private Button createRoomButton;
+    [SerializeField] private Button randomRoomButton;
+    [SerializeField] private Button joinByIdButton;
+    [SerializeField] private Button exitButton;
+    [SerializeField] private Button roomListButton;
     
     [SerializeField] private Menu menu;
     
@@ -49,10 +47,10 @@ public class MainMenu : MonoBehaviour
 
     private void Start()
     {
-        CreateRoomButton.onClick.AddListener(CreateRoom);
-        RandomRoomButton.onClick.AddListener(RandomRoom);
-        JoinByIdButton.onClick.AddListener(JoinById);
-        ExitButton.onClick.AddListener(Exit);
-        RoomListButton.onClick.AddListener(RoomList);
+        createRoomButton.onClick.AddListener(CreateRoom);
+        randomRoomButton.onClick.AddListener(RandomRoom);
+        joinByIdButton.onClick.AddListener(JoinById);
+        exitButton.onClick.AddListener(Exit);
+        roomListButton.onClick.AddListener(RoomList);
     }
 }

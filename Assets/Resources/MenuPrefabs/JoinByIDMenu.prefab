@@ -822,9 +822,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 711590ed335869949a208d7f8dbfdca0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RoomNameInputField: {fileID: 4036568193780151161}
-  JoinButton: {fileID: 4036568194856049219}
-  BackButton: {fileID: 4036568193751345026}
+  roomNameInputField: {fileID: 4036568193780151161}
+  joinButton: {fileID: 4036568194856049219}
+  backButton: {fileID: 4036568193751345026}
   menu: {fileID: 4036568194165401146}
 --- !u!1 &4036568194754427904
 GameObject:

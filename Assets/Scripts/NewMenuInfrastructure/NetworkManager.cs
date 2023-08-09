@@ -1,13 +1,8 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
-using UnityEngine.UI;
 using Photon.Realtime;
-using Unity.VisualScripting;
 using Random = UnityEngine.Random;
 
 public class NetworkManager : MonoBehaviourPunCallbacks
@@ -19,13 +14,13 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         Instance = this;
     }
     
-    public TextMeshProUGUI ConnectionStatusText;
+    public TextMeshProUGUI connectionStatusText;
     
     private Dictionary<string, RoomInfo> _cachedRoomList;
-    private Dictionary<string, GameObject> roomListGameObjects;
-    private Dictionary<int, GameObject> playerListGameObjects;
+    private Dictionary<string, GameObject> _roomListGameObjects;
+    private Dictionary<int, GameObject> _playerListGameObjects;
 
-    [SerializeField] private MenuManager _menuManager;
+    [SerializeField] private MenuManager menuManager;
     private CreateRoomMenu _createRoomMenu;
     private InsideRoomMenu _insideRoomMenu;
     private JoinByIDMenu _joinByIDMenu;
@@ -33,58 +28,56 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     private LoginMenu _loginMenu;
     private MainMenu _mainMenu;
     private RoomListMenu _roomListMenu;
-
-    [SerializeField] private Transform rootForUI;
     
-    [SerializeField] private MenuFactory _menuFactory;
+    [SerializeField] private MenuFactory menuFactory;
 
     private void Start()
     { 
-        _createRoomMenu = _menuFactory.CreateMenuWindow<CreateRoomMenu>();
+        _createRoomMenu = menuFactory.CreateMenuWindow<CreateRoomMenu>();
         _createRoomMenu.OnClickCreateRoom += OnRoomCreateButtonClicked;
         _createRoomMenu.OnClickBack += OnBackButtonClicked;
-        _menuManager.AddMenu(_createRoomMenu.Menu);
+        menuManager.AddMenu(_createRoomMenu.Menu);
 
-        _insideRoomMenu = _menuFactory.CreateMenuWindow<InsideRoomMenu>();
+        _insideRoomMenu = menuFactory.CreateMenuWindow<InsideRoomMenu>();
         _insideRoomMenu.OnClickLeave += OnLeaveGameButtonClicked;
         _insideRoomMenu.OnClickStartGame += OnStartGameButtonClicked;
-        _menuManager.AddMenu(_insideRoomMenu.Menu);
+        menuManager.AddMenu(_insideRoomMenu.Menu);
         
-        _joinByIDMenu = _menuFactory.CreateMenuWindow<JoinByIDMenu>();
-        _joinByIDMenu.OnClickJoin += () => OnJoinRoomButtonClicked(_joinByIDMenu.roomName);
+        _joinByIDMenu = menuFactory.CreateMenuWindow<JoinByIDMenu>();
+        _joinByIDMenu.OnClickJoin += () => OnJoinRoomButtonClicked(_joinByIDMenu.RoomName);
         _joinByIDMenu.OnClickBack += OnBackButtonClicked;
-        _menuManager.AddMenu(_joinByIDMenu.Menu);
+        menuManager.AddMenu(_joinByIDMenu.Menu);
         
-        _joinRandomRoomMenu = _menuFactory.CreateMenuWindow<JoinRandomRoomMenu>();
+        _joinRandomRoomMenu = menuFactory.CreateMenuWindow<JoinRandomRoomMenu>();
         _joinRandomRoomMenu.OnClickBack += OnBackButtonClicked;
-        _menuManager.AddMenu(_joinRandomRoomMenu.Menu);
+        menuManager.AddMenu(_joinRandomRoomMenu.Menu);
 
-        _loginMenu = _menuFactory.CreateMenuWindow<LoginMenu>();
+        _loginMenu = menuFactory.CreateMenuWindow<LoginMenu>();
         _loginMenu.OnClickLogin += OnLoginButtonClicked;
-        _menuManager.AddMenu(_loginMenu.Menu);
+        menuManager.AddMenu(_loginMenu.Menu);
         
         
-        _mainMenu = _menuFactory.CreateMenuWindow<MainMenu>();
+        _mainMenu = menuFactory.CreateMenuWindow<MainMenu>();
         _mainMenu.OnClickCreateRoom += OnMainMenuCreateRoomButtonClicked;
         _mainMenu.OnClickExit += Application.Quit;
         _mainMenu.OnClickRoomList += OnShowRoomListButtonClicked;
         _mainMenu.OnClickRandomRoom += OnJoinRandomRoomButtonClicked;
-        _mainMenu.OnClickJoinById += () => _menuManager.OpenMenu(_joinByIDMenu.Menu);
-        _menuManager.AddMenu(_mainMenu.Menu);
+        _mainMenu.OnClickJoinById += () => menuManager.OpenMenu(_joinByIDMenu.Menu);
+        menuManager.AddMenu(_mainMenu.Menu);
 
-        _roomListMenu = _menuFactory.CreateMenuWindow<RoomListMenu>();
+        _roomListMenu = menuFactory.CreateMenuWindow<RoomListMenu>();
         _roomListMenu.OnClickBackButton += OnBackButtonClicked;
-        _menuManager.AddMenu(_roomListMenu.Menu);
+        menuManager.AddMenu(_roomListMenu.Menu);
         
-        _cachedRoomList = new Dictionary<string, RoomInfo>();  
-        roomListGameObjects = new Dictionary<string, GameObject>();  
-	  
-        _menuManager.OpenMenu(_loginMenu.Menu);
+        _cachedRoomList = new();  
+        _roomListGameObjects = new();
+        
+        menuManager.OpenMenu(_loginMenu.Menu);
     }
 
     private void Update()
     {
-        ConnectionStatusText.text = "Connection status: " + PhotonNetwork.NetworkClientState;
+        connectionStatusText.text = "Connection status: " + PhotonNetwork.NetworkClientState;
     }
     
     public override void OnConnected()
@@ -95,7 +88,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public override void OnConnectedToMaster()
     {
         print(PhotonNetwork.LocalPlayer.NickName + " is connected to photon");
-        _menuManager.OpenMenu(_mainMenu.Menu);
+        menuManager.OpenMenu(_mainMenu.Menu);
     }
 
     public override void OnCreatedRoom()
@@ -106,17 +99,14 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         print(PhotonNetwork.LocalPlayer.NickName + " joined to " + PhotonNetwork.CurrentRoom.Name);
-        _menuManager.OpenMenu(_insideRoomMenu.Menu);
+        menuManager.OpenMenu(_insideRoomMenu.Menu);
         
         _insideRoomMenu.TryActivateStartButton();
 
         _insideRoomMenu.roomInfoText.text =
             $"Room name: {PhotonNetwork.CurrentRoom.Name} \n\r  Players: {PhotonNetwork.CurrentRoom.PlayerCount}/{PhotonNetwork.CurrentRoom.MaxPlayers}";
 
-        if (playerListGameObjects == null)
-        {
-            playerListGameObjects = new Dictionary<int, GameObject>();
-        }
+        _playerListGameObjects ??= new();
         
 
         foreach (Player player in PhotonNetwork.PlayerList)
@@ -126,7 +116,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             PlayerListItem playerListItem = playerListGameObject.GetComponent<PlayerListItem>();
             playerListItem.SetUp(player);
 
-            playerListGameObjects.Add(player.ActorNumber, playerListGameObject);
+            _playerListGameObjects.Add(player.ActorNumber, playerListGameObject);
         }
     }
 
@@ -134,7 +124,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         ClearRoomListView();
 
-        foreach (RoomInfo room in roomList)
+        foreach (var room in roomList)
         {
             print(room.Name);
             if (!room.IsOpen || !room.IsVisible || room.RemovedFromList)
@@ -166,7 +156,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             
             roomListItem.OnClickJoinRoom += () => OnJoinRoomButtonClicked(room.Name);
 
-            roomListGameObjects.Add(room.Name, roomListEntryGameObject);
+            _roomListGameObjects.Add(room.Name, roomListEntryGameObject);
         }
     }
 
@@ -180,7 +170,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         PlayerListItem playerListItem = playerListGameObject.GetComponent<PlayerListItem>();
         playerListItem.SetUp(newPlayer);
 
-        playerListGameObjects.Add(newPlayer.ActorNumber, playerListGameObject);
+        _playerListGameObjects.Add(newPlayer.ActorNumber, playerListGameObject);
     }
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
@@ -188,21 +178,21 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         _insideRoomMenu.roomInfoText.text =
             $"Room name: {PhotonNetwork.CurrentRoom.Name} \n\r  Players: {PhotonNetwork.CurrentRoom.PlayerCount}/{PhotonNetwork.CurrentRoom.MaxPlayers}";
         
-        Destroy(playerListGameObjects[otherPlayer.ActorNumber].gameObject);
-        playerListGameObjects.Remove(otherPlayer.ActorNumber);
+        Destroy(_playerListGameObjects[otherPlayer.ActorNumber].gameObject);
+        _playerListGameObjects.Remove(otherPlayer.ActorNumber);
     }
 
     public override void OnLeftRoom()
     {
-        _menuManager.OpenMenu(_mainMenu.Menu);
+        menuManager.OpenMenu(_mainMenu.Menu);
 
-        foreach (GameObject playerListGameObject in playerListGameObjects.Values)
+        foreach (GameObject playerListGameObject in _playerListGameObjects.Values)
         {
             Destroy(playerListGameObject);
         }
         
-        playerListGameObjects.Clear();
-        playerListGameObjects = null;
+        _playerListGameObjects.Clear();
+        _playerListGameObjects = null;
     }
 
     public override void OnJoinRandomFailed(short returnCode, string message)
@@ -211,8 +201,10 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
         string roomName = $"Room {Random.Range(1000, 10000)}";
 
-        RoomOptions roomOptions = new RoomOptions();
-        roomOptions.MaxPlayers = 20;
+        RoomOptions roomOptions = new RoomOptions
+        {
+            MaxPlayers = 20
+        };
         PhotonNetwork.CreateRoom(roomName, roomOptions);
     }
 
@@ -228,15 +220,15 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     
     void ClearRoomListView()
     {
-        foreach (GameObject roomListGameObject in roomListGameObjects.Values)
+        foreach (GameObject roomListGameObject in _roomListGameObjects.Values)
         {
             Destroy(roomListGameObject);
         }
         
-        roomListGameObjects.Clear();
+        _roomListGameObjects.Clear();
     }
-    
-    public void OnJoinRoomButtonClicked(string roomName)
+
+    private void OnJoinRoomButtonClicked(string roomName)
     {
         if (PhotonNetwork.InLobby)
         {
@@ -246,33 +238,33 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         PhotonNetwork.JoinRoom(roomName);
     }
 
-    public void OnLeaveGameButtonClicked()
+    private void OnLeaveGameButtonClicked()
     {
         PhotonNetwork.LeaveRoom();
     }
 
-    public void OnBackButtonClicked()
+    private void OnBackButtonClicked()
     {
         if (PhotonNetwork.InLobby)
         {
             PhotonNetwork.LeaveLobby();
         }
 
-        _menuManager.OpenMenu(_mainMenu.Menu);
+        menuManager.OpenMenu(_mainMenu.Menu);
     }
 
-    public void OnJoinByIDButtonClicked()
+    private void OnJoinByIDButtonClicked()
     {
         
     }
 
-    public void OnJoinRandomRoomButtonClicked()
+    private void OnJoinRandomRoomButtonClicked()
     {
-        _menuManager.OpenMenu(_joinRandomRoomMenu.Menu);
+        menuManager.OpenMenu(_joinRandomRoomMenu.Menu);
         PhotonNetwork.JoinRandomRoom();
     }
 
-    public void OnStartGameButtonClicked()
+    private void OnStartGameButtonClicked()
     {
         if (PhotonNetwork.IsMasterClient)
         {
@@ -280,9 +272,9 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         }
     }
 
-    public void OnLoginButtonClicked()
+    private void OnLoginButtonClicked()
     {
-        string playerName = _loginMenu.playerName;
+        var playerName = _loginMenu.PlayerName;
         if (!string.IsNullOrEmpty(playerName))
         {
             PhotonNetwork.LocalPlayer.NickName = playerName;
@@ -296,22 +288,24 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public void OnRoomCreateButtonClicked()
     {
-        string roomName = _createRoomMenu.roomName;
+        var roomName = _createRoomMenu.RoomName;
 
         if (string.IsNullOrEmpty(roomName))
         {
             roomName = "Room " + Random.Range(1000, 9999);
         }
 
-        RoomOptions roomOptions = new RoomOptions();
-        roomOptions.MaxPlayers = (byte)int.Parse(_createRoomMenu.maxPlayer);
+        var roomOptions = new RoomOptions
+        {
+            MaxPlayers = (byte)int.Parse(_createRoomMenu.MaxPlayer)
+        };
 
         PhotonNetwork.CreateRoom(roomName, roomOptions);
     }
 
     public void OnCancelButtonClicked()
     {
-        _menuManager.OpenMenu(_mainMenu.Menu);
+        menuManager.OpenMenu(_mainMenu.Menu);
     }
 
     public void OnShowRoomListButtonClicked()
@@ -321,11 +315,11 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             PhotonNetwork.JoinLobby();
         }
         
-        _menuManager.OpenMenu(_roomListMenu.Menu);
+        menuManager.OpenMenu(_roomListMenu.Menu);
     }
-    
-    public void OnMainMenuCreateRoomButtonClicked()
+
+    private void OnMainMenuCreateRoomButtonClicked()
     {
-        _menuManager.OpenMenu(_createRoomMenu.Menu);
+        menuManager.OpenMenu(_createRoomMenu.Menu);
     }
 }

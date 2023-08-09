@@ -1,19 +1,17 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class LoginMenu : MonoBehaviour
 {
-    [SerializeField] private TMP_InputField LoginInputField;
+    [SerializeField] private TMP_InputField loginInputField;
 
-    [SerializeField] Button loginButton;
+    [SerializeField] private Button loginButton;
     
     [SerializeField] private Menu menu;
 
-    public string playerName => LoginInputField.text;
+    public string PlayerName => loginInputField.text;
 
     public Menu Menu => menu;
 

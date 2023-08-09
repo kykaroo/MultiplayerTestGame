@@ -1,21 +1,18 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class JoinByIDMenu : MonoBehaviour
 {
-    [SerializeField] private TMP_InputField RoomNameInputField;
+    [SerializeField] private TMP_InputField roomNameInputField;
 
-    [SerializeField] private Button JoinButton;
-    [SerializeField] private Button BackButton;
+    [SerializeField] private Button joinButton;
+    [SerializeField] private Button backButton;
     
     [SerializeField] private Menu menu;
     
-    public string roomName => RoomNameInputField.text;
+    public string RoomName => roomNameInputField.text;
     public Menu Menu => menu;
 
     public event Action OnClickJoin;
@@ -33,7 +30,7 @@ public class JoinByIDMenu : MonoBehaviour
 
     private void Start()
     {
-        JoinButton.onClick.AddListener(Join);
-        BackButton.onClick.AddListener(Back);
+        joinButton.onClick.AddListener(Join);
+        backButton.onClick.AddListener(Back);
     }
 }

@@ -1,12 +1,10 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class JoinRandomRoomMenu : MonoBehaviour
 {
-    [SerializeField] private Button BackButton;
+    [SerializeField] private Button backButton;
     
     [SerializeField] private Menu menu;
     
@@ -22,6 +20,6 @@ public class JoinRandomRoomMenu : MonoBehaviour
 
     private void Start()
     {
-        BackButton.onClick.AddListener(Back);
+        backButton.onClick.AddListener(Back);
     }
 }

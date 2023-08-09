@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using Photon.Realtime;
 using TMPro;
 using UnityEngine;
@@ -14,15 +12,15 @@ public class RoomListItem : MonoBehaviour
     
     public event Action OnClickJoinRoom;
     
-    public string RoomName
+    /*public string RoomName
     {
         set => roomName.text = value;
-    }
+    }*/
     
-    public string RoomPlayers
+    /*public string RoomPlayers
     {
         set => roomPlayers.text = value;
-    }
+    }*/
     
     protected virtual void JoinRoom()
     {

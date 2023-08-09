@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using Photon.Pun;
 using TMPro;
 using UnityEngine;
@@ -8,7 +6,7 @@ using UnityEngine.UI;
 
 public class InsideRoomMenu : MonoBehaviour
 {
-    private GameObject playerListPrefab;
+    private GameObject _playerListPrefab;
     [SerializeField] public GameObject playerListContent;
     [SerializeField] public GameObject startGameButton;
 
@@ -19,10 +17,10 @@ public class InsideRoomMenu : MonoBehaviour
     
     [SerializeField] private Menu menu;
 
-    public string RoomInfo => roomInfoText.text;
-    public GameObject PlayerListPrefab => playerListPrefab;
-    public GameObject PlayerListContent => playerListContent;
-    public GameObject StartGameButton => startGameButton;
+    // public string RoomInfo => roomInfoText.text;
+    // public GameObject PlayerListPrefab => playerListPrefab;
+    // public GameObject PlayerListContent => playerListContent;
+    // public GameObject StartGameButton => startGameButton;
     public Menu Menu => menu;
 
     public event Action OnClickLeave;
@@ -46,13 +44,12 @@ public class InsideRoomMenu : MonoBehaviour
 
     private void Awake()
     {
-        playerListPrefab = Resources.Load<GameObject>("ItemForListPrefabs/PlayerListItemPrefab");
+        _playerListPrefab = Resources.Load<GameObject>("ItemForListPrefabs/PlayerListItemPrefab");
     }
 
     public GameObject CreatePlayerListItem()
     {
-        GameObject playerListGameObject = Instantiate(playerListPrefab);
-        playerListGameObject.transform.SetParent(playerListContent.transform);
+        GameObject playerListGameObject = Instantiate(_playerListPrefab, playerListContent.transform, true);
         playerListGameObject.transform.localScale = Vector3.one;
         playerListGameObject.transform.localPosition = playerListContent.transform.position;
         return playerListGameObject;
@@ -65,10 +62,8 @@ public class InsideRoomMenu : MonoBehaviour
             startGameButton.SetActive(true);
             return true;
         }
-        else
-        {
-            startGameButton.SetActive(false);
-            return false;
-        }
+
+        startGameButton.SetActive(false);
+        return false;
     }
 }

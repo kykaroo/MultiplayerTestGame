@@ -695,10 +695,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a67cc28337ae8c40a3917d54e78a919, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ConnectionStatusText: {fileID: 2073534815}
-  _menuManager: {fileID: 8217766896272758271}
-  rootForUI: {fileID: 416143124}
-  _menuFactory: {fileID: 1738589095}
+  connectionStatusText: {fileID: 2073534815}
+  menuManager: {fileID: 8217766896272758271}
+  menuFactory: {fileID: 1738589095}
 --- !u!4 &2055701309
 Transform:
   m_ObjectHideFlags: 0

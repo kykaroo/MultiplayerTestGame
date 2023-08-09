@@ -760,7 +760,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7aa5c116798748c439d033e535b7ed06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LoginInputField: {fileID: 7922199146899550028}
+  loginInputField: {fileID: 7922199146899550028}
   loginButton: {fileID: 7922199147454882120}
   menu: {fileID: 7922199147707277897}
 --- !u!1 &7922199148271160233

@@ -1189,10 +1189,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e11b20bcf50b2064da4b06758f548d62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CreateRoomButton: {fileID: 381657978962516448}
-  BackButton: {fileID: 381657978787529964}
-  RoomNameInputField: {fileID: 381657977987197590}
-  MaxPlayersInputField: {fileID: 381657979361555147}
+  createRoomButton: {fileID: 381657978962516448}
+  backButton: {fileID: 381657978787529964}
+  roomNameInputField: {fileID: 381657977987197590}
+  maxPlayersInputField: {fileID: 381657979361555147}
   menu: {fileID: 381657978755882222}
 --- !u!1 &381657978787529874
 GameObject:
