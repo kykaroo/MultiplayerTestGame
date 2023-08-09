@@ -147,8 +147,9 @@ GameObject:
   - component: {fileID: 7133643536809473933}
   - component: {fileID: 5447893484968900514}
   - component: {fileID: 2154210261720157228}
+  - component: {fileID: -358429599546503344}
   m_Layer: 5
-  m_Name: RoomListEntryPrefab
+  m_Name: RoomListItemPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -235,6 +236,21 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+--- !u!114 &-358429599546503344
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2879970793734238880}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0131874176dd3854f921e12f8c344685, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  roomName: {fileID: 5762114579640834593}
+  roomPlayers: {fileID: 6630718357753692403}
+  joinRoomButton: {fileID: 4550460286892099514}
 --- !u!1 &3821038608444633388
 GameObject:
   m_ObjectHideFlags: 0

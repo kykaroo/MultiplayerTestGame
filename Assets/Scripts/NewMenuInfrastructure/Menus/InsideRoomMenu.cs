@@ -45,6 +45,6 @@ public class InsideRoomMenu : MonoBehaviour
 
     private void Awake()
     {
-        playerListPrefab = Resources.Load<GameObject>("Prefabs/PlayerListPrefab");
+        playerListPrefab = Resources.Load<GameObject>("ItemForListPrefabs/PlayerListItemPrefab");
     }
 }

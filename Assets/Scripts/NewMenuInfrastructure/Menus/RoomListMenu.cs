@@ -32,6 +32,6 @@ public class RoomListMenu : MonoBehaviour
 
     private void Awake()
     {
-        roomListEntryPrefab = Resources.Load<GameObject>("Prefabs/RoomListEntryPrefab");
+        roomListEntryPrefab = Resources.Load<GameObject>("ItemForListPrefabs/RoomListItemPrefab");
     }
 }

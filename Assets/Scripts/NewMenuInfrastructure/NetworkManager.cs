@@ -134,16 +134,16 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             playerListGameObject.transform.localScale = Vector3.one;
             playerListGameObject.transform.position = _insideRoomMenu.playerListContent.transform.position;
 
-            playerListGameObject.transform.Find("PlayerNameText").GetComponent<TextMeshProUGUI>().text =
-                player.NickName;
+            PlayerListItem playerListItem = playerListGameObject.GetComponent<PlayerListItem>();
+            playerListItem.PlayerName = player.NickName;
 
             if (player.ActorNumber == PhotonNetwork.LocalPlayer.ActorNumber)
             {
-                playerListGameObject.transform.Find("PlayerIndicator").gameObject.SetActive(true);
+                playerListItem.PlayerIndicator.SetActive(true);
             }
             else
             {
-                playerListGameObject.transform.Find("PlayerIndicator").gameObject.SetActive(false);
+                playerListItem.PlayerIndicator.SetActive(false);
             }
 
             playerListGameObjects.Add(player.ActorNumber, playerListGameObject);
@@ -184,10 +184,12 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             roomListEntryGameObject.transform.localScale = Vector3.one;
             roomListEntryGameObject.transform.localPosition = _roomListMenu.roomListContent.transform.position;
 
-            roomListEntryGameObject.transform.Find("RoomNameText").GetComponent<TextMeshProUGUI>().text = room.Name;
-            roomListEntryGameObject.transform.Find("RoomPlayersText").GetComponent<TextMeshProUGUI>().text = room.PlayerCount + " / " + room.MaxPlayers;
-            roomListEntryGameObject.transform.Find("JoinRoomButton").GetComponent<Button>().onClick.AddListener((() => OnJoinRoomButtonClicked(room.Name)));
-            
+            RoomListItem roomListItem = roomListEntryGameObject.GetComponent<RoomListItem>();
+
+            roomListItem.RoomName = room.Name;
+            roomListItem.RoomPlayers = room.PlayerCount + " / " + room.MaxPlayers;
+            roomListItem.OnClickJoinRoom += () => OnJoinRoomButtonClicked(room.Name);
+
             roomListGameObjects.Add(room.Name, roomListEntryGameObject);
         }
     }
