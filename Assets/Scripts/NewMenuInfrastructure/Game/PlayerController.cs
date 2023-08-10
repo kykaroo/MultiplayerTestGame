@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
+using UnityEngine.UI;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 public class PlayerController : MonoBehaviourPunCallbacks, IDamagable
@@ -18,6 +19,9 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamagable
     [SerializeField] private GameObject cameraHolder;
     
     [SerializeField] private Item[] items;
+
+    [SerializeField] private Image healthBarImage;
+    [SerializeField] private GameObject ui;
 
     [SerializeField] private int itemIndex;
     private int _previousItemIndex = -1;
@@ -54,6 +58,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamagable
         {
             Destroy(GetComponentInChildren<Camera>().gameObject);
             Destroy(playerBody);
+            Destroy(ui);
             return;
         }
         
@@ -197,6 +202,9 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamagable
         if (!PV.IsMine) return;
 
         _currentHealth -= damage;
+
+        healthBarImage.fillAmount = _currentHealth / MaxHealth;
+        //TODO Сделать скрытие HP при 100%
 
         if (_currentHealth <= 0)
         {

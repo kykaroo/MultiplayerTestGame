@@ -33,10 +33,10 @@ RectTransform:
   m_Father: {fileID: 963884506134301927}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 444.55, y: -0.0049448}
-  m_SizeDelta: {x: 229.2, y: 101.83}
+  m_AnchorMin: {x: 0.75600004, y: 0}
+  m_AnchorMax: {x: 0.89747924, y: 1}
+  m_AnchoredPosition: {x: -0.11505, y: -0.0056152344}
+  m_SizeDelta: {x: -0.2301, y: 3.83}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1011980629002087081
 CanvasRenderer:
@@ -93,12 +93,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 80
+  m_fontSize: 37.35
   m_fontSizeBase: 80
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_fontSizeMax: 80
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
@@ -148,6 +148,7 @@ GameObject:
   - component: {fileID: 5447893484968900514}
   - component: {fileID: 2154210261720157228}
   - component: {fileID: -358429599546503344}
+  - component: {fileID: 3519102509022225455}
   m_Layer: 5
   m_Name: RoomListItemPrefab
   m_TagString: Untagged
@@ -173,10 +174,10 @@ RectTransform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -10.659973, y: 169.94}
-  m_SizeDelta: {x: -376.8748, y: -978.1594}
+  m_AnchorMin: {x: 0, y: 0.56859267}
+  m_AnchorMax: {x: 1, y: 0.6602223}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7133643536809473933
 CanvasRenderer:
@@ -251,6 +252,27 @@ MonoBehaviour:
   roomName: {fileID: 5762114579640834593}
   roomPlayers: {fileID: 6630718357753692403}
   joinRoomButton: {fileID: 4550460286892099514}
+--- !u!223 &3519102509022225455
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2879970793734238880}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 0
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 25
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+  m_TargetDisplay: 0
 --- !u!1 &3821038608444633388
 GameObject:
   m_ObjectHideFlags: 0
@@ -262,6 +284,7 @@ GameObject:
   - component: {fileID: 4327980804624577243}
   - component: {fileID: 8909236825097721273}
   - component: {fileID: 5762114579640834593}
+  - component: {fileID: 8987275929389905464}
   m_Layer: 5
   m_Name: RoomNameText
   m_TagString: Untagged
@@ -284,10 +307,10 @@ RectTransform:
   m_Father: {fileID: 963884506134301927}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -220.81, y: 0.00016832}
-  m_SizeDelta: {x: 1101.5, y: 101.83}
+  m_AnchorMin: {x: 0.0144375, y: 0}
+  m_AnchorMax: {x: 0.75600004, y: 1}
+  m_AnchoredPosition: {x: -0.000030517578, y: -0.7206192}
+  m_SizeDelta: {x: 0, y: 2.4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8909236825097721273
 CanvasRenderer:
@@ -344,12 +367,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 80
+  m_fontSize: 36.1
   m_fontSizeBase: 80
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_fontSizeMax: 80
   m_fontStyle: 0
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
@@ -386,6 +409,27 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!223 &8987275929389905464
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3821038608444633388}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 0
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 25
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+  m_TargetDisplay: 0
 --- !u!1 &5437357038485016334
 GameObject:
   m_ObjectHideFlags: 0
@@ -421,10 +465,10 @@ RectTransform:
   m_Father: {fileID: 963884506134301927}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 665.3528, y: 0.0011235}
-  m_SizeDelta: {x: 212.3965, y: 101.82}
+  m_AnchorMin: {x: 0.89747924, y: 0}
+  m_AnchorMax: {x: 0.9901042, y: 1}
+  m_AnchoredPosition: {x: -0.618103, y: 0.23958969}
+  m_SizeDelta: {x: 1.2219, y: 0.47129}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1262120695632670676
 CanvasRenderer:
@@ -601,12 +645,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 80
+  m_fontSize: 34.35
   m_fontSizeBase: 80
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_fontSizeMax: 80
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
