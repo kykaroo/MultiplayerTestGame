@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using Photon.Pun;
 using UnityEngine;
@@ -9,6 +6,8 @@ public class PlayerManager : MonoBehaviour
 {
     private PhotonView PV;
 
+    private GameObject _controller;
+
     private void Awake()
     {
         PV = GetComponent<PhotonView>();
@@ -16,7 +15,8 @@ public class PlayerManager : MonoBehaviour
 
     void CreateController()
     {
-        PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerController"), Vector3.zero, Quaternion.identity);
+        Transform spawnPoint = SpawnManager.Instance.GetSpawnPoint();
+        _controller = PhotonNetwork.Instantiate(Path.Combine("PhotonPrafabs", "PlayerController"), spawnPoint.position, spawnPoint.rotation, 0, new object[] {PV.ViewID});
     }
 
     private void Start()
@@ -25,5 +25,11 @@ public class PlayerManager : MonoBehaviour
         {
             CreateController();
         }
+    }
+
+    public void Die()
+    {
+        PhotonNetwork.Destroy(_controller);
+        CreateController();
     }
 }

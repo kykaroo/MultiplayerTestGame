@@ -9,7 +9,7 @@ using Object = UnityEngine.Object;
 
 public class PlayerControllerFactory
 {
-    private GameObject playerGameObject;
+    /*private GameObject playerGameObject;
     private GameObject bullet;
     public PlayerControllerFactory()
     {
@@ -36,6 +36,6 @@ public class PlayerControllerFactory
        playerController._joystick = fixedJoystick;
        playerController._fireButton = fireButton;
        return playerController;
-   }
+   }*/
 }
 

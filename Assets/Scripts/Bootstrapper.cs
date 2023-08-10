@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class Bootstrapper : MonoBehaviour
 {
-    public Sprite sprite;
+    /*public Sprite sprite;
     public FixedJoystick joystick;
     public Button fireButton;
     
@@ -15,5 +15,5 @@ public class Bootstrapper : MonoBehaviour
     { 
         PlayerControllerFactory playerControllerFactory = new PlayerControllerFactory();
         playerControllerFactory.CreatePlayer("Player", 3, 3, sprite, 3, joystick, fireButton);
-    }
+    }*/
 }

@@ -88,6 +88,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         print(PhotonNetwork.LocalPlayer.NickName + " is connected to photon");
         menuManager.OpenMenu(_mainMenu.Menu);
+        PhotonNetwork.AutomaticallySyncScene = true;
     }
 
     public override void OnCreatedRoom()
@@ -219,12 +220,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
         menuManager.OpenMenu(_mainMenu.Menu);
     }
-
-    private void OnJoinByIDButtonClicked()
-    {
-        
-    }
-
+    
     private void OnJoinRandomRoomButtonClicked()
     {
         menuManager.OpenMenu(_joinRandomRoomMenu.Menu);

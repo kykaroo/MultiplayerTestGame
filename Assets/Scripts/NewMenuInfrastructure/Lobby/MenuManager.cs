@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class MenuManager : MonoBehaviour
@@ -23,7 +24,7 @@ public class MenuManager : MonoBehaviour
         {
             if (t.menuName == menuName)
             {
-                OpenMenu(t);
+                t.Open();
             }
             else if (t.open)
             {
@@ -39,18 +40,10 @@ public class MenuManager : MonoBehaviour
 
     public void OpenMenu(Menu menu)
     {
-        print(menus.Count + " menuCount");
-        foreach (Menu t in menus)
+        foreach (var t in menus.Where(t => t.open))
         {
-            print($"");
-            if (t.open)
-            {
-                print($"{t} is closed");
-                CloseMenu(t);
-            }
+            CloseMenu(t);
         }
-        
-        print($"{menu} is opened");
         menu.Open();
     }
 }
