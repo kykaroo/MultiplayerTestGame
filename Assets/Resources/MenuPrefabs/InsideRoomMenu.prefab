@@ -855,6 +855,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d628a14e2f1aaa4ba312d68349a368c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  firstInput: {fileID: 6944478668950101450}
   menuName: InsideRoom
   open: 0
 --- !u!1 &6944478668863831034

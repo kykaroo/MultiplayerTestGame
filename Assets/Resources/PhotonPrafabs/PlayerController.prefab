@@ -437,6 +437,7 @@ MonoBehaviour:
   items:
   - {fileID: 312184996500695323}
   - {fileID: 2111205031093659566}
+  healthBarGameObject: {fileID: 6164219184225244357}
   healthBarImage: {fileID: 4991855854882249340}
   ui: {fileID: 7945044198890424509}
   itemIndex: 0
@@ -807,7 +808,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7215850400487820012
 RectTransform:
   m_ObjectHideFlags: 0

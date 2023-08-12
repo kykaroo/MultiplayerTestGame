@@ -861,6 +861,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d628a14e2f1aaa4ba312d68349a368c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  firstInput: {fileID: 3029516650895363954}
   menuName: CreateRoom
   open: 0
 --- !u!114 &3029516650653235467
