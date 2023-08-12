@@ -1,7 +1,7 @@
 using Photon.Pun;
 using UnityEngine;
 
-public class SingleShotGun : Item
+public class SingleShotGun : Item<GunInfo>
 {
     [SerializeField] private Camera fpsCam;
     [SerializeField] private GameObject bulletImpactPrefab;
@@ -25,7 +25,7 @@ public class SingleShotGun : Item
 
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
-            hit.collider.gameObject.GetComponent<IDamagable>()?.TakeDamage(((GunInfo)itemInfo).damage);
+            hit.collider.gameObject.GetComponent<IDamagable>()?.TakeDamage((itemInfo).damage);
             _photonView.RPC("RPC_Shoot", RpcTarget.All, hit.point, hit.normal);
         }
     }

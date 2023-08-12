@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-public abstract class Gun : Item
+public abstract class Gun : Item<GunInfo>
 {
     public GameObject bullet;
 

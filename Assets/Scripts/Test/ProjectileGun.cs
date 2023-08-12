@@ -63,14 +63,15 @@ public class ProjectileGun : Gun
 
         Vector3 directionWithSpread = directionWithoutSpread + new Vector3(x, y, 0);
         
+        Vector3 vector3 = directionWithSpread.normalized * shootForce + fpsCam.transform.up * upwardForce;
         
         GameObject currentBullet = PhotonNetwork.Instantiate("ProjectTileGun/Bullet", attackPoint.position, Quaternion.identity);
         
         currentBullet.transform.forward = directionWithSpread.normalized;
-        
-        currentBullet.GetComponent<Rigidbody>().AddForce(directionWithSpread.normalized * shootForce, ForceMode.Impulse);
-        currentBullet.GetComponent<Rigidbody>().AddForce(fpsCam.transform.up * upwardForce, ForceMode.Impulse);
 
+        currentBullet.GetComponent<Rigidbody>().AddForce(vector3, ForceMode.Impulse);
+        
+        
         if (muzzleFlash != null)
         {
             Instantiate(muzzleFlash, attackPoint.position, Quaternion.identity);
