@@ -64,7 +64,17 @@ public class ProjectileGun : Gun
         Vector3 directionWithSpread = directionWithoutSpread + new Vector3(x, y, 0);
         
         
-        photonView.RPC(nameof(RPC_Shoot), RpcTarget.All, directionWithSpread);
+        GameObject currentBullet = PhotonNetwork.Instantiate("ProjectTileGun/Bullet", attackPoint.position, Quaternion.identity);
+        
+        currentBullet.transform.forward = directionWithSpread.normalized;
+        
+        currentBullet.GetComponent<Rigidbody>().AddForce(directionWithSpread.normalized * shootForce, ForceMode.Impulse);
+        currentBullet.GetComponent<Rigidbody>().AddForce(fpsCam.transform.up * upwardForce, ForceMode.Impulse);
+
+        if (muzzleFlash != null)
+        {
+            Instantiate(muzzleFlash, attackPoint.position, Quaternion.identity);
+        }
         
         BulletsLeft--;
         BulletsShot++;
@@ -78,7 +88,7 @@ public class ProjectileGun : Gun
 
         if (BulletsShot < bulletPerTap && BulletsLeft > 0)
         {
-            Invoke(nameof(RPC_Shoot), timeBetweenShoots);
+            Invoke(nameof(Shoot), timeBetweenShoots);
         }
     }
 
@@ -98,21 +108,5 @@ public class ProjectileGun : Gun
     {
         BulletsLeft = magazineSize;
         Reloading = false;
-    }
-    
-    [PunRPC]
-    void RPC_Shoot(Vector3 directionWithSpread)
-    {
-        GameObject currentBullet = PhotonNetwork.Instantiate("ProjectTileGun/Bullet", attackPoint.position, Quaternion.identity);
-        
-        currentBullet.transform.forward = directionWithSpread.normalized;
-        
-        currentBullet.GetComponent<Rigidbody>().AddForce(directionWithSpread.normalized * shootForce, ForceMode.Impulse);
-        currentBullet.GetComponent<Rigidbody>().AddForce(fpsCam.transform.up * upwardForce, ForceMode.Impulse);
-
-        if (muzzleFlash != null)
-        {
-            Instantiate(muzzleFlash, attackPoint.position, Quaternion.identity);
-        }
     }
 }
