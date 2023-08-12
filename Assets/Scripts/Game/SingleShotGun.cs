@@ -1,9 +1,11 @@
 using Photon.Pun;
 using UnityEngine;
 
-public class SingleShotGun : Gun
+public class SingleShotGun : Item
 {
-    [SerializeField] private Camera cam;
+    [SerializeField] private Camera fpsCam;
+    [SerializeField] private GameObject bulletImpactPrefab;
+    
     private PhotonView _photonView;
 
     private void Awake()
@@ -18,8 +20,8 @@ public class SingleShotGun : Gun
 
     private void Shoot()
     {
-        Ray ray = cam.ViewportPointToRay(new(0.5f, 0.5f));
-        ray.origin = cam.transform.position;
+        Ray ray = fpsCam.ViewportPointToRay(new(0.5f, 0.5f));
+        ray.origin = fpsCam.transform.position;
 
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
