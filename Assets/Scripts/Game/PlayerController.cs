@@ -1,12 +1,6 @@
-using System;
-using System.Collections;
 using Photon.Pun;
 using Photon.Realtime;
-using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.Serialization;
-using UnityEngine.Tilemaps;
 using UnityEngine.UI;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 
