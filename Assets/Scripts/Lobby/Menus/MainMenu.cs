@@ -9,6 +9,7 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private Button joinByIdButton;
     [SerializeField] private Button exitButton;
     [SerializeField] private Button roomListButton;
+    [SerializeField] private Button optionsButton;
     
     [SerializeField] private Menu menu;
     
@@ -19,6 +20,7 @@ public class MainMenu : MonoBehaviour
     public event Action OnClickJoinById;
     public event Action OnClickExit;
     public event Action OnClickRoomList;
+    public event Action OnClickOptions;
 
     protected virtual void CreateRoom()
     {
@@ -44,6 +46,11 @@ public class MainMenu : MonoBehaviour
     {
         OnClickRoomList?.Invoke();
     }
+    
+    protected virtual void Options()
+    {
+        OnClickOptions?.Invoke();
+    }
 
     private void Start()
     {
@@ -52,5 +59,6 @@ public class MainMenu : MonoBehaviour
         joinByIdButton.onClick.AddListener(JoinById);
         exitButton.onClick.AddListener(Exit);
         roomListButton.onClick.AddListener(RoomList);
+        optionsButton.onClick.AddListener(Options);
     }
 }

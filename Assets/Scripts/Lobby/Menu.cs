@@ -9,7 +9,7 @@ public class Menu : MonoBehaviour
     private EventSystem System;
     
     public string menuName;
-    public bool open;
+    public bool open = true;
 
     public void Open()
     {
