@@ -9,6 +9,7 @@ public class LoginMenu : MonoBehaviour
     [SerializeField] private TMP_InputField passwordInputField;
 
     [SerializeField] private Button loginButton;
+    [SerializeField] private Button exitButton;
     
     [SerializeField] private Menu menu;
 
@@ -28,5 +29,6 @@ public class LoginMenu : MonoBehaviour
     private void Start()
     {
         loginButton.onClick.AddListener(Login);
+        exitButton.onClick.AddListener(Application.Quit);
     }
 }

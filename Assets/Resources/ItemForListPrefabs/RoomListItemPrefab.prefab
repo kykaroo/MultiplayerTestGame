@@ -148,7 +148,6 @@ GameObject:
   - component: {fileID: 5447893484968900514}
   - component: {fileID: 2154210261720157228}
   - component: {fileID: -358429599546503344}
-  - component: {fileID: 3519102509022225455}
   m_Layer: 5
   m_Name: RoomListItemPrefab
   m_TagString: Untagged
@@ -252,27 +251,6 @@ MonoBehaviour:
   roomName: {fileID: 5762114579640834593}
   roomPlayers: {fileID: 6630718357753692403}
   joinRoomButton: {fileID: 4550460286892099514}
---- !u!223 &3519102509022225455
-Canvas:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2879970793734238880}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_RenderMode: 2
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
-  m_PixelPerfect: 0
-  m_ReceivesEvents: 1
-  m_OverrideSorting: 0
-  m_OverridePixelPerfect: 0
-  m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 25
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
-  m_TargetDisplay: 0
 --- !u!1 &3821038608444633388
 GameObject:
   m_ObjectHideFlags: 0
