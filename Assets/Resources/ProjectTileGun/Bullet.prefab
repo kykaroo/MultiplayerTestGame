@@ -130,9 +130,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f9e831a841dd3c4cb33c183718c40f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectileInfo: {fileID: 11400000, guid: 3e82996428fbd8f47910d39eb5ebfa33, type: 2}
-  projectileImpactPrefab: {fileID: 3129625447603714859, guid: e4ecb6db475f08a4b9a722290c33df96, type: 3}
-  damage: 50
+  itemGameObject: {fileID: 4767866311701904877}
+  itemInfo: {fileID: 11400000, guid: 3e82996428fbd8f47910d39eb5ebfa33, type: 2}
 --- !u!114 &7331833308500435497
 MonoBehaviour:
   m_ObjectHideFlags: 0

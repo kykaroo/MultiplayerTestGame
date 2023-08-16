@@ -1,59 +1,63 @@
 using System;
+using Lobby.Items;
 using Photon.Pun;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class InsideRoomMenu : MonoBehaviour
+namespace Lobby.Menus
 {
-    private PlayerListItem _playerListPrefab;
-    [SerializeField] public Transform playerListContent;
-    [SerializeField] public GameObject startGameButton;
-    [SerializeField] private Button leaveButton;
-    [SerializeField] private Button startButton;
-    [SerializeField] public TextMeshProUGUI roomInfoText;
-
-    public event Action OnClickLeave;
-    public event Action OnClickStartGame;
-
-    private void Leave()
+    public class InsideRoomMenu : MonoBehaviour
     {
-        OnClickLeave?.Invoke();
-    }
+        private PlayerListItem _playerListPrefab;
+        [SerializeField] public Transform playerListContent;
+        [SerializeField] public GameObject startGameButton;
+        [SerializeField] private Button leaveButton;
+        [SerializeField] private Button startButton;
+        [SerializeField] public TextMeshProUGUI roomInfoText;
 
-    private void StartGame()
-    {
-        OnClickStartGame?.Invoke();
-    }
+        public event Action OnClickLeave;
+        public event Action OnClickStartGame;
 
-    private void Start()
-    {
-        leaveButton.onClick.AddListener(Leave);
-        startButton.onClick.AddListener(StartGame);
-    }
-
-    private void Awake()
-    {
-        _playerListPrefab = Resources.Load<PlayerListItem>("ItemForListPrefabs/PlayerListItemPrefab");
-    }
-
-    public PlayerListItem CreatePlayerListItem()
-    {
-        PlayerListItem playerListGameObject = Instantiate(_playerListPrefab, playerListContent, true);
-        playerListGameObject.transform.localScale = Vector3.one;
-        playerListGameObject.transform.localPosition = playerListContent.position;
-        return playerListGameObject;
-    }
-
-    public bool TryActivateStartButton()
-    {
-        if (PhotonNetwork.LocalPlayer.IsMasterClient)
+        private void Leave()
         {
-            startGameButton.SetActive(true);
-            return true;
+            OnClickLeave?.Invoke();
         }
 
-        startGameButton.SetActive(false);
-        return false;
+        private void StartGame()
+        {
+            OnClickStartGame?.Invoke();
+        }
+
+        private void Start()
+        {
+            leaveButton.onClick.AddListener(Leave);
+            startButton.onClick.AddListener(StartGame);
+        }
+
+        private void Awake()
+        {
+            _playerListPrefab = Resources.Load<PlayerListItem>("ItemForListPrefabs/PlayerListItemPrefab");
+        }
+
+        public PlayerListItem CreatePlayerListItem()
+        {
+            PlayerListItem playerListGameObject = Instantiate(_playerListPrefab, playerListContent, true);
+            playerListGameObject.transform.localScale = Vector3.one;
+            playerListGameObject.transform.localPosition = playerListContent.position;
+            return playerListGameObject;
+        }
+
+        public bool TryActivateStartButton()
+        {
+            if (PhotonNetwork.LocalPlayer.IsMasterClient)
+            {
+                startGameButton.SetActive(true);
+                return true;
+            }
+
+            startGameButton.SetActive(false);
+            return false;
+        }
     }
 }

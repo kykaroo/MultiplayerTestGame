@@ -1,46 +1,49 @@
-﻿using System;
+﻿using Lobby.Menus;
 using Photon.Pun;
 using Object = UnityEngine.Object;
 
-public class JoinByIDMenuState : MenuStateBase
+namespace Lobby.States
 {
-    private JoinByIDMenu _joinByIDMenu;
-
-    public JoinByIDMenuState(MenuFactory menuFactory) : base(menuFactory)
+    public class JoinByIDMenuState : MenuStateBase
     {
-    }
+        private JoinByIDMenu _joinByIDMenu;
 
-    protected override void OnEnter()
-    {
-        _joinByIDMenu = MenuFactory.CreateMenuWindow<JoinByIDMenu>();
-        _joinByIDMenu.OnClickJoin += () => OnJoinRoomButtonClicked(_joinByIDMenu.RoomName);
-        _joinByIDMenu.OnClickBack += OnBackButtonClicked;
-    }
-
-    protected override void OnExit()
-    {
-        Object.Destroy(_joinByIDMenu.gameObject);
-        
-        _joinByIDMenu.OnClickBack -= OnBackButtonClicked;
-    }
-
-    private void OnJoinRoomButtonClicked(string roomName)
-    {
-        if (PhotonNetwork.InLobby)
+        public JoinByIDMenuState(MenuFactory menuFactory) : base(menuFactory)
         {
-            PhotonNetwork.LeaveLobby();
         }
 
-        PhotonNetwork.JoinRoom(roomName);
-    }
-
-    private void OnBackButtonClicked()
-    {
-        if (PhotonNetwork.InLobby)
+        protected override void OnEnter()
         {
-            PhotonNetwork.LeaveLobby();
+            _joinByIDMenu = MenuFactory.CreateMenuWindow<JoinByIDMenu>();
+            _joinByIDMenu.OnClickJoin += () => OnJoinRoomButtonClicked(_joinByIDMenu.RoomName);
+            _joinByIDMenu.OnClickBack += OnBackButtonClicked;
         }
+
+        protected override void OnExit()
+        {
+            Object.Destroy(_joinByIDMenu.gameObject);
         
-        StateMachine.SetState<MainMenuState>();
+            _joinByIDMenu.OnClickBack -= OnBackButtonClicked;
+        }
+
+        private void OnJoinRoomButtonClicked(string roomName)
+        {
+            if (PhotonNetwork.InLobby)
+            {
+                PhotonNetwork.LeaveLobby();
+            }
+
+            PhotonNetwork.JoinRoom(roomName);
+        }
+
+        private void OnBackButtonClicked()
+        {
+            if (PhotonNetwork.InLobby)
+            {
+                PhotonNetwork.LeaveLobby();
+            }
+        
+            StateMachine.SetState<MainMenuState>();
+        }
     }
 }

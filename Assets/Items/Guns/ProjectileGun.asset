@@ -13,5 +13,15 @@ MonoBehaviour:
   m_Name: ProjectileGun
   m_EditorClassIdentifier: 
   itemName: ProjectileGun
-  projectileType: Bullet
-  damage: 50
+  damage: 0
+  projectileType: {fileID: 11400000, guid: 3e82996428fbd8f47910d39eb5ebfa33, type: 2}
+  shootForce: 2
+  upwardForce: 0
+  timeBetweenShooting: 1
+  spread: 1
+  reloadTime: 2
+  timeBetweenShoots: 0.5
+  bulletPerTap: 1
+  magazineSize: 10
+  allowButtonHold: 1
+  muzzleFlash: {fileID: 0}

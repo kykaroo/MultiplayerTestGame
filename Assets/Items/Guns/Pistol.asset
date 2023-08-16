@@ -14,3 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Pistol
   damage: 25
+  projectileType: {fileID: 11400000, guid: 3e82996428fbd8f47910d39eb5ebfa33, type: 2}
+  shootForce: 0
+  upwardForce: 0
+  timeBetweenShooting: 0
+  spread: 0
+  reloadTime: 0
+  timeBetweenShoots: 0
+  bulletPerTap: 0
+  magazineSize: 0
+  allowButtonHold: 0
+  muzzleFlash: {fileID: 0}
+  ammunitionDisplay: {fileID: 0}

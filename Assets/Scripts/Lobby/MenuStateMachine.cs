@@ -1,20 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using Lobby.States;
 
-public class MenuStateMachine
+namespace Lobby
 {
-    private readonly Dictionary<Type, IMenuState> _states;
-    private IMenuState _currentState;
-
-    public MenuStateMachine(Dictionary<Type,IMenuState> states)
+    public class MenuStateMachine
     {
-        _states = states;
-    }
+        private readonly Dictionary<Type, IMenuState> _states;
+        private IMenuState _currentState;
 
-    public void SetState<T>() where T : IMenuState
-    {
-        _currentState?.Exit();
-        _currentState = _states[typeof(T)];
-        _currentState.Enter(this);
+        public MenuStateMachine(Dictionary<Type,IMenuState> states)
+        {
+            _states = states;
+        }
+
+        public void SetState<T>() where T : IMenuState
+        {
+            _currentState?.Exit();
+            _currentState = _states[typeof(T)];
+            _currentState.Enter(this);
+        }
     }
 }

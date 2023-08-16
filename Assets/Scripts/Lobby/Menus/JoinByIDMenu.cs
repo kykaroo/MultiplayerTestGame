@@ -3,31 +3,34 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class JoinByIDMenu : MonoBehaviour
+namespace Lobby.Menus
 {
-    [SerializeField] private TMP_InputField roomNameInputField;
+    public class JoinByIDMenu : MonoBehaviour
+    {
+        [SerializeField] private TMP_InputField roomNameInputField;
 
-    [SerializeField] private Button joinButton;
-    [SerializeField] private Button backButton;
+        [SerializeField] private Button joinButton;
+        [SerializeField] private Button backButton;
     
-    public string RoomName => roomNameInputField.text;
+        public string RoomName => roomNameInputField.text;
 
-    public event Action OnClickJoin;
-    public event Action OnClickBack;
+        public event Action OnClickJoin;
+        public event Action OnClickBack;
 
-    protected virtual void Join()
-    {
-        OnClickJoin?.Invoke();
-    }
+        protected virtual void Join()
+        {
+            OnClickJoin?.Invoke();
+        }
 
-    protected virtual void Back()
-    {
-        OnClickBack?.Invoke();
-    }
+        protected virtual void Back()
+        {
+            OnClickBack?.Invoke();
+        }
 
-    private void Start()
-    {
-        joinButton.onClick.AddListener(Join);
-        backButton.onClick.AddListener(Back);
+        private void Start()
+        {
+            joinButton.onClick.AddListener(Join);
+            backButton.onClick.AddListener(Back);
+        }
     }
 }

@@ -1,37 +1,40 @@
 using System;
+using Lobby.Items;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
-public class RoomListMenu : MonoBehaviour
+namespace Lobby.Menus
 {
-    [SerializeField] private Button backButton;
-    [SerializeField] private Transform roomListContent;
+    public class RoomListMenu : MonoBehaviour
+    {
+        [SerializeField] private Button backButton;
+        [SerializeField] private Transform roomListContent;
     
-    private RoomListItem _roomListEntryPrefab;
+        private RoomListItem _roomListEntryPrefab;
 
-    public event Action OnClickBackButton;
+        public event Action OnClickBackButton;
 
-    protected virtual void Back()
-    {
-        OnClickBackButton?.Invoke();
-    }
+        protected virtual void Back()
+        {
+            OnClickBackButton?.Invoke();
+        }
 
-    private void Start()
-    {
-        backButton.onClick.AddListener(Back);
-    }
+        private void Start()
+        {
+            backButton.onClick.AddListener(Back);
+        }
 
-    private void Awake()
-    {
-        _roomListEntryPrefab = Resources.Load<RoomListItem>("ItemForListPrefabs/RoomListItemPrefab");
-    }
+        private void Awake()
+        {
+            _roomListEntryPrefab = Resources.Load<RoomListItem>("ItemForListPrefabs/RoomListItemPrefab");
+        }
 
-    public RoomListItem CreateRoomListItem()
-    {
-        RoomListItem roomListEntryGameObject = Instantiate(_roomListEntryPrefab, roomListContent, true);
-        roomListEntryGameObject.transform.localScale = Vector3.one;
-        roomListEntryGameObject.transform.localPosition = roomListContent.position;
-        return roomListEntryGameObject;
+        public RoomListItem CreateRoomListItem()
+        {
+            RoomListItem roomListEntryGameObject = Instantiate(_roomListEntryPrefab, roomListContent, true);
+            roomListEntryGameObject.transform.localScale = Vector3.one;
+            roomListEntryGameObject.transform.localPosition = roomListContent.position;
+            return roomListEntryGameObject;
+        }
     }
 }

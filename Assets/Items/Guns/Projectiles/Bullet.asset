@@ -9,8 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b108b1f8e345554aa7b02075d126590, type: 3}
+  m_Script: {fileID: 11500000, guid: 3b8304abbaf721b45b8e014a991b62e7, type: 3}
   m_Name: Bullet
   m_EditorClassIdentifier: 
   itemName: Bullet
-  projectileType: Bullet
+  projectilePrefab: {fileID: 4767866311701904877, guid: 90dad7bcc330ce74c916f8b1c14c55cb, type: 3}
+  impactPrefab: {fileID: 3129625447603714859, guid: e4ecb6db475f08a4b9a722290c33df96, type: 3}
+  damage: 50
+  explosionRadius: 0
+  explosionDamageFalloff: 0
+  velocity: 0

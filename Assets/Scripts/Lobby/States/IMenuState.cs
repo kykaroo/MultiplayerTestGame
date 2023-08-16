@@ -1,5 +1,8 @@
-﻿public interface IMenuState
+﻿namespace Lobby.States
 {
-    void Enter(MenuStateMachine menuStateMachine);
-    void Exit();
+    public interface IMenuState
+    {
+        void Enter(MenuStateMachine menuStateMachine);
+        void Exit();
+    }
 }

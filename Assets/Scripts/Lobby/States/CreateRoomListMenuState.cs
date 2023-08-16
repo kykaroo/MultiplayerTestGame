@@ -1,97 +1,102 @@
 ﻿using System.Collections.Generic;
+using Lobby.Items;
+using Lobby.Menus;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 
-public class RoomListMenuState : MenuStateBase
+namespace Lobby.States
 {
-    private RoomListMenu _roomListMenu;
-
-    private Dictionary<string, RoomInfo> _cachedRoomList;
-
-    private Dictionary<string, RoomListItem> _roomListGameObjects;
-    private readonly NetworkManager _networkManager;
-
-    public RoomListMenuState(MenuFactory menuFactory, NetworkManager networkManager) : base(menuFactory)
+    public class RoomListMenuState : MenuStateBase
     {
-        _networkManager = networkManager;
-    }
+        private RoomListMenu _roomListMenu;
 
-    protected override void OnEnter()
-    {
-        _roomListMenu = MenuFactory.CreateMenuWindow<RoomListMenu>();
-        
-        _networkManager.OnRoomListUpdateEvent += UpdatePlayersList;
-        _roomListMenu.OnClickBackButton += OnBackButtonClicked;
-    }
+        private Dictionary<string, RoomInfo> _cachedRoomList;
 
-    protected override void OnExit()
-    {
-        Object.Destroy(_roomListMenu.gameObject);
-        
-        _networkManager.OnRoomListUpdateEvent -= UpdatePlayersList;
-        _roomListMenu.OnClickBackButton -= OnBackButtonClicked;
-    }
+        private Dictionary<string, RoomListItem> _roomListGameObjects;
+        private readonly NetworkManager _networkManager;
 
-    private static void OnJoinRoomButtonClicked(string roomName)
-    {
-        if (PhotonNetwork.InLobby)
+        public RoomListMenuState(MenuFactory menuFactory, NetworkManager networkManager) : base(menuFactory)
         {
-            PhotonNetwork.LeaveLobby();
-        }
-    
-        PhotonNetwork.JoinRoom(roomName);
-    }
-
-
-    void ClearRoomListView()
-    {
-        foreach (var roomListGameObject in _roomListGameObjects.Values)
-        {
-            Object.Destroy(roomListGameObject.gameObject);
-        }
-        
-        _roomListGameObjects.Clear();
-    }
-
-
-    private void OnBackButtonClicked()
-    {
-        if (PhotonNetwork.InLobby)
-        {
-            PhotonNetwork.LeaveLobby();
+            _networkManager = networkManager;
         }
 
-        StateMachine.SetState<MainMenuState>();
-    }
-
-    private void UpdatePlayersList(List<RoomInfo> roomList)
-    {
-        ClearRoomListView();
-
-        foreach (var room in roomList)
+        protected override void OnEnter()
         {
-            if (!room.IsOpen || !room.IsVisible || room.RemovedFromList)
+            _roomListMenu = MenuFactory.CreateMenuWindow<RoomListMenu>();
+        
+            _networkManager.OnRoomListUpdateEvent += UpdatePlayersList;
+            _roomListMenu.OnClickBackButton += OnBackButtonClicked;
+        }
+
+        protected override void OnExit()
+        {
+            Object.Destroy(_roomListMenu.gameObject);
+        
+            _networkManager.OnRoomListUpdateEvent -= UpdatePlayersList;
+            _roomListMenu.OnClickBackButton -= OnBackButtonClicked;
+        }
+
+        private static void OnJoinRoomButtonClicked(string roomName)
+        {
+            if (PhotonNetwork.InLobby)
             {
-                if (_cachedRoomList.ContainsKey(room.Name))
+                PhotonNetwork.LeaveLobby();
+            }
+    
+            PhotonNetwork.JoinRoom(roomName);
+        }
+
+
+        void ClearRoomListView()
+        {
+            foreach (var roomListGameObject in _roomListGameObjects.Values)
+            {
+                Object.Destroy(roomListGameObject.gameObject);
+            }
+        
+            _roomListGameObjects.Clear();
+        }
+
+
+        private void OnBackButtonClicked()
+        {
+            if (PhotonNetwork.InLobby)
+            {
+                PhotonNetwork.LeaveLobby();
+            }
+
+            StateMachine.SetState<MainMenuState>();
+        }
+
+        private void UpdatePlayersList(List<RoomInfo> roomList)
+        {
+            ClearRoomListView();
+
+            foreach (var room in roomList)
+            {
+                if (!room.IsOpen || !room.IsVisible || room.RemovedFromList)
                 {
-                    _cachedRoomList.Remove(room.Name);
+                    if (_cachedRoomList.ContainsKey(room.Name))
+                    {
+                        _cachedRoomList.Remove(room.Name);
+                    }
+                }
+                else
+                {
+                    _cachedRoomList[room.Name] = room;
                 }
             }
-            else
+
+            foreach (RoomInfo room in _cachedRoomList.Values)
             {
-                _cachedRoomList[room.Name] = room;
+                RoomListItem roomListItem = _roomListMenu.CreateRoomListItem();
+                roomListItem.SetUp(room);
+
+                roomListItem.OnClickJoinRoom += () => OnJoinRoomButtonClicked(room.Name);
+
+                _roomListGameObjects.Add(room.Name, roomListItem);
             }
-        }
-
-        foreach (RoomInfo room in _cachedRoomList.Values)
-        {
-            RoomListItem roomListItem = _roomListMenu.CreateRoomListItem();
-            roomListItem.SetUp(room);
-
-            roomListItem.OnClickJoinRoom += () => OnJoinRoomButtonClicked(room.Name);
-
-            _roomListGameObjects.Add(room.Name, roomListItem);
         }
     }
 }
