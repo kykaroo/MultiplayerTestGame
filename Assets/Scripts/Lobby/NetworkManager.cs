@@ -18,15 +18,11 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         print(PhotonNetwork.LocalPlayer.NickName + " is connected to photon");
         PhotonNetwork.AutomaticallySyncScene = true;
     }
-
-    public override void OnConnected() => print("Connected to internet");
-
-    public override void OnCreatedRoom() => print(PhotonNetwork.CurrentRoom.Name + " is created");
-
+    
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
         print(message);
-
+        
         var roomName = $"Room {Random.Range(1000, 10000)}";
 
         var roomOptions = new RoomOptions
@@ -35,7 +31,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         };
         PhotonNetwork.CreateRoom(roomName, roomOptions);
     }
-
+    
     public override void OnJoinedRoom() => OnJoinedRoomEvent?.Invoke();
 
     public override void OnJoinRoomFailed(short s, string room) => print($"Room \"{room}\" does not exist");
