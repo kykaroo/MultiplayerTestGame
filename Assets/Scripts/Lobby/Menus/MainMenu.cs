@@ -11,10 +11,6 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private Button roomListButton;
     [SerializeField] private Button optionsButton;
     
-    [SerializeField] private Menu menu;
-    
-    public Menu Menu => menu;
-    
     public event Action OnClickCreateRoom;
     public event Action OnClickRandomRoom;
     public event Action OnClickJoinById;

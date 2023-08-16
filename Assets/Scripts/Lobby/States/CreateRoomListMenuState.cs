@@ -19,17 +19,21 @@ public class RoomListMenuState : MenuStateBase
 
     protected override void OnEnter()
     {
-        CreateRoomListMenu();
+        _roomListMenu = MenuFactory.CreateMenuWindow<RoomListMenu>();
+        
         _networkManager.OnRoomListUpdateEvent += UpdatePlayersList;
+        _roomListMenu.OnClickBackButton += OnBackButtonClicked;
     }
 
     protected override void OnExit()
     {
         Object.Destroy(_roomListMenu.gameObject);
-        _networkManager.OnRoomListUpdateEvent += UpdatePlayersList;
+        
+        _networkManager.OnRoomListUpdateEvent -= UpdatePlayersList;
+        _roomListMenu.OnClickBackButton -= OnBackButtonClicked;
     }
 
-    internal static void OnJoinRoomButtonClicked(string roomName)
+    private static void OnJoinRoomButtonClicked(string roomName)
     {
         if (PhotonNetwork.InLobby)
         {
@@ -48,12 +52,6 @@ public class RoomListMenuState : MenuStateBase
         }
         
         _roomListGameObjects.Clear();
-    }
-
-    private void CreateRoomListMenu()
-    {
-        _roomListMenu = MenuFactory.CreateMenuWindow<RoomListMenu>();
-        _roomListMenu.OnClickBackButton += OnBackButtonClicked;
     }
 
 

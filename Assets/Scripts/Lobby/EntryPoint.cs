@@ -20,7 +20,7 @@ public class EntryPoint : MonoBehaviour
     {
         _stateMachine = new MenuStateMachine(new Dictionary<Type, IMenuState>()
         {
-            { typeof(LoginMenuState), new LoginMenuState(menuFactory) },
+            { typeof(LoginMenuState), new LoginMenuState(menuFactory, networkManager) },
             { typeof(MainMenuState), new MainMenuState(menuFactory) },
             { typeof(JoinRandomRoomState), new JoinRandomRoomState(menuFactory) },
             { typeof(CreateRoomMenuState), new CreateRoomMenuState(menuFactory) },

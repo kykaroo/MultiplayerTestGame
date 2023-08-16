@@ -6,16 +6,9 @@ using UnityEngine.UI;
 public class RoomListMenu : MonoBehaviour
 {
     [SerializeField] private Button backButton;
-
     [SerializeField] private Transform roomListContent;
     
-    [SerializeField] private Menu menu;
-    
     private RoomListItem _roomListEntryPrefab;
-
-    // public GameObject roomListContent => RoomListContent;
-    // public GameObject RoomListEntryPrefab => _roomListEntryPrefab;
-    public Menu Menu => menu;
 
     public event Action OnClickBackButton;
 

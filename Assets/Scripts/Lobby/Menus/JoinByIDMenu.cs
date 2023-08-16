@@ -10,10 +10,7 @@ public class JoinByIDMenu : MonoBehaviour
     [SerializeField] private Button joinButton;
     [SerializeField] private Button backButton;
     
-    [SerializeField] private Menu menu;
-    
     public string RoomName => roomNameInputField.text;
-    public Menu Menu => menu;
 
     public event Action OnClickJoin;
     public event Action OnClickBack;

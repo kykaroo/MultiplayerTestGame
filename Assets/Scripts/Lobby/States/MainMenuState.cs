@@ -11,17 +11,8 @@ public class MainMenuState : MenuStateBase
 
     protected override void OnEnter()
     {
-        CreateMainMenu();
-    }
-
-    protected override void OnExit()
-    {
-        Object.Destroy(_mainMenu.gameObject);
-    }
-
-    private void CreateMainMenu()
-    {
         _mainMenu = MenuFactory.CreateMenuWindow<MainMenu>();
+        
         _mainMenu.OnClickCreateRoom += OnMainMenuCreateRoomButtonClicked;
         _mainMenu.OnClickExit += Application.Quit;
         _mainMenu.OnClickRoomList += OnShowRoomListButtonClicked;
@@ -30,6 +21,18 @@ public class MainMenuState : MenuStateBase
         _mainMenu.OnClickOptions += OnOptionsButtonClicked;
     }
 
+    protected override void OnExit()
+    {
+        Object.Destroy(_mainMenu.gameObject);
+        
+        _mainMenu.OnClickCreateRoom -= OnMainMenuCreateRoomButtonClicked;
+        _mainMenu.OnClickExit -= Application.Quit;
+        _mainMenu.OnClickRoomList -= OnShowRoomListButtonClicked;
+        _mainMenu.OnClickRandomRoom -= OnJoinRandomRoomButtonClicked;
+        _mainMenu.OnClickJoinById -= OnClickJoinById;
+        _mainMenu.OnClickOptions -= OnOptionsButtonClicked;
+    }
+    
     private void OnClickJoinById()
     {
         StateMachine.SetState<JoinByIDMenuState>();

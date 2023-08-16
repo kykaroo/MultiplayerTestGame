@@ -9,19 +9,9 @@ public class InsideRoomMenu : MonoBehaviour
     private PlayerListItem _playerListPrefab;
     [SerializeField] public Transform playerListContent;
     [SerializeField] public GameObject startGameButton;
-
     [SerializeField] private Button leaveButton;
     [SerializeField] private Button startButton;
-    
     [SerializeField] public TextMeshProUGUI roomInfoText;
-    
-    [SerializeField] private Menu menu;
-
-    // public string RoomInfo => roomInfoText.text;
-    // public GameObject PlayerListPrefab => playerListPrefab;
-    // public GameObject PlayerListContent => playerListContent;
-    // public GameObject StartGameButton => startGameButton;
-    public Menu Menu => menu;
 
     public event Action OnClickLeave;
     public event Action OnClickStartGame;

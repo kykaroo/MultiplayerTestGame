@@ -5,26 +5,28 @@ using UnityEngine;
 public class LoginMenuState : MenuStateBase
 {
     private LoginMenu _loginMenu;
+    private readonly NetworkManager _networkManager;
 
-    public LoginMenuState(MenuFactory menuFactory) : base(menuFactory)
+    public LoginMenuState(MenuFactory menuFactory, NetworkManager networkManager) : base(menuFactory)
     {
+        _networkManager = networkManager;
     }
 
     protected override void OnEnter()
     {
-        CreateLoginMenu();
+        _loginMenu = MenuFactory.CreateMenuWindow<LoginMenu>();
+        
+        _loginMenu.OnClickLogin += OnLoginButtonClicked;
+        _networkManager.OnConnectedToMasterServer += OnConnectedToMaster;
         // TODO: загрузить логин пароль если есть и попробовать войти
     }
 
     protected override void OnExit()
     {
         Object.Destroy(_loginMenu.gameObject);
-    }
-
-    private void CreateLoginMenu()
-    {
-        _loginMenu = MenuFactory.CreateMenuWindow<LoginMenu>();
-        _loginMenu.OnClickLogin += OnLoginButtonClicked;
+        
+        _loginMenu.OnClickLogin -= OnLoginButtonClicked;
+        _networkManager.OnConnectedToMasterServer -= OnConnectedToMaster;
     }
 
     private void OnLoginButtonClicked()
@@ -34,19 +36,17 @@ public class LoginMenuState : MenuStateBase
         {
             PhotonNetwork.LocalPlayer.NickName = playerName;
             PhotonNetwork.ConnectUsingSettings();
+            _loginMenu.ConnectingText.gameObject.SetActive(true);
         }
         else
         {
             Debug.Log("Player name is invalid!");
         }
+    }
 
-        if (PhotonNetwork.IsConnected)
-        {
-            StateMachine.SetState<MainMenuState>();
-        }
-        else
-        {
-            // TODO: StateMachine.SetState<ErrorLoginState>();
-        }
+    private void OnConnectedToMaster()
+    {
+        StateMachine.SetState<MainMenuState>(); 
+        // TODO: StateMachine.SetState<ErrorLoginState>();
     }
 }

@@ -14,13 +14,15 @@ public class InsideRoomMenuState : MenuStateBase
 
     protected override void OnEnter()
     {
-        CreateInsideRoomMenu();
+        _insideRoomMenu = MenuFactory.CreateMenuWindow<InsideRoomMenu>();
         CreatePlayers();
         
         _networkManager.OnPlayerEnteredRoomEvent += OnPlayerEnteredRoom;
         _networkManager.OnPlayerLeftRoomEvent += OnPlayerLeftRoom;
         _networkManager.OnMasterClientSwitchedEvent += OnMasterClientSwitched;
         _networkManager.OnLeftRoomEvent += OnLeftRoom;
+        _insideRoomMenu.OnClickLeave += OnLeaveGameButtonClicked;
+        _insideRoomMenu.OnClickStartGame += OnStartGameButtonClicked;
     }
 
     public void OnLeftRoom()
@@ -33,15 +35,11 @@ public class InsideRoomMenuState : MenuStateBase
         _networkManager.OnPlayerEnteredRoomEvent -= OnPlayerEnteredRoom;
         _networkManager.OnPlayerLeftRoomEvent -= OnPlayerLeftRoom;
         _networkManager.OnMasterClientSwitchedEvent -= OnMasterClientSwitched;
+        _networkManager.OnLeftRoomEvent -= OnLeftRoom;
+        _insideRoomMenu.OnClickLeave -= OnLeaveGameButtonClicked;
+        _insideRoomMenu.OnClickStartGame -= OnStartGameButtonClicked;
 
         Object.Destroy(_insideRoomMenu.gameObject);
-    }
-
-    private void CreateInsideRoomMenu()
-    {
-        _insideRoomMenu = MenuFactory.CreateMenuWindow<InsideRoomMenu>();
-        _insideRoomMenu.OnClickLeave += OnLeaveGameButtonClicked;
-        _insideRoomMenu.OnClickStartGame += OnStartGameButtonClicked;
     }
 
     private void CreatePlayers()

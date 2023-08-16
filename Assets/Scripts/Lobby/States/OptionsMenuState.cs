@@ -11,18 +11,16 @@ public class OptionsMenuState : MenuStateBase
 
     protected override void OnEnter()
     {
-        CreateOptionsMenu();
+        _optionsMenu = MenuFactory.CreateMenuWindow<OptionsMenu>();
+        
+        _optionsMenu.OnClickBack += OnBackButtonClicked;
     }
 
     protected override void OnExit()
     {
         Object.Destroy(_optionsMenu.gameObject);
-    }
-
-    private void CreateOptionsMenu()
-    {
-        _optionsMenu = MenuFactory.CreateMenuWindow<OptionsMenu>();
-        _optionsMenu.OnClickBack += OnBackButtonClicked;
+        
+        _optionsMenu.OnClickBack -= OnBackButtonClicked;
     }
 
 

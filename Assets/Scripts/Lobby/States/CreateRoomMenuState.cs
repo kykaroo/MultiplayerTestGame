@@ -12,21 +12,19 @@ public class CreateRoomMenuState : MenuStateBase
 
     protected override void OnEnter()
     {
-        CreateCreateRoomMenu();
+        _createRoomMenu = MenuFactory.CreateMenuWindow<CreateRoomMenu>();
+        
+        _createRoomMenu.OnClickCreateRoom += OnRoomCreateButtonClicked;
+        _createRoomMenu.OnClickBack += OnBackButtonClicked;
     }
 
     protected override void OnExit()
     {
         Object.Destroy(_createRoomMenu.gameObject);
+        
+        _createRoomMenu.OnClickCreateRoom -= OnRoomCreateButtonClicked;
+        _createRoomMenu.OnClickBack -= OnBackButtonClicked;
     }
-
-    private void CreateCreateRoomMenu()
-    {
-        _createRoomMenu = MenuFactory.CreateMenuWindow<CreateRoomMenu>();
-        _createRoomMenu.OnClickCreateRoom += OnRoomCreateButtonClicked;
-        _createRoomMenu.OnClickBack += OnBackButtonClicked;
-    }
-
     public void OnRoomCreateButtonClicked()
     {
         var roomName = _createRoomMenu.RoomName;

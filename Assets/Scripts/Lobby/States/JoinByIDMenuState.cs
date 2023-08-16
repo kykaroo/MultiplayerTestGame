@@ -1,5 +1,6 @@
-﻿using Photon.Pun;
-using UnityEngine;
+﻿using System;
+using Photon.Pun;
+using Object = UnityEngine.Object;
 
 public class JoinByIDMenuState : MenuStateBase
 {
@@ -11,19 +12,16 @@ public class JoinByIDMenuState : MenuStateBase
 
     protected override void OnEnter()
     {
-        CreateJoinByIDMenu();
+        _joinByIDMenu = MenuFactory.CreateMenuWindow<JoinByIDMenu>();
+        _joinByIDMenu.OnClickJoin += () => OnJoinRoomButtonClicked(_joinByIDMenu.RoomName);
+        _joinByIDMenu.OnClickBack += OnBackButtonClicked;
     }
 
     protected override void OnExit()
     {
         Object.Destroy(_joinByIDMenu.gameObject);
-    }
-
-    private void CreateJoinByIDMenu()
-    {
-        _joinByIDMenu = MenuFactory.CreateMenuWindow<JoinByIDMenu>();
-        _joinByIDMenu.OnClickJoin += () => OnJoinRoomButtonClicked(_joinByIDMenu.RoomName);
-        _joinByIDMenu.OnClickBack += OnBackButtonClicked;
+        
+        _joinByIDMenu.OnClickBack -= OnBackButtonClicked;
     }
 
     private void OnJoinRoomButtonClicked(string roomName)

@@ -6,10 +6,6 @@ public class OptionsMenu : MonoBehaviour
 {
     [SerializeField] private Button backButton;
     
-    [SerializeField] private Menu menu;
-    
-    public Menu Menu => menu;
-    
     public event Action OnClickBack;
 
     protected virtual void Back()

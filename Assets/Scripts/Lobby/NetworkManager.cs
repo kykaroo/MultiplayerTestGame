@@ -12,10 +12,11 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public event Action<Player> OnPlayerEnteredRoomEvent;
     public event Action<Player> OnPlayerLeftRoomEvent;
     public event Action<Player> OnMasterClientSwitchedEvent;
+    public event Action OnConnectedToMasterServer;
 
     public override void OnConnectedToMaster()
     {
-        print(PhotonNetwork.LocalPlayer.NickName + " is connected to photon");
+        OnConnectedToMasterServer?.Invoke();
         PhotonNetwork.AutomaticallySyncScene = true;
     }
     

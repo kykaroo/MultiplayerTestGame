@@ -11,7 +11,10 @@ internal class JoinRandomRoomState : MenuStateBase
 
     protected override void OnEnter()
     {
-        CreateJoinRandomRoomMenu();
+        _joinRandomRoomMenu = MenuFactory.CreateMenuWindow<JoinRandomRoomMenu>();
+        
+        _joinRandomRoomMenu.OnClickBack += OnBackButtonClicked;
+        
         PhotonNetwork.JoinRandomRoom();
         // Sample
         // PhotonNetwork.OnDisconnectFromRoom += OnDisconnect;
@@ -20,14 +23,11 @@ internal class JoinRandomRoomState : MenuStateBase
     protected override void OnExit()
     {
         Object.Destroy(_joinRandomRoomMenu.gameObject);
+        
+        _joinRandomRoomMenu.OnClickBack -= OnBackButtonClicked;
+        
         // Sample
         // PhotonNetwork.OnDisconnectFromRoom -= OnDisconnect;
-    }
-
-    private void CreateJoinRandomRoomMenu()
-    {
-        _joinRandomRoomMenu = MenuFactory.CreateMenuWindow<JoinRandomRoomMenu>();
-        _joinRandomRoomMenu.OnClickBack += OnBackButtonClicked;
     }
 
     // Sample

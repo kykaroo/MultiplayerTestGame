@@ -7,14 +7,10 @@ public class CreateRoomMenu : MonoBehaviour
 {
     [SerializeField] private Button createRoomButton;
     [SerializeField] private Button backButton;
-
     [SerializeField] private TMP_InputField roomNameInputField; [SerializeField] private TMP_InputField maxPlayersInputField;
-    
-    [SerializeField] private Menu menu;
 
     public string RoomName => roomNameInputField.text;
     public string MaxPlayer => maxPlayersInputField.text;
-    public Menu Menu => menu;
 
     public event Action OnClickCreateRoom;
     public event Action OnClickBack;
