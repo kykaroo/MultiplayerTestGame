@@ -26,12 +26,12 @@ namespace Lobby.Menus
 
         private void Awake()
         {
-            _roomListEntryPrefab = Resources.Load<RoomListItem>("ItemForListPrefabs/RoomListItemPrefab");
+            _roomListEntryPrefab = Resources.Load<RoomListItem>("Lobby/ItemForListPrefabs/RoomListItemPrefab");
         }
 
         public RoomListItem CreateRoomListItem()
         {
-            RoomListItem roomListEntryGameObject = Instantiate(_roomListEntryPrefab, roomListContent, true);
+            var roomListEntryGameObject = Instantiate(_roomListEntryPrefab, roomListContent, true);
             roomListEntryGameObject.transform.localScale = Vector3.one;
             roomListEntryGameObject.transform.localPosition = roomListContent.position;
             return roomListEntryGameObject;

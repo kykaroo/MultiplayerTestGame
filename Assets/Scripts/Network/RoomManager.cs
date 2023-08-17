@@ -35,7 +35,7 @@ namespace Network
         {
             if (scene.buildIndex == 2)
             {
-                PhotonNetwork.Instantiate(Path.Combine("PhotonPrafabs", "PlayerManager"), Vector3.zero, Quaternion.identity);
+                PhotonNetwork.Instantiate("Game/PhotonPrefabs/PlayerManager", Vector3.zero, Quaternion.identity);
             }
         }
     }

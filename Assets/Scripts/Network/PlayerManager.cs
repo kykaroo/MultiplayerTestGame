@@ -25,7 +25,7 @@ namespace Network
         void CreateController()
         {
             Transform spawnPoint = SpawnManager.Instance.GetSpawnPoint();
-            _controller = PhotonNetwork.Instantiate(Path.Combine("PhotonPrafabs", "PlayerController"), spawnPoint.position, spawnPoint.rotation, 0, new object[] {PV.ViewID});
+            _controller = PhotonNetwork.Instantiate("Game/PhotonPrefabs/PlayerController", spawnPoint.position, spawnPoint.rotation, 0, new object[] {PV.ViewID});
         }
 
         private void Start()

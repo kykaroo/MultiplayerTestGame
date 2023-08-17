@@ -3,6 +3,7 @@ using Game.ItemSystem.Weapon;
 using Network;
 using Photon.Pun;
 using TMPro;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
@@ -267,6 +268,14 @@ namespace Game.Player
         private void Die()
         {
             PlayerManager.Die();
+        }
+
+        private void InstantiateItems()
+        {
+            foreach (var item in items)
+            {
+                PhotonNetwork.Instantiate("", gameObject.transform.position, quaternion.identity);
+            }
         }
     }
 }

@@ -24,6 +24,8 @@ namespace Lobby.States
         protected override void OnEnter()
         {
             _roomListMenu = MenuFactory.CreateMenuWindow<RoomListMenu>();
+            _roomListGameObjects = new();
+            _cachedRoomList = new();
         
             _networkManager.OnRoomListUpdateEvent += UpdatePlayersList;
             _roomListMenu.OnClickBackButton += OnBackButtonClicked;
@@ -88,9 +90,9 @@ namespace Lobby.States
                 }
             }
 
-            foreach (RoomInfo room in _cachedRoomList.Values)
+            foreach (var room in _cachedRoomList.Values)
             {
-                RoomListItem roomListItem = _roomListMenu.CreateRoomListItem();
+                var roomListItem = _roomListMenu.CreateRoomListItem();
                 roomListItem.SetUp(room);
 
                 roomListItem.OnClickJoinRoom += () => OnJoinRoomButtonClicked(room.Name);

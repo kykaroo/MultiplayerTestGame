@@ -13,17 +13,7 @@ namespace Lobby.Items
         [SerializeField] private Button joinRoomButton;
     
         public event Action OnClickJoinRoom;
-    
-        /*public string RoomName
-    {
-        set => roomName.text = value;
-    }*/
-    
-        /*public string RoomPlayers
-    {
-        set => roomPlayers.text = value;
-    }*/
-    
+        
         protected virtual void JoinRoom()
         {
             OnClickJoinRoom?.Invoke();

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Bullet
   projectilePrefab: {fileID: 4767866311701904877, guid: 90dad7bcc330ce74c916f8b1c14c55cb, type: 3}
-  projectilePrefabPath: ProjectTileGun/Bullet
+  projectilePrefabPath: Game/Projectiles/Bullet
   impactPrefab: {fileID: 3129625447603714859, guid: e4ecb6db475f08a4b9a722290c33df96, type: 3}
   damage: 50
   explosionRadius: 0

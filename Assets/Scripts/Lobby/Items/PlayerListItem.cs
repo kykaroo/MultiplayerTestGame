@@ -11,12 +11,6 @@ namespace Lobby.Items
         [SerializeField] private TextMeshProUGUI playerName;
 
         private Player _player;
-        // public GameObject PlayerIndicator => playerIndicator;
-    
-        /*public string PlayerName
-    {
-        set => playerName.text = value;
-    }*/
 
         public void SetUp(Player player)
         {

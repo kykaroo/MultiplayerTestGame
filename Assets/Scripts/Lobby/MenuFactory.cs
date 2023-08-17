@@ -9,7 +9,7 @@ namespace Lobby
     
         public T CreateMenuWindow<T>() where T : MonoBehaviour
         {
-            T menuWindowPrefab = Resources.Load<T>($"MenuPrefabs/{Convert.ToString(typeof(T).Name)}");
+            T menuWindowPrefab = Resources.Load<T>($"Lobby/MenuPrefabs/{Convert.ToString(typeof(T).Name)}");
             T menuWindow = Instantiate(menuWindowPrefab, rootForUI);
             return menuWindow;
         }

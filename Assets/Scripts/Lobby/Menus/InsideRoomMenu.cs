@@ -37,7 +37,7 @@ namespace Lobby.Menus
 
         private void Awake()
         {
-            _playerListPrefab = Resources.Load<PlayerListItem>("ItemForListPrefabs/PlayerListItemPrefab");
+            _playerListPrefab = Resources.Load<PlayerListItem>("Lobby/ItemForListPrefabs/PlayerListItemPrefab");
         }
 
         public PlayerListItem CreatePlayerListItem()
