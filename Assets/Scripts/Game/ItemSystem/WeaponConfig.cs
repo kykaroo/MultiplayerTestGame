@@ -6,7 +6,6 @@ namespace Game.ItemSystem
     [CreateAssetMenu(menuName = "FPS/New Gun")]
     public class WeaponConfig : ItemInfo
     {
-        [SerializeField] private float damage;
         [SerializeField] private ProjectileConfig projectileType;
         [SerializeField] private float shootForce;
         [SerializeField] private float upwardForce;
@@ -18,8 +17,6 @@ namespace Game.ItemSystem
         [SerializeField] private int magazineSize;
         [SerializeField] private bool allowButtonHold;
         [SerializeField] private GameObject muzzleFlash;
-
-        public float Damage => damage;
         
         public ProjectileConfig ProjectileType => projectileType;
 
@@ -35,14 +32,12 @@ namespace Game.ItemSystem
 
         public float TimeBetweenShoots => timeBetweenShoots;
 
-        public float BulletPerTap => bulletPerTap;
+        public int BulletPerTap => bulletPerTap;
 
         public int MagazineSize => magazineSize;
 
         public bool AllowButtonHold => allowButtonHold;
 
         public GameObject MuzzleFlash => muzzleFlash;
-
-        public string ItemName => itemName;
     }
 }

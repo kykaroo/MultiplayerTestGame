@@ -324,7 +324,9 @@ MonoBehaviour:
   - {fileID: 8023644282157281261}
   healthBarGameObject: {fileID: 6164219184225244357}
   healthBarImage: {fileID: 4991855854882249340}
-  ui: {fileID: 7945044198890424509}
+  HUD: {fileID: 7945044198890424509}
+  reloadIndicator: {fileID: 4351980726735423749}
+  ammunitionDisplay: {fileID: 8982659628231981778}
   itemIndex: 0
   grounded: 0
 --- !u!114 &6453041631635206590
@@ -892,10 +894,10 @@ RectTransform:
   m_Father: {fileID: 2621768907024776824}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -635, y: -449}
-  m_SizeDelta: {x: 396.6691, y: 86.3081}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 325, y: 91}
+  m_SizeDelta: {x: 396.66907, y: 86.308105}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8713376972504687182
 CanvasRenderer:
@@ -1064,12 +1066,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemGameObject: {fileID: 3224911755753436233}
   itemInfo: {fileID: 11400000, guid: 9f091773538805d4db8c5aeaec7cec91, type: 2}
-  photonView: {fileID: 4185071631646529921}
   fpsCam: {fileID: 1575423208570371025}
   attackPoint: {fileID: 8694955557935623956}
   allowInvoke: 1
-  ammunitionDisplay: {fileID: 8982659628231981778}
-  reloadIndicator: {fileID: 4351980726735423749}
 --- !u!1 &7945044198890424509
 GameObject:
   m_ObjectHideFlags: 0

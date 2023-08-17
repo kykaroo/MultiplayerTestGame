@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Game.ItemSystem
@@ -10,9 +11,11 @@ namespace Game.ItemSystem
     public abstract class UsableItem : MonoBehaviour
     {
         public GameObject itemGameObject;
-    
+        
         public virtual void M1ButtonAction() { }
         public virtual void M2ButtonAction() { }
         public virtual void RButtonAction() { }
+
+        public virtual void OnItemChange() { }
     }
 }

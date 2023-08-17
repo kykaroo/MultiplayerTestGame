@@ -1,6 +1,8 @@
 using Game.ItemSystem;
+using Game.ItemSystem.Weapon;
 using Network;
 using Photon.Pun;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
@@ -19,7 +21,9 @@ namespace Game.Player
 
         [SerializeField] private GameObject healthBarGameObject;
         [SerializeField] private Image healthBarImage;
-        [SerializeField] private GameObject ui;
+        [SerializeField] private GameObject HUD;
+        [SerializeField] private Image reloadIndicator;
+        public TextMeshProUGUI ammunitionDisplay;
 
         [SerializeField] private int itemIndex;
         private int _previousItemIndex = -1;
@@ -35,6 +39,7 @@ namespace Game.Player
         private Vector3 _moveAmount;
         private const float MaxHealth = 100f;
         private float _currentHealth = MaxHealth;
+        private float _currentReloadTime;
 
         private PhotonView PV;
 
@@ -56,7 +61,7 @@ namespace Game.Player
             {
                 Destroy(GetComponentInChildren<Camera>().gameObject);
                 Destroy(playerBody);
-                Destroy(ui);
+                Destroy(HUD);
                 return;
             }
         
@@ -71,9 +76,32 @@ namespace Game.Player
             Look();
             Move();
             Jump();
-        
+            InputCheck();
+
             EquipItemCheck();
             FallOffMapCheck();
+
+            if (reloadIndicator.fillAmount >= 1f && reloadIndicator.gameObject.activeSelf)
+            {
+                reloadIndicator.gameObject.SetActive(false);
+            }
+            else
+            {
+                reloadIndicator.fillAmount += 1f / _currentReloadTime * Time.deltaTime;
+            }
+        }
+
+        private void InputCheck()
+        {
+            if (Input.GetKey(KeyCode.Mouse0))
+            {
+                items[itemIndex].M1ButtonAction();
+            }
+
+            if (Input.GetKeyDown(KeyCode.R))
+            { 
+                items[itemIndex].RButtonAction();         
+            }
         }
 
         private void EquipItemCheck()
@@ -111,16 +139,6 @@ namespace Game.Player
                         EquipItem(itemIndex - 1);
                     }
                 }
-            }
-
-            if (Input.GetKey(KeyCode.Mouse0))
-            {
-                items[itemIndex].M1ButtonAction();
-            }
-
-            if (Input.GetKeyDown(KeyCode.R))
-            { 
-                items[itemIndex].RButtonAction();         
             }
         }
 
@@ -182,10 +200,16 @@ namespace Game.Player
 
             if (_previousItemIndex != -1)
             {
+                items[_previousItemIndex].GetComponent<BulletWeapon>().OnReload -= WeaponReload;
+                items[_previousItemIndex].GetComponent<BulletWeapon>().OnAmmunitionChange -= UpdateAmmunitionDisplay;
                 items[_previousItemIndex].itemGameObject.SetActive(false);
             }
 
             _previousItemIndex = itemIndex;
+            
+            items[itemIndex].GetComponent<BulletWeapon>().OnReload += WeaponReload;
+            items[itemIndex].GetComponent<BulletWeapon>().OnAmmunitionChange += UpdateAmmunitionDisplay;
+            items[itemIndex].OnItemChange();
 
             if (PV.IsMine)
             {
@@ -193,6 +217,22 @@ namespace Game.Player
                 hash.Add("itemIndex", itemIndex);
                 PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
             }
+        }
+
+        private void UpdateAmmunitionDisplay(int magazineSize, int bulletsLeft, int bulletPerTap)
+        {
+            if (ammunitionDisplay != null)
+            {
+                ammunitionDisplay.text =
+                    $"{bulletsLeft / bulletPerTap} / {magazineSize / bulletPerTap}";
+            }
+        }
+
+        private void WeaponReload(float reloadTime)
+        {
+            _currentReloadTime = reloadTime;
+            reloadIndicator.gameObject.SetActive(true);
+            reloadIndicator.fillAmount = 0f;
         }
 
         public override void OnPlayerPropertiesUpdate(Photon.Realtime.Player targetPlayer, Hashtable changedProps)

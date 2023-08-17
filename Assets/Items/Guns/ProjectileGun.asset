@@ -20,7 +20,7 @@ MonoBehaviour:
   timeBetweenShooting: 1
   spread: 1
   reloadTime: 2
-  timeBetweenShoots: 0.5
+  timeBetweenShoots: 1
   bulletPerTap: 1
   magazineSize: 10
   allowButtonHold: 1

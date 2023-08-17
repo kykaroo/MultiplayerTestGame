@@ -7,6 +7,7 @@ namespace Game.ItemSystem
     public class ProjectileConfig : ItemInfo
     {
         [SerializeField] private GameObject projectilePrefab;
+        [SerializeField] private string projectilePrefabPath;
         [SerializeField] private GameObject impactPrefab;
         [SerializeField] private float damage;
         [SerializeField] private float explosionRadius;
@@ -24,7 +25,7 @@ namespace Game.ItemSystem
         public float ExplosionDamageFalloff => explosionDamageFalloff;
 
         public float Velocity => velocity;
-
-        public string ItemName => itemName;
+        
+        public string ProjectilePrefabPath => projectilePrefabPath;
     }
 }

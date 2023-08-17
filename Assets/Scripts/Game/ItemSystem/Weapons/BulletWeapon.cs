@@ -1,13 +1,13 @@
+using System;
 using Photon.Pun;
-using TMPro;
+using UnityEditor;
 using UnityEngine;
-using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 namespace Game.ItemSystem.Weapon
 {
     public class BulletWeapon : UsableItem<WeaponConfig>
     {
-        public PhotonView photonView;
         public Camera fpsCam;
         public Transform attackPoint;
         private int _bulletsLeft;
@@ -16,10 +16,10 @@ namespace Game.ItemSystem.Weapon
         private bool _readyToShot;
         private bool _reloading;
         public bool allowInvoke = true;
-        public TextMeshProUGUI ammunitionDisplay;
-        public Image reloadIndicator;
-
-
+        
+        public event Action<float> OnReload;
+        public event Action<int, int, int> OnAmmunitionChange;
+        
         public override void M1ButtonAction()
         {
             _shooting = itemInfo.AllowButtonHold ? Input.GetKey(KeyCode.Mouse0) : Input.GetKeyDown(KeyCode.Mouse0);
@@ -45,26 +45,15 @@ namespace Game.ItemSystem.Weapon
             }
         }
 
+        public override void OnItemChange()
+        {
+            OnAmmunitionChange?.Invoke(itemInfo.MagazineSize, _bulletsLeft, itemInfo.BulletPerTap);
+        }
+
         private void Awake()
         {
             _bulletsLeft = itemInfo.MagazineSize;
             _readyToShot = true;
-        }
-
-        private void Update()
-        {
-            reloadIndicator.fillAmount += 1f / itemInfo.ReloadTime * Time.deltaTime;
-            
-            if (reloadIndicator.fillAmount >= 1f && reloadIndicator.gameObject.activeSelf)
-            {
-                reloadIndicator.gameObject.SetActive(false);
-            }
-
-            if (ammunitionDisplay != null)
-            {
-                ammunitionDisplay.text =
-                    $"{_bulletsLeft / itemInfo.BulletPerTap} / {itemInfo.MagazineSize / itemInfo.BulletPerTap}";
-            }
         }
 
         private void Shoot()
@@ -85,7 +74,7 @@ namespace Game.ItemSystem.Weapon
             var vector3 = directionWithSpread.normalized * itemInfo.ShootForce +
                           fpsCam.transform.up * itemInfo.UpwardForce;
 
-            var currentBullet = PhotonNetwork.Instantiate("ProjectTileGun/Bullet", position, Quaternion.identity);
+            var currentBullet = PhotonNetwork.Instantiate(itemInfo.ProjectileType.ProjectilePrefabPath, position, Quaternion.identity);
 
             currentBullet.transform.forward = directionWithSpread.normalized;
 
@@ -110,7 +99,10 @@ namespace Game.ItemSystem.Weapon
             if (_bulletsShot < itemInfo.BulletPerTap && _bulletsLeft > 0)
             {
                 Invoke(nameof(Shoot), itemInfo.TimeBetweenShoots);
+                OnAmmunitionChange?.Invoke(itemInfo.MagazineSize, _bulletsLeft, itemInfo.BulletPerTap);
             }
+            
+            OnAmmunitionChange?.Invoke(itemInfo.MagazineSize, _bulletsLeft, itemInfo.BulletPerTap);
         }
 
         private void ResetShot()
@@ -122,14 +114,16 @@ namespace Game.ItemSystem.Weapon
         private void Reload()
         {
             _reloading = true;
-            reloadIndicator.gameObject.SetActive(true);
-            reloadIndicator.fillAmount = 0f;
+            
+            OnReload?.Invoke(itemInfo.ReloadTime);
+            
             Invoke(nameof(ReloadFinished), itemInfo.ReloadTime);
         }
 
         private void ReloadFinished()
         {
             _bulletsLeft = itemInfo.MagazineSize;
+            OnAmmunitionChange?.Invoke(itemInfo.MagazineSize, _bulletsLeft, itemInfo.BulletPerTap);
             _reloading = false;
         }
     }
