@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Linq;
 using ExitGames.Client.Photon;
@@ -5,11 +6,15 @@ using Game.Player;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Network
 {
     public class PlayerManager : MonoBehaviour
     {
+        private RoomCamera _roomCamera;
+        private DeathCamera _deathCamera;
+
         private PhotonView PV;
 
         private GameObject _controller;
@@ -32,15 +37,15 @@ namespace Network
         {
             if (PV.IsMine)
             {
-                CreateController();
+                CreateRoomCamera();
             }
         }
 
-        public void Die()
+        public void Die(GameObject cameraHolder)
         {
             PhotonNetwork.Destroy(_controller);
-            CreateController();
-        
+            CreateDeathCam(cameraHolder);
+
             _deaths++;
 
             var hash = new Hashtable { { "deaths", _deaths } };
@@ -64,6 +69,48 @@ namespace Network
         public static PlayerManager Find(Player player)
         {
             return FindObjectsOfType<PlayerManager>().SingleOrDefault(x => Equals(x.PV.Owner, player));
+        }
+
+        private void CreateRoomCamera()
+        {
+            _roomCamera = Instantiate(Resources.Load<GameObject>("Game/Cams/RoomCamera"), RoomManager.Instance.LobbyCameraAnchor.position,
+                RoomManager.Instance.LobbyCameraAnchor.rotation).GetComponent<RoomCamera>();
+            
+            _roomCamera.OnJoinButtonClick += JoinGame;
+            _roomCamera.OnQuitButtonClick += QuitGame;
+        }
+        
+        private void CreateDeathCam(GameObject cameraHolder)
+        {
+            _deathCamera = Instantiate(Resources.Load<GameObject>("Game/Cams/DeathCam"), cameraHolder.transform.position,
+                Quaternion.identity).GetComponent<DeathCamera>();
+
+            _deathCamera.OnRespawnButtonClick += Respawn;
+            _deathCamera.OnQuitButtonClick += QuitGame;
+        }
+
+        private void Respawn()
+        {
+            _deathCamera.OnRespawnButtonClick -= Respawn;
+            _deathCamera.OnQuitButtonClick -= QuitGame;
+            
+            Destroy(_deathCamera.gameObject);
+            CreateController();
+        }
+
+        private void JoinGame()
+        {
+            _roomCamera.OnJoinButtonClick -= JoinGame;
+            _roomCamera.OnJoinButtonClick -= QuitGame;
+            
+            Destroy(_roomCamera.gameObject);
+            CreateController();
+        }
+
+        private void QuitGame()
+        {
+            PhotonNetwork.LeaveRoom();
+            SceneManager.LoadScene(0);
         }
     }
 }

@@ -47,8 +47,6 @@ namespace Lobby.States
 
         private void CreatePlayers()
         {
-            Debug.Log(PhotonNetwork.LocalPlayer.NickName + " joined to " + PhotonNetwork.CurrentRoom.Name);
-
             _insideRoomMenu.TryActivateStartButton();
 
             _insideRoomMenu.roomInfoText.text =

@@ -7,6 +7,10 @@ namespace Network
 {
     public class RoomManager : MonoBehaviourPunCallbacks
     {
+        [SerializeField] private Transform lobbyCameraAnchor;
+
+        public Transform LobbyCameraAnchor => lobbyCameraAnchor;
+        
         public static RoomManager Instance;
         private void Awake()
         {

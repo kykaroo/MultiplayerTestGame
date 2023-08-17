@@ -24,8 +24,6 @@ namespace Lobby
     
         public override void OnJoinRandomFailed(short returnCode, string message)
         {
-            print(message);
-        
             var roomName = $"Room {Random.Range(1000, 10000)}";
 
             var roomOptions = new RoomOptions

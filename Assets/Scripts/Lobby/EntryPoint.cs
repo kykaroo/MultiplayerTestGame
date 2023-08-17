@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Lobby.States;
+using Photon.Pun;
+using Photon.Realtime;
 using UnityEngine;
 
 namespace Lobby
@@ -15,8 +17,15 @@ namespace Lobby
         private void Start()
         {
             SetupStates();
-
-            _stateMachine.SetState<LoginMenuState>();
+            
+            if (PhotonNetwork.IsConnected)
+            {
+                _stateMachine.SetState<MainMenuState>();
+            }
+            else
+            {
+                _stateMachine.SetState<LoginMenuState>();
+            }
         }
 
         private void SetupStates()

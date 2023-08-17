@@ -1,3 +1,4 @@
+using System;
 using Game.ItemSystem;
 using Game.ItemSystem.Weapon;
 using Network;
@@ -68,6 +69,12 @@ namespace Game.Player
         
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
+        }
+
+        private void OnDestroy()
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
         }
 
         private void Update()
@@ -267,7 +274,7 @@ namespace Game.Player
 
         private void Die()
         {
-            PlayerManager.Die();
+            PlayerManager.Die(cameraHolder);
         }
 
         private void InstantiateItems()
