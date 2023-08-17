@@ -3,35 +3,32 @@ using Game.ItemSystem;
 using Game.ItemSystem.Weapon;
 using Network;
 using Photon.Pun;
-using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.UI;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 namespace Game.Player
 {
     public class PlayerController : MonoBehaviourPunCallbacks, IDamagable
     {
-        [SerializeField] private float mouseSensitivityX, mouseSensitivityY, sprintSpeed, walkSpeed, jumpForce, smoothTime;
-    
-        [SerializeField] private Rigidbody playerBody;
+        [SerializeField] private float mouseSensitivityX;
+        [SerializeField] private float mouseSensitivityY;
+        [SerializeField] private float sprintSpeed;
+        [SerializeField] private float walkSpeed;
+        [SerializeField] private float jumpForce;
+        [SerializeField] private float smoothTime;
 
-        [SerializeField] private GameObject cameraHolder;
+        [SerializeField] private Rigidbody playerBody;
+        [SerializeField] private GameObject itemHolder;
+        [SerializeField] private GameObject nickNameCanvas;
+
+        [SerializeField] private Transform cameraHolder;
+        [SerializeField] private UnityEngine.Camera playerCameraPrefab;
     
         [SerializeField] private UsableItem[] items;
 
-        [SerializeField] private GameObject healthBarGameObject;
-        [SerializeField] private Image healthBarImage;
-        [SerializeField] private GameObject HUD;
-        [SerializeField] private Image reloadIndicator;
-        public TextMeshProUGUI ammunitionDisplay;
-
         [SerializeField] private int itemIndex;
         private int _previousItemIndex = -1;
-
-        private PlayerManager PlayerManager;
-
 
         public bool grounded;
 
@@ -42,39 +39,39 @@ namespace Game.Player
         private const float MaxHealth = 100f;
         private float _currentHealth = MaxHealth;
         private float _currentReloadTime;
+        private bool _isDead;
+        private UnityEngine.Camera _camera;
+        private PlayerManager _playerManager;
 
         private PhotonView PV;
+
+        public event Action<float, float> OnHealthChange;
+        public event Action OnDeath;
+        public event Action<UsableItem> OnItemChange;
 
         private void Awake()
         {
             playerBody = GetComponent<Rigidbody>();
             PV = GetComponent<PhotonView>();
 
-            PlayerManager = PhotonView.Find((int)PV.InstantiationData[0]).GetComponent<PlayerManager>();
+            _playerManager = PhotonView.Find((int)PV.InstantiationData[0]).GetComponent<PlayerManager>();
         }
 
         private void Start()
         {
             if (PV.IsMine)
             {
+                _camera = Instantiate(playerCameraPrefab, cameraHolder);
                 EquipItem(0);
             }
             else
             {
-                Destroy(GetComponentInChildren<Camera>().gameObject);
                 Destroy(playerBody);
-                Destroy(HUD);
                 return;
             }
         
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
-        }
-
-        private void OnDestroy()
-        {
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
         }
 
         private void Update()
@@ -88,15 +85,6 @@ namespace Game.Player
 
             EquipItemCheck();
             FallOffMapCheck();
-
-            if (reloadIndicator.fillAmount >= 1f && reloadIndicator.gameObject.activeSelf)
-            {
-                reloadIndicator.gameObject.SetActive(false);
-            }
-            else
-            {
-                reloadIndicator.fillAmount += 1f / _currentReloadTime * Time.deltaTime;
-            }
         }
 
         private void InputCheck()
@@ -194,7 +182,7 @@ namespace Game.Player
             if (!PV.IsMine)
                 return;
         
-            playerBody.MovePosition(playerBody.position + transform.TransformDirection(_moveAmount)*Time.fixedDeltaTime);
+            playerBody.MovePosition(playerBody.position + transform.TransformDirection(_moveAmount) * Time.fixedDeltaTime);
         }
 
         void EquipItem(int index)
@@ -208,39 +196,22 @@ namespace Game.Player
 
             if (_previousItemIndex != -1)
             {
-                items[_previousItemIndex].GetComponent<BulletWeapon>().OnReload -= WeaponReload;
-                items[_previousItemIndex].GetComponent<BulletWeapon>().OnAmmunitionChange -= UpdateAmmunitionDisplay;
                 items[_previousItemIndex].itemGameObject.SetActive(false);
             }
 
             _previousItemIndex = itemIndex;
-            
-            items[itemIndex].GetComponent<BulletWeapon>().OnReload += WeaponReload;
-            items[itemIndex].GetComponent<BulletWeapon>().OnAmmunitionChange += UpdateAmmunitionDisplay;
+
+            OnItemChange?.Invoke(items[itemIndex]);
+
+            items[itemIndex].SetCamera(_camera);
             items[itemIndex].OnItemChange();
 
             if (PV.IsMine)
             {
-                Hashtable hash = new Hashtable();
+                var hash = new Hashtable();
                 hash.Add("itemIndex", itemIndex);
                 PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
             }
-        }
-
-        private void UpdateAmmunitionDisplay(int magazineSize, int bulletsLeft, int bulletPerTap)
-        {
-            if (ammunitionDisplay != null)
-            {
-                ammunitionDisplay.text =
-                    $"{bulletsLeft / bulletPerTap} / {magazineSize / bulletPerTap}";
-            }
-        }
-
-        private void WeaponReload(float reloadTime)
-        {
-            _currentReloadTime = reloadTime;
-            reloadIndicator.gameObject.SetActive(true);
-            reloadIndicator.fillAmount = 0f;
         }
 
         public override void OnPlayerPropertiesUpdate(Photon.Realtime.Player targetPlayer, Hashtable changedProps)
@@ -260,10 +231,7 @@ namespace Game.Player
         void RPC_TakeDamage(float damage, PhotonMessageInfo info)
         {
             _currentHealth -= damage;
-
-            healthBarImage.fillAmount = _currentHealth / MaxHealth;
-        
-            healthBarGameObject.SetActive(MaxHealth - _currentHealth != 0);
+            OnHealthChange?.Invoke(_currentHealth, MaxHealth);
 
             if (_currentHealth <= 0)
             {
@@ -274,7 +242,23 @@ namespace Game.Player
 
         private void Die()
         {
-            PlayerManager.Die(cameraHolder);
+            _isDead = true;
+            playerBody.constraints = RigidbodyConstraints.None;
+            OnDeath?.Invoke();
+            _playerManager.AddDeathToCounter();
+
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+            PV.RPC(nameof(RPC_DisableHands), RpcTarget.All);
+            
+            enabled = false;
+        }
+
+        [PunRPC]
+        void RPC_DisableHands()
+        {
+            itemHolder.SetActive(false);
+            nickNameCanvas.SetActive(false);
         }
 
         private void InstantiateItems()

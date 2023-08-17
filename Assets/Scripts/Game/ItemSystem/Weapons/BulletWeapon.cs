@@ -8,7 +8,7 @@ namespace Game.ItemSystem.Weapon
 {
     public class BulletWeapon : UsableItem<WeaponConfig>
     {
-        public Camera fpsCam;
+        public UnityEngine.Camera fpsCam;
         public Transform attackPoint;
         private int _bulletsLeft;
         private int _bulletsShot;
@@ -43,6 +43,11 @@ namespace Game.ItemSystem.Weapon
             {
                 Reload();
             }
+        }
+
+        public override void SetCamera(UnityEngine.Camera camera)
+        {
+            fpsCam = camera;
         }
 
         public override void OnItemChange()

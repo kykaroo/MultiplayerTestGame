@@ -13,12 +13,11 @@ MonoBehaviour:
   m_Name: ProjectileGun
   m_EditorClassIdentifier: 
   itemName: ProjectileGun
-  damage: 0
   projectileType: {fileID: 11400000, guid: 3e82996428fbd8f47910d39eb5ebfa33, type: 2}
   shootForce: 2
   upwardForce: 0
   timeBetweenShooting: 1
-  spread: 1
+  spread: 0
   reloadTime: 2
   timeBetweenShoots: 1
   bulletPerTap: 1

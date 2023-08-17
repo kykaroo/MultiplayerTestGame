@@ -1,28 +1,26 @@
 using System.IO;
+using Game;
+using Game.Camera;
+using Game.Player;
 using Photon.Pun;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Object = System.Object;
 
 namespace Network
 {
     public class RoomManager : MonoBehaviourPunCallbacks
     {
         [SerializeField] private Transform lobbyCameraAnchor;
+        [SerializeField] private EntryPoint _entryPoint;
+        [SerializeField] private GuiFactory guiFactory;
+        [SerializeField] private PlayerManager playerManager;
+        [SerializeField] private PlayerController playerController;
+
+        private PlayerManager _playerManager;
 
         public Transform LobbyCameraAnchor => lobbyCameraAnchor;
         
-        public static RoomManager Instance;
-        private void Awake()
-        {
-            if (Instance)
-            {
-                Destroy(gameObject);
-                return;
-            }
-            DontDestroyOnLoad(gameObject);
-            Instance = this;
-        }
-
         public override void OnEnable()
         {
             base.OnEnable();
@@ -39,7 +37,7 @@ namespace Network
         {
             if (scene.buildIndex == 2)
             {
-                PhotonNetwork.Instantiate("Game/PhotonPrefabs/PlayerManager", Vector3.zero, Quaternion.identity);
+                _playerManager = PhotonNetwork.Instantiate("Game/PhotonPrefabs/PlayerManager", Vector3.zero, Quaternion.identity).GetComponent<PlayerManager>();
             }
         }
     }

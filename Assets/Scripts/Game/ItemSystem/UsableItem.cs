@@ -17,5 +17,7 @@ namespace Game.ItemSystem
         public virtual void RButtonAction() { }
 
         public virtual void OnItemChange() { }
+        
+        public virtual void SetCamera(UnityEngine.Camera camera) { }
     }
 }
