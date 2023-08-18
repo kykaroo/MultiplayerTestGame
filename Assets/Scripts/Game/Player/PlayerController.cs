@@ -61,7 +61,7 @@ namespace Game.Player
             if (PV.IsMine)
             {
                 _camera = Instantiate(playerCameraPrefab, cameraHolder);
-                EquipItem(0);
+                // EquipItem(0);
             }
             else
             {
@@ -80,24 +80,11 @@ namespace Game.Player
             Look();
             Move();
             Jump();
-            InputCheck();
 
-            EquipItemCheck();
+            // EquipItemCheck();
             FallOffMapCheck();
         }
-
-        private void InputCheck()
-        {
-            if (Input.GetKey(KeyCode.Mouse0))
-            {
-                items[_itemIndex].M1ButtonAction();
-            }
-
-            if (Input.GetKeyDown(KeyCode.R))
-            { 
-                items[_itemIndex].RButtonAction();         
-            }
-        }
+        
 
         private void EquipItemCheck()
         {

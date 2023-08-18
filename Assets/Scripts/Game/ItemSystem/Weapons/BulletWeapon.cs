@@ -8,7 +8,7 @@ namespace Game.ItemSystem.Weapon
 {
     public class BulletWeapon : UsableItem<WeaponConfig>
     {
-        public UnityEngine.Camera fpsCam;
+        private UnityEngine.Camera _fpsCam;
         public Transform attackPoint;
         private int _bulletsLeft;
         private int _bulletsShot;
@@ -16,6 +16,12 @@ namespace Game.ItemSystem.Weapon
         private bool _readyToShot;
         private bool _reloading;
         public bool allowInvoke = true;
+        private ShootConfig _shootConfig;
+
+        private float LastShootTime;
+        private float InitialClickTime;
+        private float StopShootingTime;
+        private bool LastFrameWantedToShoot;
         
         public event Action<float> OnReload;
         public event Action<int, int, int> OnAmmunitionChange;
@@ -29,6 +35,7 @@ namespace Game.ItemSystem.Weapon
             if (!_readyToShot || !_shooting || _reloading || _bulletsLeft <= 0) return;
             _bulletsShot = 0;
 
+            InitialClickTime = Time.time;
             Shoot();
         }
 
@@ -47,7 +54,7 @@ namespace Game.ItemSystem.Weapon
 
         public override void SetCamera(UnityEngine.Camera camera)
         {
-            fpsCam = camera;
+            _fpsCam = camera;
         }
 
         public override void OnItemChange()
@@ -63,9 +70,22 @@ namespace Game.ItemSystem.Weapon
 
         private void Shoot()
         {
+            itemGameObject.transform.localRotation = Quaternion.Lerp(itemGameObject.transform.localRotation,
+                Quaternion.Euler(itemGameObject.transform.position), Time.deltaTime * _shootConfig.RecoilRecoverySpeed);
+
+
             _readyToShot = false;
 
-            var ray = fpsCam.ViewportPointToRay(new(0.5f, 0.5f, 0));
+            Vector3 spreadAmount = _shootConfig.GetSpread(Time.time - InitialClickTime);
+            itemGameObject.transform.forward += itemGameObject.transform.TransformDirection(spreadAmount);
+            Vector3 shootDirection = itemGameObject.transform.parent.forward + spreadAmount;
+            
+            
+            
+            
+            var ray = _fpsCam.ViewportPointToRay(new(0.5f, 0.5f, 0));
+            
+            
 
             var targetPoint = Physics.Raycast(ray, out var hit) ? hit.point : ray.GetPoint(75);
             var position = attackPoint.position;
@@ -77,7 +97,7 @@ namespace Game.ItemSystem.Weapon
             var directionWithSpread = directionWithoutSpread + new Vector3(x, y, 0);
 
             var vector3 = directionWithSpread.normalized * itemInfo.ShootForce +
-                          fpsCam.transform.up * itemInfo.UpwardForce;
+                          _fpsCam.transform.up * itemInfo.UpwardForce;
 
             var currentBullet = PhotonNetwork.Instantiate(itemInfo.ProjectileType.ProjectilePrefabPath, position, Quaternion.identity);
 
