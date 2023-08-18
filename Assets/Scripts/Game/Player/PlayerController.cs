@@ -39,7 +39,6 @@ namespace Game.Player
         private const float MaxHealth = 100f;
         private float _currentHealth = MaxHealth;
         private float _currentReloadTime;
-        private bool _isDead;
         private UnityEngine.Camera _camera;
         private PlayerManager _playerManager;
 
@@ -242,7 +241,6 @@ namespace Game.Player
 
         private void Die()
         {
-            _isDead = true;
             playerBody.constraints = RigidbodyConstraints.None;
             OnDeath?.Invoke();
             _playerManager.AddDeathToCounter();

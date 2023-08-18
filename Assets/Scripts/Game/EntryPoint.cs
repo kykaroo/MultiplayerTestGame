@@ -14,6 +14,7 @@ namespace Game
     public class EntryPoint : MonoBehaviour
     {
         [SerializeField] private GuiFactory guiFactory; 
+        [SerializeField] private UnityEngine.Camera preGameCamera; 
         private PlayerManager _playerManager;
         
         private GuiStateMachine _stateMachine;
@@ -31,7 +32,7 @@ namespace Game
             {
                 { typeof(DeathGuiState), new DeathGuiState(guiFactory, _playerManager) },
                 { typeof(HudState), new HudState(guiFactory) },
-                { typeof(PreGameState), new PreGameState(guiFactory, _playerManager) },
+                { typeof(PreGameState), new PreGameState(guiFactory, _playerManager, preGameCamera) },
                 { typeof(InitializeState), new InitializeState(guiFactory, _playerManager) }
             });
         }

@@ -11,10 +11,12 @@ namespace Game.Camera.States
     {
         private PreGameGui _preGameGui;
         private readonly PlayerManager _playerManager;
+        private UnityEngine.Camera _camera;
 
-        public PreGameState(GuiFactory guiFactory, PlayerManager playerManager) : base(guiFactory)
+        public PreGameState(GuiFactory guiFactory, PlayerManager playerManager, UnityEngine.Camera camera) : base(guiFactory)
         {
             _playerManager = playerManager;
+            _camera = camera;
         }
         
         protected override void OnEnter()
@@ -30,6 +32,7 @@ namespace Game.Camera.States
             _preGameGui.OnJoinButtonClick -= JoinGame;
             _preGameGui.OnQuitButtonClick -= QuitGame;
             
+            Object.Destroy(_camera.gameObject);
             Object.Destroy(_preGameGui.gameObject);
         }
         
