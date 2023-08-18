@@ -7,6 +7,7 @@ namespace Game.ItemSystem
     public class Bullet : UsableItem<ProjectileConfig>
     {
         private PhotonView _photonView;
+        private bool isHit;
 
         private void Awake()
         {
@@ -15,11 +16,15 @@ namespace Game.ItemSystem
     
         private void OnCollisionEnter(Collision other)
         {
+            if (isHit) return;
+            isHit = true;
+
             if (other.gameObject.GetComponent<PhotonView>() != null && other.gameObject.GetComponent<PhotonView>().IsMine)
             {
                 CreateBulletImpact(other);
             
-                other.gameObject.GetComponent<IDamagable>().TakeDamage(itemInfo.Damage);
+                print(other.collider.gameObject.name);
+                other.gameObject.GetComponent<IDamagable>().TakeDamage(itemInfo.Damage, other.collider.gameObject.name); 
             }
             else
             {

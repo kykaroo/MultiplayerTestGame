@@ -27,7 +27,7 @@ namespace Game.Player
     
         [SerializeField] private UsableItem[] items;
 
-        [SerializeField] private int itemIndex;
+        private int _itemIndex;
         private int _previousItemIndex = -1;
 
         public bool grounded;
@@ -90,12 +90,12 @@ namespace Game.Player
         {
             if (Input.GetKey(KeyCode.Mouse0))
             {
-                items[itemIndex].M1ButtonAction();
+                items[_itemIndex].M1ButtonAction();
             }
 
             if (Input.GetKeyDown(KeyCode.R))
             { 
-                items[itemIndex].RButtonAction();         
+                items[_itemIndex].RButtonAction();         
             }
         }
 
@@ -112,26 +112,26 @@ namespace Game.Player
 
             if (Input.GetAxisRaw("Mouse ScrollWheel") > 0f)
             {
-                if (itemIndex >= items.Length - 1)
+                if (_itemIndex >= items.Length - 1)
                 {
                     EquipItem(0);
                 }
                 else
                 {
-                    EquipItem(itemIndex + 1);
+                    EquipItem(_itemIndex + 1);
                 }
             }
             else
             {
                 if (Input.GetAxisRaw("Mouse ScrollWheel") < 0f)
                 {
-                    if (itemIndex <= 0)
+                    if (_itemIndex <= 0)
                     {
                         EquipItem(items.Length - 1);
                     }
                     else
                     {
-                        EquipItem(itemIndex - 1);
+                        EquipItem(_itemIndex - 1);
                     }
                 }
             }
@@ -189,26 +189,26 @@ namespace Game.Player
             if (index == _previousItemIndex)
                 return;
 
-            itemIndex = index;
+            _itemIndex = index;
 
-            items[itemIndex].itemGameObject.SetActive(true);
+            items[_itemIndex].itemGameObject.SetActive(true);
 
             if (_previousItemIndex != -1)
             {
                 items[_previousItemIndex].itemGameObject.SetActive(false);
             }
 
-            _previousItemIndex = itemIndex;
+            _previousItemIndex = _itemIndex;
 
-            OnItemChange?.Invoke(items[itemIndex]);
+            OnItemChange?.Invoke(items[_itemIndex]);
 
-            items[itemIndex].SetCamera(_camera);
-            items[itemIndex].OnItemChange();
+            items[_itemIndex].SetCamera(_camera);
+            items[_itemIndex].OnItemChange();
 
             if (PV.IsMine)
             {
                 var hash = new Hashtable();
-                hash.Add("itemIndex", itemIndex);
+                hash.Add("itemIndex", _itemIndex);
                 PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
             }
         }
@@ -221,14 +221,25 @@ namespace Game.Player
             }
         }
 
-        public void TakeDamage(float damage)
+        public void TakeDamage(float damage, string bodyPartHitName)
         {
-            PV.RPC(nameof(RPC_TakeDamage), PV.Owner, damage); 
+            PV.RPC(nameof(RPC_TakeDamage), PV.Owner, damage, bodyPartHitName); 
         }
 
         [PunRPC]
-        void RPC_TakeDamage(float damage, PhotonMessageInfo info)
+        void RPC_TakeDamage(float damage, string bodyPartHitName, PhotonMessageInfo info)
         {
+            switch (bodyPartHitName)
+            {
+                case "Head":
+                    damage *= 1.5f;
+                    break;
+                case "Body":
+                    break;
+                case "Legs":
+                    damage *= 0.5f;
+                    break;
+            }
             _currentHealth -= damage;
             OnHealthChange?.Invoke(_currentHealth, MaxHealth);
 
