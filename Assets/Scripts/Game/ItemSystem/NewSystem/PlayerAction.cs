@@ -17,9 +17,9 @@ public class PlayerAction : MonoBehaviour
     {
         if (!PV.IsMine) return;
         
-        if (Input.GetMouseButton(0) && GunSelector.ActiveGun != null)
+        if (GunSelector.ActiveGun != null)
         {
-            GunSelector.ActiveGun.Shoot();
+            GunSelector.ActiveGun.Tick(Input.GetMouseButton(0));
         }
     }
 }

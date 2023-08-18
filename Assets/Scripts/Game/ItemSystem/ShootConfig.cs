@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-[CreateAssetMenu(fileName = "Shoot Config", menuName = "FPS/Shoot Config")]
+[CreateAssetMenu(fileName = "Shoot Config", menuName = "Guns/Shoot Config")]
 public class ShootConfig : ScriptableObject
 {
     public LayerMask HitMask;

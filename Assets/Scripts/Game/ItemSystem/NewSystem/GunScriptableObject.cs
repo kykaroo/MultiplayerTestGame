@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Pool;
 
@@ -17,7 +18,12 @@ public class GunScriptableObject : ScriptableObject
 
     private MonoBehaviour ActiveMonoBehaviour;
     private GameObject Model;
+    
     private float LastShootTime;
+    private float InitialClickTime;
+    private float StopShootingTime;
+    private bool LastFrameWantedToShoot;
+    
     private ParticleSystem ShootSystem;
     private ObjectPool<TrailRenderer> TrailPool;
 
@@ -51,18 +57,43 @@ public class GunScriptableObject : ScriptableObject
         return trail;
     }
 
+    public void Tick(bool wantToShoot)
+    {
+        Model.transform.localRotation = Quaternion.Lerp(Model.transform.localRotation, Quaternion.Euler(SpawnRotation), Time.deltaTime * ShootConfig.RecoilRecoverySpeed);
+        
+        if (wantToShoot)
+        {
+            LastFrameWantedToShoot = true;
+            Shoot();
+        }
+        else
+        {
+            if (!wantToShoot && LastFrameWantedToShoot)
+            {
+                StopShootingTime = Time.time;
+                LastFrameWantedToShoot = false;
+            }
+        }
+    }
     public void Shoot()
     {
+        if (Time.time - LastShootTime - ShootConfig.FireRate > Time.deltaTime)
+        {
+            float lastDuration = Mathf.Clamp(0, StopShootingTime - InitialClickTime, ShootConfig.MaxSpreadTime);
+            float lerpTime = (ShootConfig.RecoilRecoverySpeed - (Time.time - StopShootingTime)) / ShootConfig.RecoilRecoverySpeed;
+            InitialClickTime = Time.time - Mathf.Lerp(0, lastDuration, Mathf.Clamp01(lerpTime));
+        }
+        
         if (Time.time > ShootConfig.FireRate + LastShootTime)
         {
             LastShootTime = Time.time;
             ShootSystem.Play();
-            Vector3 shootDirection = ShootSystem.transform.forward +
-                                     new Vector3(Random.Range(-ShootConfig.Spread.x, ShootConfig.Spread.x),
-                                         Random.Range(-ShootConfig.Spread.y, ShootConfig.Spread.y),
-                                         Random.Range(-ShootConfig.Spread.z, ShootConfig.Spread.z));
-            shootDirection.Normalize();
 
+            Vector3 spreadAmount = ShootConfig.GetSpread(Time.time - InitialClickTime);
+            Model.transform.forward += Model.transform.TransformDirection(spreadAmount);
+            
+            Vector3 shootDirection = Model.transform.forward;
+            
             if (Physics.Raycast(ShootSystem.transform.position, shootDirection,out RaycastHit hit, float.MaxValue, ShootConfig.HitMask))
             {
                 ActiveMonoBehaviour.StartCoroutine(PlayTrail(ShootSystem.transform.position, hit.point, hit));
