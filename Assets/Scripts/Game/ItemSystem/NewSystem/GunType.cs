@@ -1,5 +1,8 @@
-public enum GunType
+namespace Game.ItemSystem.NewSystem
 {
-    M4A4,
-    Glock
+    public enum GunType
+    {
+        M4A4,
+        Glock
+    }
 }

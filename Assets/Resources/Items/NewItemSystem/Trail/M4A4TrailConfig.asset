@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 888782ca2e1a59245ae1a9cca10221cd, type: 3}
   m_Name: M4A4TrailConfig
   m_EditorClassIdentifier: 
-  Material: {fileID: 2100000, guid: e5a83424dea38dd47af47b9f778fc013, type: 2}
+  Material: {fileID: 2100000, guid: 039338c8589b48c4da19494aa36aa145, type: 2}
   WidthCurve:
     serializedVersion: 2
     m_Curve:

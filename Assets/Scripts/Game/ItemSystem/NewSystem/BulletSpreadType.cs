@@ -1,8 +1,9 @@
-using UnityEngine;
-
-public enum BulletSpreadType
+namespace Game.ItemSystem.NewSystem
 {
-    None,
-    Simple,
-    TextureBased
+    public enum BulletSpreadType
+    {
+        None,
+        Simple,
+        TextureBased
+    }
 }

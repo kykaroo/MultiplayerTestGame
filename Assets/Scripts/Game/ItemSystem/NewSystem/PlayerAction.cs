@@ -1,25 +1,27 @@
-using System;
 using Photon.Pun;
 using UnityEngine;
 
-public class PlayerAction : MonoBehaviour
+namespace Game.ItemSystem.NewSystem
 {
-    [SerializeField] private PlayerGunSelector GunSelector;
-
-    private PhotonView PV;
-
-    private void Awake()
+    public class PlayerAction : MonoBehaviour
     {
-        PV = GetComponent<PhotonView>();
-    }
+        [SerializeField] private PlayerGunSelector GunSelector;
 
-    private void Update()
-    {
-        if (!PV.IsMine) return;
-        
-        if (GunSelector.ActiveGun != null)
+        private PhotonView PV;
+
+        private void Awake()
         {
-            GunSelector.ActiveGun.Tick(Input.GetMouseButton(0));
+            PV = GetComponent<PhotonView>();
+        }
+
+        private void Update()
+        {
+            if (!PV.IsMine) return;
+        
+            if (GunSelector.ActiveGun != null)
+            {
+                GunSelector.ActiveGun.Tick(Input.GetMouseButton(0));
+            }
         }
     }
 }
