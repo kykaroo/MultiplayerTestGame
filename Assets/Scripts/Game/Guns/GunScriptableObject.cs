@@ -164,10 +164,10 @@ namespace Game.ItemSystem.NewSystem
         {
             // TODO SurfaceManager
 
-            if (hitCollider.TryGetComponent(out IDamagable damagable))
-            {
-                // TODO Новый IDamagable
-            }
+            // if (hitCollider.TryGetComponent(out IDamagable damagable))
+            // {
+            //     // TODO Новый IDamagable
+            // }
         }
 
         private void DoHitscanShoot(Vector3 shootDirection)

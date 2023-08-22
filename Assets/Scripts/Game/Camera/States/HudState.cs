@@ -1,6 +1,4 @@
 ﻿using Game.Camera.GUIs;
-using Game.ItemSystem;
-using Game.ItemSystem.Weapon;
 using Game.Player;
 using UnityEngine;
 
@@ -9,7 +7,7 @@ namespace Game.Camera.States
     public class HudState : GuiBaseStateWithPayload<PlayerController>
     {
         private HudGui _hudGui;
-        private UsableItem _item;
+        // private UsableItem _item;
         private PlayerController _playerController;
 
         public HudState(GuiFactory guiFactory) : base(guiFactory) { }
@@ -20,7 +18,7 @@ namespace Game.Camera.States
 
             _playerController = playerController;
 
-            _playerController.OnItemChange += ItemChange;
+            // _playerController.OnItemChange += ItemChange;
             _playerController.OnHealthChange += UpdateHealth;
             _playerController.OnDeath += OnDeath;
         }
@@ -33,7 +31,7 @@ namespace Game.Camera.States
             Object.Destroy(_hudGui.gameObject);
         }
         
-        private void ItemChange(UsableItem item)
+        /*private void ItemChange(UsableItem item)
         {
             switch (_item)
             {
@@ -52,7 +50,7 @@ namespace Game.Camera.States
                     weapon.OnAmmunitionChange += UpdateAmmunitionDisplay;
                     break;
             }
-        }
+        }*/
 
         private void OnDeath()
         {

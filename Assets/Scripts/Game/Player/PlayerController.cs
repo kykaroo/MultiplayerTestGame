@@ -1,6 +1,5 @@
 using System;
-using Game.ItemSystem;
-using Game.ItemSystem.Weapon;
+using Game.ItemSystem.NewSystem;
 using Network;
 using Photon.Pun;
 using Unity.Mathematics;
@@ -9,33 +8,19 @@ using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 namespace Game.Player
 {
-    public class PlayerController : MonoBehaviourPunCallbacks, IDamagable
+    public class PlayerController : MonoBehaviourPunCallbacks
     {
-        [SerializeField] private float mouseSensitivityX;
-        [SerializeField] private float mouseSensitivityY;
-        [SerializeField] private float sprintSpeed;
-        [SerializeField] private float walkSpeed;
-        [SerializeField] private float jumpForce;
-        [SerializeField] private float smoothTime;
-
         [SerializeField] private Rigidbody playerBody;
         [SerializeField] private GameObject itemHolder;
         [SerializeField] private GameObject nickNameCanvas;
 
         [SerializeField] private Transform cameraHolder;
         [SerializeField] private UnityEngine.Camera playerCameraPrefab;
-    
-        [SerializeField] private UsableItem[] items;
 
         private int _itemIndex;
         private int _previousItemIndex = -1;
-
-        public bool grounded;
-
-        private float _verticalLookRotation;
-
-        private Vector3 _smoothMoveVelocity;
-        private Vector3 _moveAmount;
+        
+        
         private const float MaxHealth = 100f;
         private float _currentHealth = MaxHealth;
         private float _currentReloadTime;
@@ -46,7 +31,6 @@ namespace Game.Player
 
         public event Action<float, float> OnHealthChange;
         public event Action OnDeath;
-        public event Action<UsableItem> OnItemChange;
 
         private void Awake()
         {
@@ -61,7 +45,6 @@ namespace Game.Player
             if (PV.IsMine)
             {
                 _camera = Instantiate(playerCameraPrefab, cameraHolder);
-                // EquipItem(0);
             }
             else
             {
@@ -77,134 +60,14 @@ namespace Game.Player
         {
             if (!PV.IsMine) return;
 
-            Look();
-            Move();
-            Jump();
-
-            // EquipItemCheck();
             FallOffMapCheck();
         }
         
-
-        private void EquipItemCheck()
-        {
-            for (var i = 0; i < items.Length; i++)
-            {
-                if (Input.GetKeyDown((i + 1).ToString()))
-                {
-                    EquipItem(i);
-                    break;
-                }
-            }
-
-            if (Input.GetAxisRaw("Mouse ScrollWheel") > 0f)
-            {
-                if (_itemIndex >= items.Length - 1)
-                {
-                    EquipItem(0);
-                }
-                else
-                {
-                    EquipItem(_itemIndex + 1);
-                }
-            }
-            else
-            {
-                if (Input.GetAxisRaw("Mouse ScrollWheel") < 0f)
-                {
-                    if (_itemIndex <= 0)
-                    {
-                        EquipItem(items.Length - 1);
-                    }
-                    else
-                    {
-                        EquipItem(_itemIndex - 1);
-                    }
-                }
-            }
-        }
-
         private void FallOffMapCheck()
         {
             if (transform.position.y < -10f)
             {
                 Die();
-            }
-        }
-
-        private void Jump()
-        {
-            if (Input.GetKeyDown(KeyCode.Space) && grounded)
-            {
-                playerBody.AddForce(transform.up * jumpForce);
-            }
-        }
-
-        private void Move()
-        {
-            Vector3 moveDir = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized;
-
-            _moveAmount =
-                Vector3.SmoothDamp(_moveAmount, moveDir * (Input.GetKey(KeyCode.LeftShift) ? sprintSpeed : walkSpeed), ref _smoothMoveVelocity, smoothTime);
-        }
-
-        void Look()
-        {
-            transform.Rotate(Vector3.up * (Input.GetAxisRaw("Mouse X") * mouseSensitivityX));
-
-            _verticalLookRotation += Input.GetAxisRaw("Mouse Y") * mouseSensitivityY;
-            _verticalLookRotation = Mathf.Clamp(_verticalLookRotation, -90f, 90f);
-
-            cameraHolder.transform.localEulerAngles = Vector3.left * _verticalLookRotation;
-        }
-
-        public void SetGroundedState(bool grounded)
-        {
-            this.grounded = grounded;
-        }
-
-        private void FixedUpdate()
-        {
-            if (!PV.IsMine)
-                return;
-        
-            playerBody.MovePosition(playerBody.position + transform.TransformDirection(_moveAmount) * Time.fixedDeltaTime);
-        }
-
-        void EquipItem(int index)
-        {
-            if (index == _previousItemIndex)
-                return;
-
-            _itemIndex = index;
-
-            items[_itemIndex].itemGameObject.SetActive(true);
-
-            if (_previousItemIndex != -1)
-            {
-                items[_previousItemIndex].itemGameObject.SetActive(false);
-            }
-
-            _previousItemIndex = _itemIndex;
-
-            OnItemChange?.Invoke(items[_itemIndex]);
-
-            items[_itemIndex].SetCamera(_camera);
-            items[_itemIndex].OnItemChange();
-
-            if (PV.IsMine)
-            {
-                var hash = new Hashtable();
-                hash.Add("itemIndex", _itemIndex);
-                PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
-            }
-        }
-
-        public override void OnPlayerPropertiesUpdate(Photon.Realtime.Player targetPlayer, Hashtable changedProps)
-        {
-            if (changedProps.ContainsKey("itemIndex") && !PV.IsMine && Equals(targetPlayer, PV.Owner))
-            {
-                EquipItem((int)changedProps["itemIndex"]);
             }
         }
 
@@ -255,14 +118,6 @@ namespace Game.Player
         {
             itemHolder.SetActive(false);
             nickNameCanvas.SetActive(false);
-        }
-
-        private void InstantiateItems()
-        {
-            foreach (var item in items)
-            {
-                PhotonNetwork.Instantiate("", gameObject.transform.position, quaternion.identity);
-            }
         }
     }
 }

@@ -340,20 +340,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ed28d88ad71f8e43a778ea6a86e9100, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mouseSensitivityX: 1
-  mouseSensitivityY: 1
-  sprintSpeed: 10
-  walkSpeed: 5
-  jumpForce: 200
-  smoothTime: 0.15
   playerBody: {fileID: 5459022053153529090}
   itemHolder: {fileID: 5555717406549720239}
   nickNameCanvas: {fileID: 4808842859778749737}
   cameraHolder: {fileID: 3190553507045204539}
   playerCameraPrefab: {fileID: 4345366148402135204, guid: ed84c640eb2ebb94785a6934bf93ae01, type: 3}
-  items:
-  - {fileID: 0}
-  grounded: 0
 --- !u!114 &6453041631635206590
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -389,7 +380,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0896ccbbe36a1884da5bfcdf20ac4f6f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GunSelector: {fileID: 4033566859376298457}
+  mouseSensitivityX: 1
+  mouseSensitivityY: 1
+  sprintSpeed: 4
+  walkSpeed: 8
+  jumpForce: 200
+  smoothTime: 1
+  itemSelector: {fileID: 4033566859376298457}
+  cameraHolder: {fileID: 3190553507045204539}
+  playerCameraPrefab: {fileID: 4345366148402135204, guid: ed84c640eb2ebb94785a6934bf93ae01, type: 3}
+  grounded: 0
 --- !u!54 &5459022053153529090
 Rigidbody:
   m_ObjectHideFlags: 0
