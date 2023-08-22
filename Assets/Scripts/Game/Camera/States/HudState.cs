@@ -1,32 +1,32 @@
 ﻿using Game.Camera.GUIs;
-using Game.Player;
 using UnityEngine;
 
 namespace Game.Camera.States
 {
-    public class HudState : GuiBaseStateWithPayload<PlayerController>
+    using Player = Game.Player.Player;
+    public class HudState : GuiBaseStateWithPayload<Player>
     {
         private HudGui _hudGui;
         // private UsableItem _item;
-        private PlayerController _playerController;
+        private Player _player;
 
         public HudState(GuiFactory guiFactory) : base(guiFactory) { }
         
-        protected override void OnEnter(PlayerController playerController)
+        protected override void OnEnter(Player player)
         {
             _hudGui = GuiFactory.CreateGUI<HudGui>();
 
-            _playerController = playerController;
+            _player = player;
 
             // _playerController.OnItemChange += ItemChange;
-            _playerController.OnHealthChange += UpdateHealth;
-            _playerController.OnDeath += OnDeath;
+            _player.Health.OnHealthChange += UpdateHealth;
+            _player.Health.OnDeath += OnDeath;
         }
 
         protected override void OnExit()
         {
-            _playerController.OnHealthChange -= UpdateHealth;
-            _playerController.OnDeath -= OnDeath;
+            _player.Health.OnHealthChange -= UpdateHealth;
+            _player.Health.OnDeath -= OnDeath;
 
             Object.Destroy(_hudGui.gameObject);
         }
@@ -52,9 +52,9 @@ namespace Game.Camera.States
             }
         }*/
 
-        private void OnDeath()
+        private void OnDeath(Vector3 vector3)
         {
-            StateMachine.SetState<DeathGuiState, PlayerController>(_playerController);
+            StateMachine.SetState<DeathGuiState, Player>(_player);
         }
         
         private void WeaponReload(float reloadTime)
@@ -73,7 +73,7 @@ namespace Game.Camera.States
             }
         }
         
-        void UpdateHealth(float currentHealth, float maxHealth)
+        void UpdateHealth(float maxHealth, float currentHealth)
         {
             _hudGui.HealthBarImage.fillAmount = currentHealth / maxHealth;
             _hudGui.HealthBarGameObject.SetActive(maxHealth - currentHealth != 0);

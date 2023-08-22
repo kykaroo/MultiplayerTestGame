@@ -9,6 +9,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Player = Game.Player.Player;
 
 namespace Network
 {
@@ -29,10 +30,10 @@ namespace Network
             PV = GetComponent<PhotonView>();
         }
 
-        internal PlayerController CreateController()
+        internal Player CreatePlayer()
         {
             Transform spawnPoint = SpawnManager.Instance.GetSpawnPoint();
-            return PhotonNetwork.Instantiate("Game/PhotonPrefabs/PlayerController", spawnPoint.position, spawnPoint.rotation, 0, new object[] {PV.ViewID}).GetComponent<PlayerController>();
+            return PhotonNetwork.Instantiate("Game/PhotonPrefabs/Player", spawnPoint.position, spawnPoint.rotation, 0, new object[] {PV.ViewID}).GetComponent<Player>();
         }
 
         private void Start()
@@ -65,7 +66,7 @@ namespace Network
             PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
         }
 
-        public static PlayerManager Find(Player player)
+        public static PlayerManager Find(Photon.Realtime.Player player)
         {
             return FindObjectsOfType<PlayerManager>().SingleOrDefault(x => Equals(x.PV.Owner, player));
         }

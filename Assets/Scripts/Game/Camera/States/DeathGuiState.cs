@@ -7,10 +7,11 @@ using Object = UnityEngine.Object;
 
 namespace Game.Camera.States
 {
-    public class DeathGuiState : GuiBaseStateWithPayload<PlayerController>
+    using Player = Game.Player.Player;
+    public class DeathGuiState : GuiBaseStateWithPayload<Player>
     {
         private DeathGui _deathGui;
-        private PlayerController _playerController;
+        private Player _playerController;
         private readonly PlayerManager _playerManager;
 
         public DeathGuiState(GuiFactory guiFactory, PlayerManager playerManager) : base(guiFactory)
@@ -18,11 +19,11 @@ namespace Game.Camera.States
             _playerManager = playerManager;
         }
 
-        protected override void OnEnter(PlayerController playerController)
+        protected override void OnEnter(Player player)
         {
             _deathGui = GuiFactory.CreateGUI<DeathGui>();
 
-            _playerController = playerController;
+            _playerController = player;
             
             _deathGui.OnRespawnButtonClick += Respawn;
             _deathGui.OnQuitButtonClick += QuitGame;
@@ -45,7 +46,7 @@ namespace Game.Camera.States
         private void Respawn()
         {
             PhotonNetwork.Destroy(_playerController.gameObject);
-            StateMachine.SetState<HudState, PlayerController>(_playerManager.CreateController());
+            StateMachine.SetState<HudState, Player>(_playerManager.CreatePlayer());
         }
     }
 }

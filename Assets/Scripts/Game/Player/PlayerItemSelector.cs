@@ -1,8 +1,9 @@
 using System.Collections.Generic;
+using Game.ItemSystem.NewSystem;
 using Photon.Pun;
 using UnityEngine;
 
-namespace Game.ItemSystem.NewSystem
+namespace Game.Player
 {
     [DisallowMultipleComponent]
     public class PlayerItemSelector : MonoBehaviour

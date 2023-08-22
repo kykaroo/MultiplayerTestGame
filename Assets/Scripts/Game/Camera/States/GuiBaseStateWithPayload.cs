@@ -23,6 +23,6 @@
 
         protected virtual void OnExit() { }
 
-        protected virtual void OnEnter(T payload) { }
+        protected virtual void OnEnter(T player) { }
     }
 }

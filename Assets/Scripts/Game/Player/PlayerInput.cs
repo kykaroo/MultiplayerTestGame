@@ -1,11 +1,8 @@
-using Game.Player;
 using Photon.Pun;
 using UnityEngine;
-using UnityEngine.Serialization;
 
-namespace Game.ItemSystem.NewSystem
+namespace Game.Player
 {
-    [RequireComponent(typeof(Rigidbody))]
     public class PlayerInput : MonoBehaviour
     {
         public float mouseSensitivityX;
@@ -21,7 +18,7 @@ namespace Game.ItemSystem.NewSystem
         
         private Vector3 _smoothMoveVelocity;
         private Vector3 _moveAmount;
-        private Rigidbody _playerBody;
+        public Rigidbody _playerBody;
         private PhotonView PV;
         
         public bool grounded;

@@ -16,6 +16,7 @@ namespace Game.ItemSystem.NewSystem
         public Vector3 SpawnPoint;
         public Vector3 SpawnRotation;
 
+        public DamageConfigScriptableObject DamageConfig;
         public ShootConfigurationScriptableObject ShootConfig;
         public TrailConfigurationScriptableObject TrailConfig;
 
@@ -119,14 +120,14 @@ namespace Game.ItemSystem.NewSystem
                 }
             }
         }
-
+        
         private void DoProjectileShoot(Vector3 shootDirection)
         {
             Bullet bullet = BulletPool.Get();
             bullet.gameObject.SetActive(true);
             bullet.OnCollision += HandleBulletCollision;
             bullet.transform.position = ShootSystem.transform.position;
-            bullet.Spawn(shootDirection* ShootConfig.BulletSpawnForce);
+            bullet.Spawn(shootDirection * ShootConfig.BulletSpawnForce);
 
             TrailRenderer trail = TrailPool.Get();
         
@@ -163,11 +164,11 @@ namespace Game.ItemSystem.NewSystem
         private void HandleBulletImpact(float distanceTraveled, Vector3 hitLocation, Vector3 hitNormal, Collider hitCollider)
         {
             // TODO SurfaceManager
-
-            // if (hitCollider.TryGetComponent(out IDamagable damagable))
-            // {
-            //     // TODO Новый IDamagable
-            // }
+            
+            if (hitCollider.transform.root.TryGetComponent(out IDamageable damageable))
+            {
+                damageable.TakeDamage(DamageConfig.GetDamage(distanceTraveled), hitCollider.name);
+            }
         }
 
         private void DoHitscanShoot(Vector3 shootDirection)

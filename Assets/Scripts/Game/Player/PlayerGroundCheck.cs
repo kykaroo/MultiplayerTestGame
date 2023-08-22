@@ -6,6 +6,7 @@ namespace Game.Player
     public class PlayerGroundCheck : MonoBehaviour
     {
         private PlayerInput _playerInput;
+        [SerializeField] private GameObject legs;
 
         private void Awake()
         {
@@ -14,7 +15,7 @@ namespace Game.Player
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.gameObject ==_playerInput.gameObject)
+            if (other.gameObject == legs)
                 return;
         
             _playerInput.SetGroundedState(true);
@@ -22,7 +23,7 @@ namespace Game.Player
 
         private void OnTriggerExit(Collider other)
         {
-            if (other.gameObject ==_playerInput.gameObject)
+            if (other.gameObject == legs)
                 return;
         
             _playerInput.SetGroundedState(false);
@@ -30,7 +31,7 @@ namespace Game.Player
 
         private void OnTriggerStay(Collider other)
         {
-            if (other.gameObject ==_playerInput.gameObject)
+            if (other.gameObject == legs)
                 return;
         
             _playerInput.SetGroundedState(true);
@@ -38,7 +39,7 @@ namespace Game.Player
 
         private void OnCollisionEnter(Collision collision)
         {
-            if (collision.gameObject ==_playerInput.gameObject)
+            if (collision.gameObject == legs)
                 return;
         
             _playerInput.SetGroundedState(true);
@@ -46,7 +47,7 @@ namespace Game.Player
 
         private void OnCollisionExit(Collision collision)
         {
-            if (collision.gameObject ==_playerInput.gameObject)
+            if (collision.gameObject == legs)
                 return;
         
             _playerInput.SetGroundedState(false);
@@ -54,7 +55,7 @@ namespace Game.Player
 
         private void OnCollisionStay(Collision collision)
         {
-            if (collision.gameObject ==_playerInput.gameObject)
+            if (collision.gameObject == legs)
                 return;
         
             _playerInput.SetGroundedState(true);

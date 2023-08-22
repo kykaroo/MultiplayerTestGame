@@ -1,4 +1,5 @@
 using System.Collections;
+using Photon.Pun;
 using UnityEngine;
 
 namespace Game.ItemSystem.NewSystem
@@ -7,6 +8,7 @@ namespace Game.ItemSystem.NewSystem
     public class Bullet : MonoBehaviour
     {
         private Rigidbody _rigidbody;
+        private PhotonView _photonView;
 
         [field: SerializeField]
         public Vector3 SpawnLocation
@@ -23,6 +25,7 @@ namespace Game.ItemSystem.NewSystem
         private void Awake()
         {
             _rigidbody = GetComponent<Rigidbody>();
+            _photonView = GetComponent<PhotonView>();
         }
 
         public void Spawn(Vector3 spawnForce)

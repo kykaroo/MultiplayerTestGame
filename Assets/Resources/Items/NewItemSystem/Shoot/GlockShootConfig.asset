@@ -12,9 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf2affe9ea155c643ad0ef7d8087f90a, type: 3}
   m_Name: GlockShootConfig
   m_EditorClassIdentifier: 
+  IsHitScan: 0
+  BulletPrefab: {fileID: 0}
+  BulletSpawnForce: 1000
   HitMask:
     serializedVersion: 2
-    m_Bits: 129
+    m_Bits: 384
   FireRate: 0.5
   RecoilRecoverySpeed: 1
   MaxSpreadTime: 1
