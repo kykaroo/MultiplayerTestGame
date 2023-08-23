@@ -2,7 +2,6 @@ using System.Collections;
 using Game.Player;
 using Photon.Pun;
 using UnityEngine;
-using UnityEngine.Pool;
 
 namespace Game.ItemSystem.NewSystem
 {
@@ -13,6 +12,7 @@ namespace Game.ItemSystem.NewSystem
         public GunType Type;
         public string Name;
         public GameObject ModelPrefab;
+        public string TrailPrefabPath;
         public Vector3 SpawnPoint;
         public Vector3 SpawnRotation;
 
@@ -22,7 +22,7 @@ namespace Game.ItemSystem.NewSystem
 
         private MonoBehaviour ActiveMonoBehaviour;
         private GameObject Model;
-        public PhotonView _photonView;
+        private PhotonView _photonView;
 
         private float LastShootTime;
         private float InitialClickTime;
@@ -30,50 +30,35 @@ namespace Game.ItemSystem.NewSystem
         private bool LastFrameWantedToShoot;
 
         private ParticleSystem ShootSystem;
-        private ObjectPool<Bullet> BulletPool;
-        private ObjectPool<TrailRenderer> TrailPool;
 
-        public void Spawn(Transform parent, MonoBehaviour activeMonoBehaviour)
+        private Transform _gunParent;
+
+        public void EntryPoint(string modelPrefabPath, MonoBehaviour activeMonoBehaviour, ItemHolder itemHolder)
         {
             ActiveMonoBehaviour = activeMonoBehaviour;
-            LastShootTime = 0; // В эдиторе может некорректно отработать, в билде все норм
-            TrailPool = new(CreateTrail);
-
-            if (!ShootConfig.IsHitScan)
-            {
-                BulletPool = new ObjectPool<Bullet>(CreateBullet);
-            }
-
-            Model = PhotonNetwork.Instantiate("Items/NewItemSystem/Prefabs/M4A4", parent.position, Quaternion.identity);
-            Model.transform.SetParent(parent, false);
-            Model.transform.localPosition = SpawnPoint;
-            Model.transform.localRotation = Quaternion.Euler(SpawnRotation);
-            _photonView = Model.GetComponent<PhotonView>();
-            ShootSystem = Model.GetComponentInChildren<ParticleSystem>();
+            LastShootTime = 0;
+            
+            Model = itemHolder.CreateGun(modelPrefabPath, SpawnPoint, SpawnRotation);
+            var gunSpawner = Model.GetComponent<GunSpawner>();
+            // gunSpawner.Initialize(SpawnPoint, SpawnRotation);
+            ShootSystem = gunSpawner.ShootSystem;
         }
 
         private TrailRenderer CreateTrail()
         {
-            GameObject instance = new("Bullet Trail");
-            TrailRenderer trail = instance.AddComponent<TrailRenderer>();
+            TrailRenderer trail = PhotonNetwork.Instantiate(TrailPrefabPath, Vector3.zero, Quaternion.identity).GetComponent<TrailRenderer>();
             trail.colorGradient = TrailConfig.Color;
             trail.material = TrailConfig.Material;
             trail.widthCurve = TrailConfig.WidthCurve;
             trail.time = TrailConfig.Duration;
             trail.minVertexDistance = TrailConfig.MinVertexDistance;
-
-            trail.emitting = false;
-            trail.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            trail.emitting = true;
 
             return trail;
         }
 
         public void Tick(bool wantToShoot)
         {
-            if (_photonView == null) return;
-        
-            if (!_photonView.IsMine) return;
-        
             Model.transform.localRotation = Quaternion.Lerp(Model.transform.localRotation, Quaternion.Euler(SpawnRotation), Time.deltaTime * ShootConfig.RecoilRecoverySpeed);
         
             if (wantToShoot)
@@ -123,20 +108,17 @@ namespace Game.ItemSystem.NewSystem
         
         private void DoProjectileShoot(Vector3 shootDirection)
         {
-            Bullet bullet = BulletPool.Get();
-            bullet.gameObject.SetActive(true);
+            Bullet bullet = PhotonNetwork.Instantiate(ShootConfig.bulletPrefabPath, ShootSystem.transform.position, Quaternion.identity)
+                .GetComponent<Bullet>();
             bullet.OnCollision += HandleBulletCollision;
-            bullet.transform.position = ShootSystem.transform.position;
             bullet.Spawn(shootDirection * ShootConfig.BulletSpawnForce);
 
-            TrailRenderer trail = TrailPool.Get();
+            TrailRenderer trail = CreateTrail();
         
             if (trail != null)
             {
                 trail.transform.SetParent(bullet.transform, false);
                 trail.transform.localPosition = Vector3.zero;
-                trail.emitting = true;
-                trail.gameObject.SetActive(true);
             }
         }
 
@@ -147,11 +129,10 @@ namespace Game.ItemSystem.NewSystem
             if (trail != null)
             {
                 trail.transform.SetParent(null, true);
-                ActiveMonoBehaviour.StartCoroutine(DelayedDisableTrail(trail));
+                ActiveMonoBehaviour.StartCoroutine(DelayedDestroyTrail(trail));
             }
-        
-            bullet.gameObject.SetActive(false);
-            BulletPool.Release(bullet);
+            
+            PhotonNetwork.Destroy(bullet.gameObject);
 
             if (collision != null)
             {
@@ -187,26 +168,25 @@ namespace Game.ItemSystem.NewSystem
 
         private IEnumerator PlayTrail(Vector3 startPoint, Vector3 endPoint, RaycastHit hit)
         {
-            TrailRenderer instance = TrailPool.Get();
-            instance.gameObject.SetActive(true);
-            instance.transform.position = startPoint;
+            TrailRenderer trail = CreateTrail();
+            trail.transform.position = startPoint;
             yield return null; // Предотвращение переноса позиции с прошлого кадра
 
-            instance.emitting = true;
+            trail.emitting = true;
 
             float distance = Vector3.Distance(startPoint, endPoint);
             float remainingDistance = distance;
 
             while (remainingDistance > 0)
             {
-                instance.transform.position =
+                trail.transform.position =
                     Vector3.Lerp(startPoint, endPoint, Mathf.Clamp01(1 - remainingDistance / distance));
                 remainingDistance -= TrailConfig.SimulationSpeed * Time.deltaTime;
 
                 yield return null;
             }
 
-            instance.transform.position = endPoint;
+            trail.transform.position = endPoint;
 
             if (hit.collider !=null)
             {
@@ -215,23 +195,15 @@ namespace Game.ItemSystem.NewSystem
 
             yield return new WaitForSeconds(TrailConfig.Duration);
             yield return null;
-            instance.emitting = false;
-            instance.gameObject.SetActive(false);
-            TrailPool.Release(instance);
+
+            PhotonNetwork.Destroy(trail.gameObject);
         }
 
-        private IEnumerator DelayedDisableTrail(TrailRenderer trail)
+        private IEnumerator DelayedDestroyTrail(TrailRenderer trail)
         {
             yield return new WaitForSeconds(TrailConfig.Duration);
             yield return null;
-            trail.emitting = false;
-            trail.gameObject.SetActive(false);
-            TrailPool.Release(trail);
-        }
-    
-        private Bullet CreateBullet()
-        {
-            return Instantiate(ShootConfig.BulletPrefab);
+            PhotonNetwork.Destroy(trail.gameObject);
         }
     }
 }

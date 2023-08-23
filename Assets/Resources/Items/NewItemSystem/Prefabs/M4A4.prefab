@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3953739476940427585}
   - component: {fileID: 715143034337652468}
   - component: {fileID: 4566366484353520556}
-  - component: {fileID: 1093396915148158882}
+  - component: {fileID: -4503172071572622764}
   - component: {fileID: 3677347183567224135}
   m_Layer: 0
   m_Name: M4A4
@@ -86,7 +86,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &1093396915148158882
+--- !u!114 &-4503172071572622764
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -95,13 +95,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1615621099556364170}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Script: {fileID: 11500000, guid: e7d1a484f0e24b42826ee6ae655b6e74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_SynchronizePosition: 1
-  m_SynchronizeRotation: 1
-  m_SynchronizeScale: 0
-  m_UseLocal: 1
+  _photonView: {fileID: 0}
+  ShootSystem: {fileID: 2270035780609235522}
 --- !u!114 &3677347183567224135
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -116,12 +114,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ObservedComponentsFoldoutOpen: 1
   Group: 0
-  prefixField: -1
+  prefixField: 0
   Synchronization: 3
   OwnershipTransfer: 1
   observableSearch: 2
-  ObservedComponents:
-  - {fileID: 1093396915148158882}
+  ObservedComponents: []
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0

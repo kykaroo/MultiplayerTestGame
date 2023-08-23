@@ -10,6 +10,7 @@ namespace Game.ItemSystem.NewSystem
     {
         public bool IsHitScan;
         public Bullet BulletPrefab;
+        public string bulletPrefabPath;
         public float BulletSpawnForce = 1000;
         public LayerMask HitMask;
         public float FireRate = 0.25f;

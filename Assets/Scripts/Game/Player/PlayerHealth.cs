@@ -9,7 +9,7 @@ namespace Game.Player
     {
         private float _maxHealth = 100f;
         private float _currentHealth;
-        private PhotonView photonView;
+        private PhotonView _photonView;
         
         public float CurrentHealth 
         {
@@ -27,10 +27,6 @@ namespace Game.Player
 
 
         public event IDamageable.DeathEvent OnDeath;
-        public void TakeDamage(float damage)
-        {
-            throw new NotImplementedException();
-        }
 
         public void TakeDamage(float damage, string bodyPartHitName)
         {
@@ -50,13 +46,14 @@ namespace Game.Player
                     break;
             }
             
-            photonView.RPC(nameof(RPC_TakeDamage), photonView.Owner, damageTaken); 
+            //Данные обновляет только игрок, получивший урон
+            _photonView.RPC(nameof(RPC_TakeDamage), _photonView.Owner, damageTaken);
         }
 
         private void Awake()
         {
             _currentHealth = _maxHealth;
-            photonView = GetComponent<PhotonView>();
+            _photonView = GetComponent<PhotonView>();
         }
 
         [PunRPC]

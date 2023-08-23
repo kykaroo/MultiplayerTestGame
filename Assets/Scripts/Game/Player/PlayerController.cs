@@ -38,6 +38,7 @@ namespace Game.Player
         {
             if (PV.IsMine)
             {
+                nickNameCanvas.SetActive(false);
                 Instantiate(playerCameraPrefab, cameraHolder);
             }
             else

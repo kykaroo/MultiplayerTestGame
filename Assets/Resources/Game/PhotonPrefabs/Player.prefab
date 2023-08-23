@@ -388,7 +388,7 @@ MonoBehaviour:
   sprintSpeed: 4
   walkSpeed: 8
   jumpForce: 200
-  smoothTime: 1
+  smoothTime: 0.1
   itemSelector: {fileID: 4033566859376298457}
   cameraHolder: {fileID: 3190553507045204539}
   playerCameraPrefab: {fileID: 4345366148402135204, guid: ed84c640eb2ebb94785a6934bf93ae01, type: 3}
@@ -443,6 +443,8 @@ MonoBehaviour:
   Guns:
   - {fileID: 11400000, guid: 2a016decd0a5a3c4d87bd3e4bad4f1d5, type: 2}
   - {fileID: 11400000, guid: dbe4922bb0ac87a4e99643488b5373d4, type: 2}
+  itemHolder: {fileID: 1675801058744744507}
+  modelPrefabPath: Items/NewItemSystem/Prefabs/M4A4
   ActiveGun: {fileID: 0}
 --- !u!114 &-8266043454697164076
 MonoBehaviour:
@@ -707,6 +709,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3168952086000159431}
+  - component: {fileID: 1675801058744744507}
+  - component: {fileID: 606736107446461176}
   m_Layer: 5
   m_Name: ItemHolder
   m_TagString: Untagged
@@ -729,6 +733,40 @@ Transform:
   m_Father: {fileID: 3190553507045204539}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1675801058744744507
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5555717406549720239}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 540bffb949410764f8c4a94d7fb99ebd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &606736107446461176
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5555717406549720239}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &6217914249394269102
 GameObject:
   m_ObjectHideFlags: 0

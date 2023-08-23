@@ -11,19 +11,23 @@ namespace Game.Player
         [SerializeField] private GunType Gun;
         [SerializeField] private Transform GunParent;
         [SerializeField] private List<GunScriptableObject> Guns;
+        [SerializeField] private ItemHolder itemHolder;
+        [SerializeField] private string modelPrefabPath;
+
+        private GameObject gunInstance;
     
-        private PhotonView PV;
+        private PhotonView _photonView;
 
         [Space] [Header("Runtime Filled")] public GunScriptableObject ActiveGun;
 
         private void Awake()
         {
-            PV = GetComponent<PhotonView>();
+            _photonView = GetComponent<PhotonView>();
         }
 
         private void Start()
         {
-            if (!PV.IsMine) return;
+            if (!_photonView.IsMine) return;
         
             GunScriptableObject gun = Guns.Find(gun => gun.Type == Gun);
 
@@ -34,9 +38,10 @@ namespace Game.Player
             }
 
             ActiveGun = gun;
-            gun.Spawn(GunParent, this);
+            
+            gun.EntryPoint(modelPrefabPath, this, itemHolder);
         }
-        
+
         /*void EquipItem(int index)
        {
            if (index == _previousItemIndex)

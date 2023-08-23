@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsHitScan: 0
   BulletPrefab: {fileID: 2392369947942207775, guid: df324753ea99cf945963dc84e798d34a, type: 3}
-  BulletSpawnForce: 1000
+  bulletPrefabPath: Items/NewItemSystem/Prefabs/Bullet
+  BulletSpawnForce: 200
   HitMask:
     serializedVersion: 2
     m_Bits: 384

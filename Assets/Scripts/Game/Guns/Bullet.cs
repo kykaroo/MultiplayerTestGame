@@ -30,13 +30,19 @@ namespace Game.ItemSystem.NewSystem
 
         public void Spawn(Vector3 spawnForce)
         {
+            _photonView.RPC(nameof(RPC_Spawn), RpcTarget.All, spawnForce);
+        }
+
+        [PunRPC]
+        void RPC_Spawn(Vector3 spawnForce)
+        {
             SpawnLocation = transform.position;
             transform.forward = spawnForce.normalized;
             _rigidbody.AddForce(spawnForce);
-            StartCoroutine(DelayedDisable(_delayedDisableTime));
+             StartCoroutine(DelayedDestroy(_delayedDisableTime));
         }
 
-        private IEnumerator DelayedDisable(float time)
+        private IEnumerator DelayedDestroy(float time)
         {
             yield return new WaitForSeconds(time);
             OnCollisionEnter(null);

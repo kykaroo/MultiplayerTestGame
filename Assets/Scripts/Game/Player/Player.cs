@@ -27,12 +27,19 @@ namespace Game.Player
         private void Die(Vector3 position)
         {
             Input._playerBody.constraints = RigidbodyConstraints.None;
-            Input.enabled = false;
             _playerManager.AddDeathToCounter();
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
             photonView.RPC(nameof(Controller.RPC_DisableHands), RpcTarget.All);
-            
+            photonView.RPC(nameof(RPC_DisablePlayer), RpcTarget.All);
+        }
+
+        [PunRPC]
+        void RPC_DisablePlayer()
+        {
+            Input.enabled = false;
+            Health.enabled = false;
+            Controller.enabled = false;
             enabled = false;
         }
     }
