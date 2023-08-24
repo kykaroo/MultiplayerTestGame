@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Game.Player;
 using Photon.Pun;
@@ -19,6 +20,7 @@ namespace Game.ItemSystem.NewSystem
         public DamageConfigScriptableObject DamageConfig;
         public ShootConfigurationScriptableObject ShootConfig;
         public TrailConfigurationScriptableObject TrailConfig;
+        public AmmoConfigurationScriptableObject AmmoConfig;
 
         private MonoBehaviour ActiveMonoBehaviour;
         private GameObject Model;
@@ -32,6 +34,8 @@ namespace Game.ItemSystem.NewSystem
         private ParticleSystem ShootSystem;
 
         private Transform _gunParent;
+
+        public event Action<int, int> OnAmmunitionUpdate;
 
         public void EntryPoint(string modelPrefabPath, MonoBehaviour activeMonoBehaviour, ItemHolder itemHolder)
         {
@@ -64,7 +68,10 @@ namespace Game.ItemSystem.NewSystem
             if (wantToShoot)
             {
                 LastFrameWantedToShoot = true;
-                Shoot();
+                if (AmmoConfig.currentClipAmmo > 0)
+                { 
+                    Shoot();
+                }
             }
             else
             {
@@ -94,6 +101,9 @@ namespace Game.ItemSystem.NewSystem
                 Vector3 shootDirection = Model.transform.forward;
             
                 ShootSystem.Play();
+
+                AmmoConfig.currentClipAmmo--;
+                OnAmmunitionUpdate?.Invoke(AmmoConfig.currentClipAmmo, AmmoConfig.currentAmmo);
 
                 if (ShootConfig.IsHitScan)
                 {
@@ -204,6 +214,16 @@ namespace Game.ItemSystem.NewSystem
             yield return new WaitForSeconds(TrailConfig.Duration);
             yield return null;
             PhotonNetwork.Destroy(trail.gameObject);
+        }
+        
+        public bool CanReload()
+        {
+            return AmmoConfig.CanReload();
+        }
+        
+        public void EndReload()
+        { 
+            AmmoConfig.Reload();
         }
     }
 }

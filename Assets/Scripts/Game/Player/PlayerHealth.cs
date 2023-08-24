@@ -1,13 +1,12 @@
-﻿using System;
-using Network;
-using Photon.Pun;
+﻿using Photon.Pun;
 using UnityEngine;
 
 namespace Game.Player
 {
     public class PlayerHealth : MonoBehaviour, IDamageable
     {
-        private float _maxHealth = 100f;
+        public float maxHealth = 100f;
+        public bool isDead;
         private float _currentHealth;
         private PhotonView _photonView;
         
@@ -19,8 +18,8 @@ namespace Game.Player
 
         public float MaxHealth
         {
-            get => _maxHealth;
-            private set => _maxHealth = value;
+            get => maxHealth;
+            private set => maxHealth = value;
         }
 
         public event IDamageable.TakeDamageEvent OnHealthChange;
@@ -30,6 +29,7 @@ namespace Game.Player
 
         public void TakeDamage(float damage, string bodyPartHitName)
         {
+            if (isDead) return;
             float damageTaken = Mathf.Clamp(damage, 0, _currentHealth);
             
             switch (bodyPartHitName)
@@ -52,18 +52,20 @@ namespace Game.Player
 
         private void Awake()
         {
-            _currentHealth = _maxHealth;
+            _currentHealth = maxHealth;
             _photonView = GetComponent<PhotonView>();
         }
 
         [PunRPC]
         void RPC_TakeDamage(float damage, PhotonMessageInfo info)
         {
+            if (isDead) return;
+            
             _currentHealth -= damage;
 
             if (damage != 0)
             {
-                OnHealthChange?.Invoke(_maxHealth, _currentHealth);
+                OnHealthChange?.Invoke(maxHealth, _currentHealth);
             }
 
             if (_currentHealth <= 0 && damage != 0)

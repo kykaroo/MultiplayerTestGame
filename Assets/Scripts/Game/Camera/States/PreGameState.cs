@@ -1,6 +1,5 @@
 ﻿using Game.Camera.GUIs;
 using Game.Player;
-using Network;
 using Photon.Pun;
 using UnityEngine;
 using UnityEngine.SceneManagement;

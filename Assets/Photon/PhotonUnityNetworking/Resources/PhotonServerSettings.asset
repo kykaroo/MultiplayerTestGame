@@ -51,6 +51,8 @@ MonoBehaviour:
   - RCP_Spawn
   - RPC_Spawn
   - RPC_DisablePlayer
+  - RPC_PlayAnimation
+  - RPC_Dead
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

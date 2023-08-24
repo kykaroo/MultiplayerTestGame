@@ -21,12 +21,16 @@ namespace Game.Camera.States
             // _playerController.OnItemChange += ItemChange;
             _player.Health.OnHealthChange += UpdateHealth;
             _player.Health.OnDeath += OnDeath;
+            _player.Input.OnReload += WeaponReload;
+            _player.Input.OnAmmunitionUpdate += UpdateAmmunitionDisplay;
         }
 
         protected override void OnExit()
         {
             _player.Health.OnHealthChange -= UpdateHealth;
             _player.Health.OnDeath -= OnDeath;
+            _player.Input.OnReload -= WeaponReload;
+            _player.Input.OnAmmunitionUpdate -= UpdateAmmunitionDisplay;
 
             Object.Destroy(_hudGui.gameObject);
         }
@@ -63,13 +67,13 @@ namespace Game.Camera.States
             _hudGui.ReloadIndicator.gameObject.SetActive(true);
             _hudGui.ReloadIndicator.fillAmount = 0f;
         }
-        
-        private void UpdateAmmunitionDisplay(int magazineSize, int bulletsLeft, int bulletPerTap)
+
+        private void UpdateAmmunitionDisplay(int ammoLeft, int maxAmmo)
         {
             if (_hudGui.AmmunitionDisplay != null)
             {
                 _hudGui.AmmunitionDisplay.text =
-                    $"{bulletsLeft / bulletPerTap} / {magazineSize / bulletPerTap}";
+                    $"{ammoLeft} / {maxAmmo}";
             }
         }
         

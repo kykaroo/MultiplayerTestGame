@@ -4,7 +4,6 @@ using Game.Camera;
 using Game.Camera.GUIs;
 using Game.Camera.States;
 using Game.Player;
-using Network;
 using Photon.Pun;
 using UnityEngine;
 using UnityEngine.Serialization;

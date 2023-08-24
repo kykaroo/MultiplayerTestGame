@@ -1,5 +1,5 @@
 ﻿using Game.Camera.GUIs;
-using Network;
+using Game.Player;
 using Object = UnityEngine.Object;
 
 namespace Game.Camera.States

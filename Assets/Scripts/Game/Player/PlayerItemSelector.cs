@@ -5,7 +5,6 @@ using UnityEngine;
 
 namespace Game.Player
 {
-    [DisallowMultipleComponent]
     public class PlayerItemSelector : MonoBehaviour
     {
         [SerializeField] private GunType Gun;
@@ -14,8 +13,6 @@ namespace Game.Player
         [SerializeField] private ItemHolder itemHolder;
         [SerializeField] private string modelPrefabPath;
 
-        private GameObject gunInstance;
-    
         private PhotonView _photonView;
 
         [Space] [Header("Runtime Filled")] public GunScriptableObject ActiveGun;
@@ -41,6 +38,8 @@ namespace Game.Player
             
             gun.EntryPoint(modelPrefabPath, this, itemHolder);
         }
+        
+        // TODO Доделать смену оружия игроков
 
         /*void EquipItem(int index)
        {

@@ -1,4 +1,3 @@
-using Game.ItemSystem.NewSystem;
 using Photon.Pun;
 using UnityEngine;
 
@@ -16,11 +15,11 @@ namespace Game.Player
 
         public GameObject CreateGun(string modelPrefabPath, Vector3 spawnPoint, Vector3 spawnRotation)
         {
-            gun = PhotonNetwork.Instantiate(modelPrefabPath, Vector3.zero, Quaternion.identity, 1, new object[] {_photonView.ViewID});
+            gun = PhotonNetwork.Instantiate(modelPrefabPath, Vector3.zero, Quaternion.identity, 0, new object[] {_photonView.ViewID});
 
-            var ghjfg = gun.GetComponent<GunSpawner>()._photonView;
+            var gunViewId = gun.GetComponent<PhotonView>().ViewID;
 
-            _photonView.RPC(nameof(RPC_Spawn), RpcTarget.AllBuffered, spawnPoint, spawnRotation, gun.GetComponent<GunSpawner>()._photonView.ViewID);
+            _photonView.RPC(nameof(RPC_Spawn), RpcTarget.AllBuffered, spawnPoint, spawnRotation, gunViewId);
             return gun;
         }
         

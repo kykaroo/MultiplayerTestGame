@@ -1,17 +1,11 @@
 using System;
-using System.IO;
 using System.Linq;
 using ExitGames.Client.Photon;
 using Game.Camera.GUIs;
-using Game.Camera.States;
-using Game.Player;
 using Photon.Pun;
-using Photon.Realtime;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using Player = Game.Player.Player;
 
-namespace Network
+namespace Game.Player
 {
     public class PlayerManager : MonoBehaviour
     {
