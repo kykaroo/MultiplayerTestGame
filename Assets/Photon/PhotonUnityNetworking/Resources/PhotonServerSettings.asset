@@ -53,6 +53,7 @@ MonoBehaviour:
   - RPC_DisablePlayer
   - RPC_PlayAnimation
   - RPC_Dead
+  - RPC_BulletRotationUpdate
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

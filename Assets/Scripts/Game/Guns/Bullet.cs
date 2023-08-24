@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using Photon.Pun;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace Game.Guns
@@ -38,6 +40,7 @@ namespace Game.Guns
         {
             SpawnLocation = transform.position;
             transform.forward = spawnForce.normalized;
+            transform.LookAt(transform.position + _rigidbody.velocity);
             _rigidbody.AddForce(spawnForce);
              StartCoroutine(DelayedDestroy(_delayedDisableTime));
         }
@@ -59,6 +62,17 @@ namespace Game.Guns
             _rigidbody.velocity = Vector3.zero;
             _rigidbody.angularVelocity = Vector3.zero;
             OnCollision = null;
+        }
+
+        private void FixedUpdate()
+        {
+           _photonView.RPC(nameof(RPC_BulletRotationUpdate), RpcTarget.All);
+        }
+
+        [PunRPC]
+        void RPC_BulletRotationUpdate()
+        {
+            transform.LookAt(transform.position + _rigidbody.velocity);
         }
     }
 }
