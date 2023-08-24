@@ -1,4 +1,4 @@
-namespace Game.ItemSystem.NewSystem
+namespace Game.Guns
 {
     public enum BulletSpreadType
     {

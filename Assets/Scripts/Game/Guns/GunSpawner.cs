@@ -1,8 +1,7 @@
-﻿using System;
-using Photon.Pun;
+﻿using Photon.Pun;
 using UnityEngine;
 
-namespace Game.ItemSystem.NewSystem
+namespace Game.Guns
 {
     public class GunSpawner : MonoBehaviour
     {

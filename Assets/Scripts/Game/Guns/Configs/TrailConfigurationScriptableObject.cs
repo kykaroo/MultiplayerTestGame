@@ -1,9 +1,10 @@
+using System;
 using UnityEngine;
 
-namespace Game.ItemSystem.NewSystem
+namespace Game.Guns
 {
     [CreateAssetMenu(fileName = "Trail Config", menuName = "Guns/Gun Trail Config", order = 4)]
-    public class TrailConfigurationScriptableObject : ScriptableObject
+    public class TrailConfigurationScriptableObject : ScriptableObject, ICloneable
     {
         public Material Material;
         public AnimationCurve WidthCurve;
@@ -13,5 +14,11 @@ namespace Game.ItemSystem.NewSystem
 
         public float MissDistance = 100f;
         public float SimulationSpeed = 100f;
+        public object Clone()
+        {
+            TrailConfigurationScriptableObject config = CreateInstance<TrailConfigurationScriptableObject>();
+            Utilities.CopyValues(this, config);
+            return config;
+        }
     }
 }

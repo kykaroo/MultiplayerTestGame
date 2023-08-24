@@ -4,10 +4,10 @@ using Game.Player;
 using Photon.Pun;
 using UnityEngine;
 
-namespace Game.ItemSystem.NewSystem
+namespace Game.Guns
 {
     [CreateAssetMenu(fileName = "Gun", menuName = "Guns/Gun", order = 0)]
-    public class GunScriptableObject : ScriptableObject
+    public class GunScriptableObject : ScriptableObject, ICloneable
     {
         // public ImpactType ImpactType;
         public GunType Type;
@@ -40,15 +40,14 @@ namespace Game.ItemSystem.NewSystem
         public void EntryPoint(string modelPrefabPath, MonoBehaviour activeMonoBehaviour, ItemHolder itemHolder)
         {
             ActiveMonoBehaviour = activeMonoBehaviour;
-            LastShootTime = 0;
-            
+
             Model = itemHolder.CreateGun(modelPrefabPath, SpawnPoint, SpawnRotation);
             var gunSpawner = Model.GetComponent<GunSpawner>();
             // gunSpawner.Initialize(SpawnPoint, SpawnRotation);
             ShootSystem = gunSpawner.ShootSystem;
         }
 
-        private TrailRenderer CreateTrail()
+        /*private TrailRenderer CreateTrail()
         {
             TrailRenderer trail = PhotonNetwork.Instantiate(TrailPrefabPath, Vector3.zero, Quaternion.identity).GetComponent<TrailRenderer>();
             trail.colorGradient = TrailConfig.Color;
@@ -59,7 +58,7 @@ namespace Game.ItemSystem.NewSystem
             trail.emitting = true;
 
             return trail;
-        }
+        }*/
 
         public void Tick(bool wantToShoot)
         {
@@ -123,13 +122,13 @@ namespace Game.ItemSystem.NewSystem
             bullet.OnCollision += HandleBulletCollision;
             bullet.Spawn(shootDirection * ShootConfig.BulletSpawnForce);
 
-            TrailRenderer trail = CreateTrail();
+            /*TrailRenderer trail = CreateTrail();
         
             if (trail != null)
             {
                 trail.transform.SetParent(bullet.transform, false);
                 trail.transform.localPosition = Vector3.zero;
-            }
+            }*/
         }
 
         private void HandleBulletCollision(Bullet bullet, Collision collision)
@@ -164,19 +163,19 @@ namespace Game.ItemSystem.NewSystem
 
         private void DoHitscanShoot(Vector3 shootDirection)
         {
-            if (Physics.Raycast(ShootSystem.transform.position, shootDirection, out RaycastHit hit, float.MaxValue,
-                    ShootConfig.HitMask))
-            {
-                ActiveMonoBehaviour.StartCoroutine(PlayTrail(ShootSystem.transform.position, hit.point, hit));
-            }
-            else
-            {
-                ActiveMonoBehaviour.StartCoroutine(PlayTrail(ShootSystem.transform.position,
-                    ShootSystem.transform.position + shootDirection * TrailConfig.MissDistance, new RaycastHit()));
-            }
+            // if (Physics.Raycast(ShootSystem.transform.position, shootDirection, out RaycastHit hit, float.MaxValue,
+            //         ShootConfig.HitMask))
+            // {
+            //     ActiveMonoBehaviour.StartCoroutine(PlayTrail(ShootSystem.transform.position, hit.point, hit));
+            // }
+            // else
+            // {
+            //     ActiveMonoBehaviour.StartCoroutine(PlayTrail(ShootSystem.transform.position,
+            //         ShootSystem.transform.position + shootDirection * TrailConfig.MissDistance, new RaycastHit()));
+            // }
         }
 
-        private IEnumerator PlayTrail(Vector3 startPoint, Vector3 endPoint, RaycastHit hit)
+        /*private IEnumerator PlayTrail(Vector3 startPoint, Vector3 endPoint, RaycastHit hit)
         {
             TrailRenderer trail = CreateTrail();
             trail.transform.position = startPoint;
@@ -207,7 +206,7 @@ namespace Game.ItemSystem.NewSystem
             yield return null;
 
             PhotonNetwork.Destroy(trail.gameObject);
-        }
+        }*/
 
         private IEnumerator DelayedDestroyTrail(TrailRenderer trail)
         {
@@ -224,6 +223,24 @@ namespace Game.ItemSystem.NewSystem
         public void EndReload()
         { 
             AmmoConfig.Reload();
+        }
+
+        public object Clone()
+        {
+            GunScriptableObject config = CreateInstance<GunScriptableObject>();
+            config.Type = Type;
+            config.Name = Name;
+            config.name = name;
+            config.DamageConfig = DamageConfig.Clone() as DamageConfigScriptableObject;
+            config.ShootConfig = ShootConfig.Clone() as ShootConfigurationScriptableObject;
+            config.AmmoConfig = AmmoConfig.Clone() as AmmoConfigurationScriptableObject;
+            config.TrailConfig = TrailConfig.Clone() as TrailConfigurationScriptableObject;
+
+            config.ModelPrefab = ModelPrefab;
+            config.SpawnPoint = SpawnPoint;
+            config.SpawnRotation = SpawnRotation;
+
+            return config;
         }
     }
 }

@@ -2,7 +2,7 @@ using System.Collections;
 using Photon.Pun;
 using UnityEngine;
 
-namespace Game.ItemSystem.NewSystem
+namespace Game.Guns
 {
     [RequireComponent(typeof(Rigidbody))]
     public class Bullet : MonoBehaviour

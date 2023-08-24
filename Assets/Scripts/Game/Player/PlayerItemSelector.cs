@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Game.ItemSystem.NewSystem;
+using Game.Guns;
 using Photon.Pun;
 using UnityEngine;
 
@@ -34,9 +34,9 @@ namespace Game.Player
                 return;
             }
 
-            ActiveGun = gun;
+            ActiveGun = gun.Clone() as GunScriptableObject;
             
-            gun.EntryPoint(modelPrefabPath, this, itemHolder);
+            ActiveGun.EntryPoint(modelPrefabPath, this, itemHolder);
         }
         
         // TODO Доделать смену оружия игроков

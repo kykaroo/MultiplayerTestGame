@@ -1,8 +1,7 @@
-﻿using System;
-using Game.Player;
+﻿using Game.Player;
 using UnityEngine;
 
-namespace Game.ItemSystem.NewSystem
+namespace Game.Guns
 {
     [RequireComponent(typeof(IDamageable))]
     public class SpawnParticleSystemOnDeath : MonoBehaviour

@@ -1,4 +1,3 @@
-using Game.ItemSystem.NewSystem;
 using UnityEngine;
 
 namespace Game.Player

@@ -3,10 +3,10 @@ using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace Game.ItemSystem.NewSystem
+namespace Game.Guns
 {
     [CreateAssetMenu(fileName = "Shoot Config", menuName = "Guns/Shoot Configuration", order = 2)]
-    public class ShootConfigurationScriptableObject : ScriptableObject
+    public class ShootConfigurationScriptableObject : ScriptableObject, ICloneable
     {
         public bool IsHitScan;
         public Bullet BulletPrefab;
@@ -77,6 +77,13 @@ namespace Game.ItemSystem.NewSystem
             Vector2 direction = (targetPosition - halfSize) / halfSize.x;
 
             return direction;
+        }
+
+        public object Clone()
+        {
+            ShootConfigurationScriptableObject config = CreateInstance<ShootConfigurationScriptableObject>();
+            Utilities.CopyValues(this, config);
+            return config;
         }
     }
 }

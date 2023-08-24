@@ -22,7 +22,7 @@ MonoBehaviour:
   FireRate: 0.1
   RecoilRecoverySpeed: 0.2
   MaxSpreadTime: 2
-  SpreaType: 2
+  SpreaType: 1
   Spread: {x: 0.05, y: 0.05, z: 0.05}
   SpreadMultiplier: 0.025
   SpreatTexture: {fileID: 2800000, guid: 4ddcbf343e3297d4a98c517de7af64b0, type: 3}

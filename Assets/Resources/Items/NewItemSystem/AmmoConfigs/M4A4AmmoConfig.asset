@@ -15,5 +15,5 @@ MonoBehaviour:
   discardClipOnReload: 0
   maxAmmo: 90
   clipSize: 25
-  currentAmmo: 22
+  currentAmmo: 90
   currentClipAmmo: 25
