@@ -633,6 +633,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de73074c939745c1b0e07ab919f5221f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  photonView: {fileID: 6453041631635206590}
   itemSelector: {fileID: 4033566859376298457}
 --- !u!1 &3595506509183320736
 GameObject:
