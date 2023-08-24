@@ -33,7 +33,7 @@ namespace Game.Player
             _playerManager.AddDeathToCounter();
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
-            photonView.RPC(nameof(Input.RPC_Dead), RpcTarget.All);
+            Input.Dead();
             photonView.RPC(nameof(Controller.RPC_DisableHands), RpcTarget.All);
             photonView.RPC(nameof(RPC_DisablePlayer), RpcTarget.All);
         }
