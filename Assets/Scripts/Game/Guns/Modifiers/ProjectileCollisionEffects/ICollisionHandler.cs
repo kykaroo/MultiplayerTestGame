@@ -1,7 +1,7 @@
 ﻿using Game.Guns.Configs;
 using UnityEngine;
 
-namespace Game.Guns.ProjectileCollision
+namespace Game.Guns.Modifiers.ProjectileCollisionEffects
 {
     public interface ICollisionHandler
     {

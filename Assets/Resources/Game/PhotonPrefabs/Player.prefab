@@ -634,6 +634,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   photonView: {fileID: 6453041631635206590}
+  impactTypeOverride: {fileID: 11400000, guid: e98d2bae6a59a344384b98e99ad22088, type: 2}
   itemSelector: {fileID: 4033566859376298457}
 --- !u!1 &3595506509183320736
 GameObject:

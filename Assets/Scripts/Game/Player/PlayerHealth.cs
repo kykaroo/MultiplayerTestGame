@@ -1,4 +1,5 @@
-﻿using Photon.Pun;
+﻿using System;
+using Photon.Pun;
 using UnityEngine;
 
 namespace Game.Player
@@ -9,6 +10,12 @@ namespace Game.Player
         public bool isDead;
         private float _currentHealth;
         private PhotonView _photonView;
+        
+        private void Awake()
+        {
+            _currentHealth = maxHealth;
+            _photonView = GetComponent<PhotonView>();
+        }
         
         public float CurrentHealth 
         {
@@ -42,18 +49,9 @@ namespace Game.Player
                 case "Legs":
                     damageTaken *= 0.5f;
                     break;
-                default:
-                    break;
             }
             
-            //Данные обновляет только игрок, получивший урон
-            _photonView.RPC(nameof(RPC_TakeDamage), _photonView.Owner, damageTaken);
-        }
-
-        private void Awake()
-        {
-            _currentHealth = maxHealth;
-            _photonView = GetComponent<PhotonView>();
+            _photonView.RPC(nameof(RPC_TakeDamage), RpcTarget.All, damageTaken);
         }
 
         [PunRPC]
@@ -72,8 +70,16 @@ namespace Game.Player
             {
                 OnDeath?.Invoke(transform.position);
                 _currentHealth = 0;
-                PlayerManager.Find(info.Sender).GetKill();
+                if (_photonView.IsMine) GiveKill(info);
             }
+        }
+
+        void GiveKill(PhotonMessageInfo info)
+        {
+            PlayerManager killer = PlayerManager.Find(info.Sender);
+            if (killer.PV.IsMine) return;
+            if (killer == null) throw new NullReferenceException("Убийца игрока не существует");
+            killer.GetKill();
         }
     }
 }

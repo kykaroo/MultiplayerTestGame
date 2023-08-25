@@ -13,7 +13,7 @@ namespace Game.Player
         private PreGameGui _preGameGUI;
         private DeathGui _deathGUI;
 
-        private PhotonView PV;
+        public PhotonView PV;
 
         private int _kills;
         private int _deaths;

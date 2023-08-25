@@ -2,7 +2,7 @@
 using Game.Player;
 using UnityEngine;
 
-namespace Game.Guns.ProjectileCollision
+namespace Game.Guns.Modifiers.ProjectileCollisionEffects
 {
     public class Explode : ICollisionHandler
     {

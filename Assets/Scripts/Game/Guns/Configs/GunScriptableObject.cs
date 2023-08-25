@@ -1,6 +1,6 @@
 using System;
 using System.Collections;
-using Game.Guns.ProjectileCollision;
+using Game.Guns.Modifiers.ProjectileCollisionEffects;
 using Game.Player;
 using Game.SurfaceManager;
 using Photon.Pun;
@@ -11,7 +11,7 @@ namespace Game.Guns.Configs
     [CreateAssetMenu(fileName = "Gun", menuName = "Guns/Gun", order = 0)]
     public class GunScriptableObject : ScriptableObject, ICloneable
     {
-        [SerializeField] private ImpactType ImpactType;
+        public ImpactType ImpactType;
         public GunType Type;
         public string Name;
         public GameObject ModelPrefab;
