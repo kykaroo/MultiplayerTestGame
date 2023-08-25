@@ -1,12 +1,12 @@
 ﻿using Game.Camera.GUIs;
 using Game.Player;
-using Network;
 using Photon.Pun;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Game.Camera.States
 {
+    using Player = Game.Player.Player;
     public class PreGameState : GuiStateBase
     {
         private PreGameGui _preGameGui;
@@ -44,7 +44,7 @@ namespace Game.Camera.States
         
         private void JoinGame()
         {
-            StateMachine.SetState<HudState, PlayerController>(_playerManager.CreateController());
+            StateMachine.SetState<HudState, Player>(_playerManager.CreatePlayer());
         }
     }
 }

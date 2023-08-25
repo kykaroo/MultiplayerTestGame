@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf2affe9ea155c643ad0ef7d8087f90a, type: 3}
+  m_Name: M4M4ShootConfig
+  m_EditorClassIdentifier: 
+  IsHitScan: 0
+  BulletPrefab: {fileID: 2392369947942207775, guid: df324753ea99cf945963dc84e798d34a, type: 3}
+  bulletPrefabPath: Items/NewItemSystem/Prefabs/Bullet
+  BulletSpawnForce: 100
+  HitMask:
+    serializedVersion: 2
+    m_Bits: 384
+  FireRate: 0.1
+  RecoilRecoverySpeed: 0.2
+  MaxSpreadTime: 2
+  SpreaType: 1
+  Spread: {x: 0.05, y: 0.05, z: 0.05}
+  SpreadMultiplier: 0.025
+  SpreatTexture: {fileID: 2800000, guid: 4ddcbf343e3297d4a98c517de7af64b0, type: 3}

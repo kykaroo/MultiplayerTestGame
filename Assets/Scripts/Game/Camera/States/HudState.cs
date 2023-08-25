@@ -1,39 +1,41 @@
 ﻿using Game.Camera.GUIs;
-using Game.ItemSystem;
-using Game.ItemSystem.Weapon;
-using Game.Player;
 using UnityEngine;
 
 namespace Game.Camera.States
 {
-    public class HudState : GuiBaseStateWithPayload<PlayerController>
+    using Player = Game.Player.Player;
+    public class HudState : GuiBaseStateWithPayload<Player>
     {
         private HudGui _hudGui;
-        private UsableItem _item;
-        private PlayerController _playerController;
+        // private UsableItem _item;
+        private Player _player;
 
         public HudState(GuiFactory guiFactory) : base(guiFactory) { }
         
-        protected override void OnEnter(PlayerController playerController)
+        protected override void OnEnter(Player player)
         {
             _hudGui = GuiFactory.CreateGUI<HudGui>();
 
-            _playerController = playerController;
+            _player = player;
 
-            _playerController.OnItemChange += ItemChange;
-            _playerController.OnHealthChange += UpdateHealth;
-            _playerController.OnDeath += OnDeath;
+            // _playerController.OnItemChange += ItemChange;
+            _player.Health.OnHealthChange += UpdateHealth;
+            _player.Health.OnDeath += OnDeath;
+            _player.Input.OnReload += WeaponReload;
+            _player.Input.OnAmmunitionUpdate += UpdateAmmunitionDisplay;
         }
 
         protected override void OnExit()
         {
-            _playerController.OnHealthChange -= UpdateHealth;
-            _playerController.OnDeath -= OnDeath;
+            _player.Health.OnHealthChange -= UpdateHealth;
+            _player.Health.OnDeath -= OnDeath;
+            _player.Input.OnReload -= WeaponReload;
+            _player.Input.OnAmmunitionUpdate -= UpdateAmmunitionDisplay;
 
             Object.Destroy(_hudGui.gameObject);
         }
         
-        private void ItemChange(UsableItem item)
+        /*private void ItemChange(UsableItem item)
         {
             switch (_item)
             {
@@ -52,11 +54,11 @@ namespace Game.Camera.States
                     weapon.OnAmmunitionChange += UpdateAmmunitionDisplay;
                     break;
             }
-        }
+        }*/
 
-        private void OnDeath()
+        private void OnDeath(Vector3 vector3)
         {
-            StateMachine.SetState<DeathGuiState, PlayerController>(_playerController);
+            StateMachine.SetState<DeathGuiState, Player>(_player);
         }
         
         private void WeaponReload(float reloadTime)
@@ -65,17 +67,17 @@ namespace Game.Camera.States
             _hudGui.ReloadIndicator.gameObject.SetActive(true);
             _hudGui.ReloadIndicator.fillAmount = 0f;
         }
-        
-        private void UpdateAmmunitionDisplay(int magazineSize, int bulletsLeft, int bulletPerTap)
+
+        private void UpdateAmmunitionDisplay(int ammoLeft, int maxAmmo)
         {
             if (_hudGui.AmmunitionDisplay != null)
             {
                 _hudGui.AmmunitionDisplay.text =
-                    $"{bulletsLeft / bulletPerTap} / {magazineSize / bulletPerTap}";
+                    $"{ammoLeft} / {maxAmmo}";
             }
         }
         
-        void UpdateHealth(float currentHealth, float maxHealth)
+        void UpdateHealth(float maxHealth, float currentHealth)
         {
             _hudGui.HealthBarImage.fillAmount = currentHealth / maxHealth;
             _hudGui.HealthBarGameObject.SetActive(maxHealth - currentHealth != 0);
