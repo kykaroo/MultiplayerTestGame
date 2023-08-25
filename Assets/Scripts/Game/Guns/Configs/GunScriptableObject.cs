@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using Game.Guns.ProjectileCollision;
 using Game.Player;
+using Game.SurfaceManager;
 using Photon.Pun;
 using UnityEngine;
 
@@ -10,7 +11,7 @@ namespace Game.Guns.Configs
     [CreateAssetMenu(fileName = "Gun", menuName = "Guns/Gun", order = 0)]
     public class GunScriptableObject : ScriptableObject, ICloneable
     {
-        // public ImpactType ImpactType;
+        [SerializeField] private ImpactType ImpactType;
         public GunType Type;
         public string Name;
         public GameObject ModelPrefab;
@@ -156,7 +157,7 @@ namespace Game.Guns.Configs
 
         private void HandleBulletImpact(float distanceTraveled, Vector3 hitLocation, Vector3 hitNormal, Collider hitCollider)
         {
-            // TODO SurfaceManager
+            SurfaceManager.SurfaceManager.Instance.HandleImpact(hitCollider.gameObject, hitLocation, hitNormal, ImpactType, 1);
             
             if (hitCollider.transform.root.TryGetComponent(out IDamageable damageable))
             {
@@ -239,6 +240,7 @@ namespace Game.Guns.Configs
             config.Type = Type;
             config.Name = Name;
             config.name = name;
+            config.ImpactType = ImpactType;
             config.DamageConfig = DamageConfig.Clone() as DamageConfigScriptableObject;
             config.ShootConfig = ShootConfig.Clone() as ShootConfigurationScriptableObject;
             config.AmmoConfig = AmmoConfig.Clone() as AmmoConfigurationScriptableObject;

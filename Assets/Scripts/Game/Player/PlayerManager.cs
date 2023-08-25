@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using ExitGames.Client.Photon;
 using Game.Camera.GUIs;
+using Game.Spawn;
 using Photon.Pun;
 using UnityEngine;
 

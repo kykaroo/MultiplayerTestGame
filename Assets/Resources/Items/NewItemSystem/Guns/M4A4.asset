@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 732df351cd7033c4aab559dc63b1d5bb, type: 3}
   m_Name: M4A4
   m_EditorClassIdentifier: 
+  ImpactType: {fileID: 11400000, guid: 66b356ae916725947a85cfa39d39001a, type: 2}
   Type: 0
   Name: M4A4
   ModelPrefab: {fileID: 1615621099556364170, guid: d7b32b689a85d1f43bfbd43be7996c55, type: 3}

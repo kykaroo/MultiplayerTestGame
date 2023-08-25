@@ -1,7 +1,7 @@
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace Game.Player
+namespace Game.Spawn
 {
     public class SpawnManager : MonoBehaviour
     {
