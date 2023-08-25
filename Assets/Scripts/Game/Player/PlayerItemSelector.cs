@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Game.Guns;
+using Game.Guns.Configs;
 using Photon.Pun;
 using UnityEngine;
 

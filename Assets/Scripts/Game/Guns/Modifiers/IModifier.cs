@@ -1,4 +1,6 @@
-﻿namespace Game.Guns.Modifiers
+﻿using Game.Guns.Configs;
+
+namespace Game.Guns.Modifiers
 {
     public interface IModifier
     {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using Game.Guns.Configs;
 
 namespace Game.Guns.Modifiers
 {

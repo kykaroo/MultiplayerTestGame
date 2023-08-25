@@ -1,10 +1,11 @@
 using System;
 using System.Collections;
+using Game.Guns.ProjectileCollision;
 using Game.Player;
 using Photon.Pun;
 using UnityEngine;
 
-namespace Game.Guns
+namespace Game.Guns.Configs
 {
     [CreateAssetMenu(fileName = "Gun", menuName = "Guns/Gun", order = 0)]
     public class GunScriptableObject : ScriptableObject, ICloneable
@@ -21,6 +22,8 @@ namespace Game.Guns
         public ShootConfigurationScriptableObject ShootConfig;
         public TrailConfigurationScriptableObject TrailConfig;
         public AmmoConfigurationScriptableObject AmmoConfig;
+
+        public ICollisionHandler[] bulletImpactEffects = Array.Empty<ICollisionHandler>();
 
         private MonoBehaviour ActiveMonoBehaviour;
         private GameObject Model;
@@ -158,6 +161,11 @@ namespace Game.Guns
             if (hitCollider.transform.root.TryGetComponent(out IDamageable damageable))
             {
                 damageable.TakeDamage(DamageConfig.GetDamage(distanceTraveled), hitCollider.name);
+            }
+            
+            foreach (var handler in bulletImpactEffects)
+            {
+                handler.HandleImpact(hitCollider, hitLocation, hitNormal, this);
             }
         }
 

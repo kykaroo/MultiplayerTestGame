@@ -940,7 +940,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3504133512234965451}
   - component: {fileID: 5721907360510747349}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: ExplosionCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -970,7 +970,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6217914249394269102}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1.5, y: 2.2, z: 1.5}

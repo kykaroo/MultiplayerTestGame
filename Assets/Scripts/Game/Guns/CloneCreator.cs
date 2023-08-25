@@ -2,7 +2,7 @@
 
 namespace Game.Guns
 {
-    public class Utilities
+    public abstract class CloneCreator
     {
         public static void CopyValues<T>(T @base, T copy)
         {

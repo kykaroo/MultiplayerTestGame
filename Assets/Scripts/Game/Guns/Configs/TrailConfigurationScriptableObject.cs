@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Game.Guns
+namespace Game.Guns.Configs
 {
     [CreateAssetMenu(fileName = "Trail Config", menuName = "Guns/Gun Trail Config", order = 4)]
     public class TrailConfigurationScriptableObject : ScriptableObject, ICloneable
@@ -17,7 +17,7 @@ namespace Game.Guns
         public object Clone()
         {
             TrailConfigurationScriptableObject config = CreateInstance<TrailConfigurationScriptableObject>();
-            Utilities.CopyValues(this, config);
+            CloneCreator.CopyValues(this, config);
             return config;
         }
     }

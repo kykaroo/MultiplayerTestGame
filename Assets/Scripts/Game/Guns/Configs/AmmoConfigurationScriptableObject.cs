@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Game.Guns
+namespace Game.Guns.Configs
 {
     [CreateAssetMenu(fileName = "Ammo Config", menuName = "Guns/Ammo Config", order = 3)]
     public class AmmoConfigurationScriptableObject : ScriptableObject, ICloneable
@@ -41,7 +41,7 @@ namespace Game.Guns
         public object Clone()
         {
             AmmoConfigurationScriptableObject config = CreateInstance<AmmoConfigurationScriptableObject>();
-            Utilities.CopyValues(this, config);
+            CloneCreator.CopyValues(this, config);
             return config;
         }
     }

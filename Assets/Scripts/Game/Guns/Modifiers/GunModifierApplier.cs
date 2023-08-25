@@ -1,4 +1,5 @@
-﻿using Game.Player;
+﻿using Game.Guns.ProjectileCollision;
+using Game.Player;
 using Photon.Pun;
 using UnityEngine;
 
@@ -25,6 +26,11 @@ namespace Game.Guns.Modifiers
                 AttributeName = "ShootConfig/Spread"
             };
             spreadModifier.Apply(itemSelector.ActiveGun);
+
+            itemSelector.ActiveGun.bulletImpactEffects = new ICollisionHandler[]
+            {
+                new Explode(2f, new(new Keyframe(0, 1), new Keyframe(1, 0.25f)), 10)
+            };
         }
     }
 }

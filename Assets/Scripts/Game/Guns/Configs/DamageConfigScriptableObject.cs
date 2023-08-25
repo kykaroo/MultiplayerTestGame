@@ -2,7 +2,7 @@
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace Game.Guns
+namespace Game.Guns.Configs
 {
     [CreateAssetMenu(fileName = "Damage Config", menuName = "Guns/Damage Config")]
     public class DamageConfigScriptableObject : ScriptableObject, ICloneable

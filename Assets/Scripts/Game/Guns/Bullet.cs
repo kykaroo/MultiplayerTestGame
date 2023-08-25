@@ -1,7 +1,5 @@
-using System;
 using System.Collections;
 using Photon.Pun;
-using Unity.Mathematics;
 using UnityEngine;
 
 namespace Game.Guns

@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace Game.Guns
+namespace Game.Guns.Configs
 {
     [CreateAssetMenu(fileName = "Shoot Config", menuName = "Guns/Shoot Configuration", order = 2)]
     public class ShootConfigurationScriptableObject : ScriptableObject, ICloneable
@@ -23,6 +23,7 @@ namespace Game.Guns
         [Header("Texture-Based spread")] [Range(0.001f, 5f)]
         public float SpreadMultiplier = 0.1f;
         public Texture2D SpreatTexture;
+        
 
         public Vector3 GetSpread(float ShootTime = 0)
         {
@@ -82,7 +83,7 @@ namespace Game.Guns
         public object Clone()
         {
             ShootConfigurationScriptableObject config = CreateInstance<ShootConfigurationScriptableObject>();
-            Utilities.CopyValues(this, config);
+            CloneCreator.CopyValues(this, config);
             return config;
         }
     }
