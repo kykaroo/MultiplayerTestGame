@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using Game.Guns.Modifiers.ProjectileCollisionEffects;
 using Game.Player;
+using Game.Player.PlayerInterfaces;
 using Game.SurfaceManager;
 using Photon.Pun;
 using UnityEngine;
@@ -157,7 +158,7 @@ namespace Game.Guns.Configs
 
         private void HandleBulletImpact(float distanceTraveled, Vector3 hitLocation, Vector3 hitNormal, Collider hitCollider)
         {
-            SurfaceManager.SurfaceManager.Instance.HandleImpact(hitCollider.gameObject, hitLocation, hitNormal, ImpactType, 1);
+            SurfaceManager.SurfaceManager.Instance.HandleImpact(hitCollider.gameObject, hitLocation, hitNormal, ImpactType, 0);
             
             if (hitCollider.transform.root.TryGetComponent(out IDamageable damageable))
             {

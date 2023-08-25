@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Game.Player
+namespace Game.Player.PlayerInterfaces
 {
     public interface IDamageable
     {

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: M4A4DamageConfig
   m_EditorClassIdentifier: 
   damageCurve:
-    m_Mode: 1
+    m_Mode: 0
     m_CurveMultiplier: 1
     m_CurveMin:
       serializedVersion: 2
@@ -82,4 +82,4 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
     m_ConstantMin: 0
-    m_ConstantMax: 0
+    m_ConstantMax: 25

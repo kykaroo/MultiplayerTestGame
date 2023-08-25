@@ -1,18 +1,18 @@
 using System;
 using System.Collections;
+using Game.Player.PlayerInterfaces;
 using Photon.Pun;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Game.Player
 {
-    public class PlayerInput : MonoBehaviour
+    public class PlayerInput : MonoBehaviour, ISlowable
     {
         [Header("Player")]
         public float mouseSensitivityX;
         public float mouseSensitivityY;
-        public float sprintSpeed;
-        public float walkSpeed;
+        public float baseSpeed;
+        public float sprintSpeedMultiplier;
         public float jumpForce;
         public float smoothTime;
         [Header("Items and camera")]
@@ -36,8 +36,14 @@ namespace Game.Player
         private Vector3 _moveAmount;
         public Rigidbody _playerBody;
         private PhotonView _photonView;
-        private bool isReloading = false;
-        
+        private bool isReloading;
+        private float walkSpeed;
+        private float sprintSpeed;
+        private int slowStacks;
+        private float currentMovementMultiplier = 1;
+
+        private Coroutine _slowCoroutine;
+
         public bool grounded;
 
         public event Action<float> OnReload;
@@ -47,6 +53,10 @@ namespace Game.Player
         {
             _photonView = GetComponent<PhotonView>();
             _playerBody = GetComponent<Rigidbody>();
+            
+            walkSpeed = baseSpeed;
+            sprintSpeed = baseSpeed * sprintSpeedMultiplier;
+            
             cameraHolder.OnReloadEnded += EndReload;
 
             foreach (AnimationClip clip in handsAnimator.runtimeAnimatorController.animationClips)
@@ -69,6 +79,7 @@ namespace Game.Player
         {
             if (!_photonView.IsMine) return;
 
+            
             if (itemSelector.ActiveGun != null)
             {
                 itemSelector.ActiveGun.OnAmmunitionUpdate += AmmunitionUpdate; // TODO исправить костыль
@@ -160,11 +171,49 @@ namespace Game.Player
             yield return new WaitForSeconds(reloadTime);
             EndReload();
         }
-
         
         public void Dead()
         {
             cameraHolder.Dead();
+        }
+
+        public void Slow(float movementMultiplier, float slowTime, bool isStackable, int maxStacks, PhotonView targetPhotonView)
+        {
+            _photonView.RPC(nameof(RPC_Slow), targetPhotonView.Owner, movementMultiplier, slowTime, isStackable);
+        }
+
+        private void CalculateSlowPercent(float movementMultiplier)
+        {
+            if (slowStacks == 1) currentMovementMultiplier =  movementMultiplier;
+            else currentMovementMultiplier +=  movementMultiplier / slowStacks;
+        }
+
+        private IEnumerator SlowDown(float slowTime)
+        {
+            walkSpeed = baseSpeed * currentMovementMultiplier;
+            sprintSpeed = walkSpeed * sprintSpeedMultiplier;
+            yield return new WaitForSeconds(slowTime);
+
+            slowStacks = 0;
+            currentMovementMultiplier = 1;
+            walkSpeed = baseSpeed;
+            sprintSpeed = walkSpeed * sprintSpeedMultiplier;
+        }
+
+        [PunRPC]
+        void RPC_Slow(float movementMultiplier, float slowTime, bool isStackable)
+        {
+            slowStacks++;
+
+            if (isStackable) CalculateSlowPercent(movementMultiplier);
+            else currentMovementMultiplier = movementMultiplier;
+            
+            if (_slowCoroutine != null)
+            {
+                StopCoroutine(_slowCoroutine);
+            }
+
+            _slowCoroutine = StartCoroutine(SlowDown(slowTime));
         }
     }
 }

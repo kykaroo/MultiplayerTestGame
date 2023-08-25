@@ -1,4 +1,5 @@
 ﻿using System;
+using Game.Player.PlayerInterfaces;
 using Photon.Pun;
 using UnityEngine;
 
@@ -77,8 +78,8 @@ namespace Game.Player
         void GiveKill(PhotonMessageInfo info)
         {
             PlayerManager killer = PlayerManager.Find(info.Sender);
-            if (killer.PV.IsMine) return;
             if (killer == null) throw new NullReferenceException("Убийца игрока не существует");
+            if (killer.PV.IsMine) return;
             killer.GetKill();
         }
     }

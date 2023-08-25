@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using Game.Camera;
-using Game.Camera.GUIs;
+﻿using Game.Camera;
 using Game.Camera.States;
 using Game.Player;
 using Photon.Pun;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Game
 {

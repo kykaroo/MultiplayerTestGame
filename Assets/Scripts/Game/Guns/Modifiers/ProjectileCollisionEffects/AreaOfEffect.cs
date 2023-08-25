@@ -1,6 +1,6 @@
-﻿using System.Collections;
-using Game.Guns.Configs;
+﻿using Game.Guns.Configs;
 using Game.Player;
+using Game.Player.PlayerInterfaces;
 using UnityEngine;
 
 namespace Game.Guns.Modifiers.ProjectileCollisionEffects
@@ -9,10 +9,10 @@ namespace Game.Guns.Modifiers.ProjectileCollisionEffects
     {
         public float AreaRadius;
         public AnimationCurve DamageFallOff;
-        public int BaseDamage;
+        public float BaseDamage;
         
         private LayerMask hitMask;
-        private Collider[] _hitObjects = new Collider[100];
+        protected Collider[] _hitObjects = new Collider[100];
         protected int Hits;
 
         public AreaOfEffect(float areaRadius, AnimationCurve damageFallOff, int baseDamage)
