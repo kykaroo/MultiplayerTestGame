@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53b2c6747a8b4c2c9899733465f3687f, type: 3}
+  m_Name: Collimator sight
+  m_EditorClassIdentifier: 
+  partType: 5
+  prefab: {fileID: 5209162665623826845, guid: 1a61d9e5b208ad94a9e2fe13ba6aff15, type: 3}

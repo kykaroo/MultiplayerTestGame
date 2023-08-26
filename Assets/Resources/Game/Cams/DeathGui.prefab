@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 187725365294352630}
   - component: {fileID: 2740463660326170613}
   - component: {fileID: 2606869332573187411}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: QuitButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 7656824982665313151}
   - component: {fileID: 8612153566333772381}
   - component: {fileID: 7368702748039965295}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: CustomizeButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -257,7 +257,7 @@ GameObject:
   - component: {fileID: 8255350681084673773}
   - component: {fileID: 300094791748464126}
   - component: {fileID: 2182592190690473596}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: DeathGui
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -375,7 +375,7 @@ GameObject:
   - component: {fileID: 960598255401044501}
   - component: {fileID: 6100402415126289497}
   - component: {fileID: 8371488319367702135}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -510,7 +510,7 @@ GameObject:
   - component: {fileID: 234864708830360736}
   - component: {fileID: 7738139377998172680}
   - component: {fileID: 6988481061296555}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -646,7 +646,7 @@ GameObject:
   - component: {fileID: 1732495022214432449}
   - component: {fileID: 1420483041591860998}
   - component: {fileID: 2287723793962824403}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: RespawnButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -767,7 +767,7 @@ GameObject:
   - component: {fileID: 1882912533361531931}
   - component: {fileID: 4810959832920122525}
   - component: {fileID: 7838347350593272613}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

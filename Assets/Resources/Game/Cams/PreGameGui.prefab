@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2407554538381166932}
   - component: {fileID: 9162428772787512645}
   - component: {fileID: 8215504692678295168}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: QuitButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 7271433762677162344}
   - component: {fileID: 6829448978398839665}
   - component: {fileID: 1803431270336617193}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: PreGameGui
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -250,7 +250,7 @@ GameObject:
   - component: {fileID: 3965862373657881166}
   - component: {fileID: 8467089058118265891}
   - component: {fileID: 4456559492483320208}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -385,7 +385,7 @@ GameObject:
   - component: {fileID: 3215636675689888575}
   - component: {fileID: 243244692374084187}
   - component: {fileID: 7430248398603823890}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -521,7 +521,7 @@ GameObject:
   - component: {fileID: 5480250718818082207}
   - component: {fileID: 5375962617974674179}
   - component: {fileID: 4076013345925291490}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: JoinButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
