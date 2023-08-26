@@ -138,14 +138,14 @@ namespace Game.Guns.Configs
 
         private void HandleBulletCollision(Bullet bullet, Collision collision)
         {
-            TrailRenderer trail = bullet.GetComponent<TrailRenderer>();
+            // TrailRenderer trail = bullet.GetComponent<TrailRenderer>();
 
-            if (trail != null)
-            {
-                trail.transform.SetParent(null, true);
-                ActiveMonoBehaviour.StartCoroutine(DelayedDestroyTrail(trail));
-            }
-            
+            // if (trail != null)
+            // {
+            //     trail.transform.SetParent(null, true);
+            //     ActiveMonoBehaviour.StartCoroutine(DelayedDestroyTrail(trail));
+            // }
+
             PhotonNetwork.Destroy(bullet.gameObject);
 
             if (collision != null)
@@ -159,7 +159,7 @@ namespace Game.Guns.Configs
         private void HandleBulletImpact(float distanceTraveled, Vector3 hitLocation, Vector3 hitNormal, Collider hitCollider)
         {
             SurfaceManager.SurfaceManager.Instance.HandleImpact(hitCollider.gameObject, hitLocation, hitNormal, ImpactType, 0);
-            
+
             if (hitCollider.transform.root.TryGetComponent(out IDamageable damageable))
             {
                 damageable.TakeDamage(DamageConfig.GetDamage(distanceTraveled), hitCollider.name);

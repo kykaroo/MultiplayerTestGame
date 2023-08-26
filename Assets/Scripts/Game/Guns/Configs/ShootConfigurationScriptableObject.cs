@@ -12,7 +12,6 @@ namespace Game.Guns.Configs
         public Bullet BulletPrefab;
         public string bulletPrefabPath;
         public float BulletSpawnForce = 1000;
-        public LayerMask HitMask;
         public float FireRate = 0.25f;
         public float RecoilRecoverySpeed = 1f;
         public float MaxSpreadTime = 1f;
@@ -23,6 +22,9 @@ namespace Game.Guns.Configs
         [Header("Texture-Based spread")] [Range(0.001f, 5f)]
         public float SpreadMultiplier = 0.1f;
         public Texture2D SpreatTexture;
+        
+        [Header("Only for raycast (disabled)")]
+        public LayerMask HitMask;
         
 
         public Vector3 GetSpread(float ShootTime = 0)

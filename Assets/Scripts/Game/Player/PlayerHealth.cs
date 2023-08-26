@@ -38,21 +38,20 @@ namespace Game.Player
         public void TakeDamage(float damage, string bodyPartHitName)
         {
             if (isDead) return;
-            float damageTaken = Mathf.Clamp(damage, 0, _currentHealth);
-            
+
             switch (bodyPartHitName)
             {
                 case "Head":
-                    damageTaken *= 1.5f;
+                    damage *= 1.5f;
                     break;
                 case "Body":
                     break;
                 case "Legs":
-                    damageTaken *= 0.5f;
+                    damage *= 0.5f;
                     break;
             }
             
-            _photonView.RPC(nameof(RPC_TakeDamage), RpcTarget.All, damageTaken);
+            _photonView.RPC(nameof(RPC_TakeDamage), RpcTarget.All, damage);
         }
 
         [PunRPC]
@@ -78,7 +77,6 @@ namespace Game.Player
         void GiveKill(PhotonMessageInfo info)
         {
             PlayerManager killer = PlayerManager.Find(info.Sender);
-            if (killer == null) throw new NullReferenceException("Убийца игрока не существует");
             if (killer.PV.IsMine) return;
             killer.GetKill();
         }

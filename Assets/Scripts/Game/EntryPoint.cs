@@ -1,4 +1,6 @@
-﻿using Game.Camera;
+﻿using System.Collections;
+using System.Collections.Generic;
+using Game.Camera;
 using Game.Camera.States;
 using Game.Player;
 using Photon.Pun;
@@ -9,15 +11,14 @@ namespace Game
     public class EntryPoint : MonoBehaviour
     {
         [SerializeField] private GuiFactory guiFactory; 
-        [SerializeField] private UnityEngine.Camera preGameCamera; 
+        [SerializeField] private UnityEngine.Camera preGameCamera;
+        [SerializeField] private string playerManagerPrefabPath;
         private PlayerManager _playerManager;
         
         private GuiStateMachine _stateMachine;
         private void Start()
         {
-            _playerManager = PhotonNetwork.Instantiate("Game/PhotonPrefabs/PlayerManager", Vector3.zero, Quaternion.identity).GetComponent<PlayerManager>();
-            SetupStates();
-            _stateMachine.SetState<PreGameState>();
+            StartCoroutine(Create());
         }
         
 
@@ -30,6 +31,14 @@ namespace Game
                 { typeof(PreGameState), new PreGameState(guiFactory, _playerManager, preGameCamera) },
                 { typeof(InitializeState), new InitializeState(guiFactory, _playerManager) }
             });
+        }
+        
+        private IEnumerator Create()
+        {
+            yield return new WaitForSeconds(0.1f);
+            _playerManager = PhotonNetwork.Instantiate(playerManagerPrefabPath, Vector3.zero, Quaternion.identity).GetComponent<PlayerManager>();
+            SetupStates();
+            _stateMachine.SetState<PreGameState>();
         }
     }
 }
