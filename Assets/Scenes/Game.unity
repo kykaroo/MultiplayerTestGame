@@ -824,7 +824,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   guiFactory: {fileID: 126806071}
-  preGameCamera: {fileID: 472169573}
+  lobbyCamera: {fileID: 472169573}
   playerManagerPrefabPath: Game/PhotonPrefabs/PlayerManager
 --- !u!4 &549599373
 Transform:

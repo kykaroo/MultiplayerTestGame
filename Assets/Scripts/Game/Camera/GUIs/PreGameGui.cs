@@ -1,26 +1,29 @@
 using System;
+using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Button = UnityEngine.UI.Button;
 
 namespace Game.Camera.GUIs
 {
     public class PreGameGui : MonoBehaviour
     {
-        [SerializeField] private Button joinButton;
+        [SerializeField] public Button spawnButton;
         [SerializeField] private Button quitButton;
+        [SerializeField] public TextMeshProUGUI respawnText;
 
-        public event Action OnJoinButtonClick;
+        public event Action OnSpawnButtonClick;
         public event Action OnQuitButtonClick;
 
         private void Start()
         {
-            joinButton.onClick.AddListener(OnJoinClick);
+            spawnButton.onClick.AddListener(OnSpawnClick);
             quitButton.onClick.AddListener(OnQuitClick);
         }
 
-        protected virtual void OnJoinClick()
+        protected virtual void OnSpawnClick()
         {
-            OnJoinButtonClick?.Invoke();
+            OnSpawnButtonClick?.Invoke();
         }
 
         protected virtual void OnQuitClick()

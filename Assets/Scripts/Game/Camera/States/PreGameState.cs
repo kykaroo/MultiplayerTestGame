@@ -23,16 +23,21 @@ namespace Game.Camera.States
         {
             _preGameGui = GuiFactory.CreateGUI<PreGameGui>();
 
-            _preGameGui.OnJoinButtonClick += JoinGame;
+            _preGameGui.OnSpawnButtonClick += Spawn;
             _preGameGui.OnQuitButtonClick += QuitGame;
+            _playerManager.OnRespawnAvailable += EnableButton;
+            _playerManager.OnRespawnUnavailable += UpdateTimer;
+            _camera.gameObject.SetActive(true);
         }
 
         protected override void OnExit()
         {
-            _preGameGui.OnJoinButtonClick -= JoinGame;
+            _preGameGui.OnSpawnButtonClick -= Spawn;
             _preGameGui.OnQuitButtonClick -= QuitGame;
+            _playerManager.OnRespawnAvailable -= EnableButton;
+            _playerManager.OnRespawnUnavailable -= UpdateTimer;
+            _camera.gameObject.SetActive(false);
             
-            Object.Destroy(_camera.gameObject);
             Object.Destroy(_preGameGui.gameObject);
         }
         
@@ -42,9 +47,21 @@ namespace Game.Camera.States
             SceneManager.LoadScene(0);
         }
         
-        private void JoinGame()
+        private void Spawn()
         {
             StateMachine.SetState<HudState, Player>(_playerManager.CreatePlayer());
+        }
+        
+        private void EnableButton()
+        {
+            _preGameGui.respawnText.text = "Respawn";
+            _preGameGui.spawnButton.interactable = true;
+        }
+        
+        private void UpdateTimer()
+        {
+            _preGameGui.spawnButton.interactable = false;
+            _preGameGui.respawnText.text = $"Respawn: {_playerManager.respawnTime}";
         }
     }
 }

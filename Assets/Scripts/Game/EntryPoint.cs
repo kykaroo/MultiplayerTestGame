@@ -5,13 +5,14 @@ using Game.Camera.States;
 using Game.Player;
 using Photon.Pun;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Game
 {
     public class EntryPoint : MonoBehaviour
     {
         [SerializeField] private GuiFactory guiFactory; 
-        [SerializeField] private UnityEngine.Camera preGameCamera;
+        [SerializeField] private UnityEngine.Camera lobbyCamera;
         [SerializeField] private string playerManagerPrefabPath;
         private PlayerManager _playerManager;
         
@@ -28,8 +29,9 @@ namespace Game
             {
                 { typeof(DeathGuiState), new DeathGuiState(guiFactory, _playerManager) },
                 { typeof(HudState), new HudState(guiFactory) },
-                { typeof(PreGameState), new PreGameState(guiFactory, _playerManager, preGameCamera) },
-                { typeof(InitializeState), new InitializeState(guiFactory, _playerManager) }
+                { typeof(PreGameState), new PreGameState(guiFactory, _playerManager, lobbyCamera) },
+                { typeof(InitializeState), new InitializeState(guiFactory, _playerManager) },
+                { typeof(CustomizeGuiState), new CustomizeGuiState(guiFactory, lobbyCamera) }
             });
         }
         

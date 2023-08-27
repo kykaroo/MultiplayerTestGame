@@ -67,4 +67,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b3f2603d2be73a4ea80a134b371fda2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PV: {fileID: 0}
+  respawnTimer: 0
+  respawnTime: 0
+  _photonView: {fileID: 0}

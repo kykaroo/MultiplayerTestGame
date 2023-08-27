@@ -362,8 +362,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   respawnButton: {fileID: 2287723793962824403}
   quitButton: {fileID: 2606869332573187411}
+  customizeButton: {fileID: 7368702748039965295}
   respawnText: {fileID: 8371488319367702135}
-  respawnTime: 5
 --- !u!1 &6071755571991471268
 GameObject:
   m_ObjectHideFlags: 0

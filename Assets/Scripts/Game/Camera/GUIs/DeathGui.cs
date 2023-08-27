@@ -8,15 +8,14 @@ namespace Game.Camera.GUIs
 {
     public class DeathGui : MonoBehaviour
     {
-        [SerializeField] private Button respawnButton;
+        [SerializeField] public Button respawnButton;
         [SerializeField] private Button quitButton;
-        [SerializeField] private TextMeshProUGUI respawnText; 
-        [SerializeField] private float respawnTime;
-    
-        private float _respawnTimer;
+        [SerializeField] private Button customizeButton;
+        [SerializeField] public TextMeshProUGUI respawnText;
 
         public event Action OnQuitButtonClick;
         public event Action OnRespawnButtonClick;
+        public event Action OnCustomizeButtonClick;
 
         protected virtual void OnRespawnClick()
         {
@@ -27,30 +26,17 @@ namespace Game.Camera.GUIs
         {
             OnQuitButtonClick?.Invoke();
         }
+
+        protected virtual void OnCustomizeClick()
+        {
+            OnCustomizeButtonClick?.Invoke();
+        }
     
         private void Start()
         {
-            _respawnTimer = respawnTime;
             quitButton.onClick.AddListener(OnQuitClick);
             respawnButton.onClick.AddListener(OnRespawnClick);
-        }
-        
-        private void Update()
-        {
-            _respawnTimer -= Time.deltaTime;
-            respawnTime = (float)Math.Round(_respawnTimer, 1);
-        
-            if (_respawnTimer <= 0)
-            {
-                _respawnTimer = 0;
-                respawnText.text = "Respawn";
-                respawnButton.interactable = true;
-            }
-            else
-            {
-                respawnButton.interactable = false;
-                respawnText.text = $"Respawn: {respawnTime}";
-            }
+            customizeButton.onClick.AddListener(OnCustomizeClick);
         }
     }
 }

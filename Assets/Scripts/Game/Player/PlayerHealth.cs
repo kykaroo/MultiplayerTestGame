@@ -77,7 +77,7 @@ namespace Game.Player
         void GiveKill(PhotonMessageInfo info)
         {
             PlayerManager killer = PlayerManager.Find(info.Sender);
-            if (killer.PV.IsMine) return;
+            if (killer._photonView.IsMine) return;
             killer.GetKill();
         }
     }
