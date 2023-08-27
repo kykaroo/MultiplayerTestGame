@@ -9,8 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 53b2c6747a8b4c2c9899733465f3687f, type: 3}
-  m_Name: Collimator sight
+  m_Script: {fileID: 11500000, guid: 44aa4a14c0a544e8820785a74c208d38, type: 3}
+  m_Name: M4A4WeaponParts
   m_EditorClassIdentifier: 
-  partType: 5
-  prefab: {fileID: 7948022094322224180, guid: 0639a6220e0cc3544a1d7dcb3ca9b97a, type: 3}
+  WeaponPartScriptableObjects:
+  - {fileID: 11400000, guid: bc8621f318e323546a55da625e7719c4, type: 2}
+  - {fileID: 11400000, guid: b4cede89f42966f4dbef400b7729e6ae, type: 2}

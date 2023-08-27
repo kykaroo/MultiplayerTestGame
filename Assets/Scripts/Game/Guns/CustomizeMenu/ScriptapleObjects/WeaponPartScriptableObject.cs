@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(menuName = "Weapon Part Type", fileName = "Customize/Weapon Part Type")]
+[CreateAssetMenu(menuName = "Customize/Weapon Part Type", fileName = "Weapon Part Type")]
 public class WeaponPartScriptableObject : ScriptableObject
 {
     public enum PartType
@@ -11,7 +11,8 @@ public class WeaponPartScriptableObject : ScriptableObject
         Stock,
         Grip,
         Scope,
-        Magazine
+        Magazine,
+        Ammunition
     }
 
     public PartType partType;
