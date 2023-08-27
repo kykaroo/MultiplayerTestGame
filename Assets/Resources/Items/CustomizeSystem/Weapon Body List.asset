@@ -9,8 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 53b2c6747a8b4c2c9899733465f3687f, type: 3}
-  m_Name: Supressor
+  m_Script: {fileID: 11500000, guid: 9d3bbeb5d35e4bb0b46324266b6fb81f, type: 3}
+  m_Name: Weapon Body List
   m_EditorClassIdentifier: 
-  partType: 1
-  prefab: {fileID: 98057974522886892, guid: 5389a614917772e428792eb6ab4aca87, type: 3}
+  m4A4BodyScriptableObject: {fileID: 11400000, guid: 1aca93f509acdb940a87bfbfdff6fefe, type: 2}

@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Collimator sight
   m_EditorClassIdentifier: 
   partType: 5
-  prefab: {fileID: 7948022094322224180, guid: 0639a6220e0cc3544a1d7dcb3ca9b97a, type: 3}
+  prefab: {fileID: 5898769011482522843, guid: 9befee6b8759a9c4c86a47af3958279d, type: 3}

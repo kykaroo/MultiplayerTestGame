@@ -2,7 +2,7 @@
 using System.Linq;
 using UnityEngine;
 
-namespace Game.Guns.CustomizeMenu.ScriptapleObjects
+namespace Game.Guns.CustomizeMenu.ScriptableObjects
 {
     [CreateAssetMenu(menuName = "Customize/Weapon Part List", fileName = "Weapon Part List")]
     public class WeaponPartListScriptableObject : ScriptableObject

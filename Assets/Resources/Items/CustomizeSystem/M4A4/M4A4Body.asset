@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90a6003e032d4c01b38d3a721f3d0f97, type: 3}
+  m_Name: M4A4Body
+  m_EditorClassIdentifier: 
+  body: 0
+  prefab: {fileID: 8821109067722555216, guid: b3580fce9998240478898c5556ebc82f, type: 3}
+  prefabUi: {fileID: 7509525919279969158, guid: a182e9e3ff9521f42aa1feafc3da8efa, type: 3}
+  weaponPartListScriptableObject: {fileID: 11400000, guid: d24b94902d232984f98c87634159be93, type: 2}
