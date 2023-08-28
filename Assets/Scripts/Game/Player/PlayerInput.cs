@@ -3,7 +3,6 @@ using System.Collections;
 using Game.Player.PlayerInterfaces;
 using Photon.Pun;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Game.Player
 {
@@ -16,18 +15,15 @@ namespace Game.Player
         public float baseSpeed;
         public float sprintSpeedMultiplier;
         public float jumpForce;
-        public float smoothTime;
-        public LayerMask groundMask;
         public float groundDrag;
         public float airDrag;
         public float jumpCooldown;
-        [FormerlySerializedAs("airMultiplier")] public float midAirMoveSpeedMultiplier;
+        public float midAirMoveSpeedMultiplier;
         public bool autoJump;
         [Header("Items and camera")]
         public PlayerItemSelector itemSelector;
         [SerializeField] private Transform cameraHolderTransform;
         [SerializeField] private CameraHolder cameraHolder;
-        [SerializeField] private UnityEngine.Camera playerCameraPrefab;
         [Header("Hands")]
         [SerializeField] private Transform leftHand;
         [SerializeField] private Transform rightHand;
@@ -42,16 +38,18 @@ namespace Game.Player
         private float _verticalLookRotation;
         private Vector3 _smoothMoveVelocity;
         private Vector3 _moveAmount;
-        private float horizontalInput;
-        private float verticalInput;
-        public Rigidbody _playerBody;
+        private float _horizontalInput;
+        private float _verticalInput;
+        public Rigidbody playerBody;
         private PhotonView _photonView;
-        private bool isReloading;
-        private float walkSpeed;
-        private float sprintSpeed;
-        private int slowStacks;
-        private float currentMovementMultiplier = 1;
-        private float jumpCooldownTimer;
+        private bool _isReloading;
+        private float _currentSpeed;
+        private int _slowStacks;
+        private float _currentMovementMultiplier = 1;
+        private float _jumpCooldownTimer;
+        private float _modifiedBaseSpeed;
+        private RaycastHit _slopeHit;
+        private bool _onSlope;
 
         private Coroutine _slowCoroutine;
 
@@ -59,15 +57,16 @@ namespace Game.Player
 
         public event Action<float> OnReload;
         public event Action<int, int> OnAmmunitionUpdate;
-        public event Action<string> OnSpeedUpdate; 
+        public event Action<string> OnSpeedUpdate;
+
+        public MovementState state;
 
         private void Awake()
         {
             _photonView = GetComponent<PhotonView>();
-            _playerBody = GetComponent<Rigidbody>();
+            playerBody = GetComponent<Rigidbody>();
             
-            walkSpeed = baseSpeed;
-            sprintSpeed = baseSpeed * sprintSpeedMultiplier;
+            _modifiedBaseSpeed = baseSpeed;
             
             cameraHolder.OnReloadEnded += EndReload;
 
@@ -86,6 +85,14 @@ namespace Game.Player
         {
             OnAmmunitionUpdate?.Invoke(itemSelector.ActiveGun.AmmoConfig.currentClipAmmo, itemSelector.ActiveGun.AmmoConfig.currentAmmo);
         }
+        
+        public enum MovementState
+        {
+            Walking,
+            Sprinting,
+            MidAir,
+            MidAirSprinting
+        }
 
         private void Update()
         {
@@ -100,7 +107,7 @@ namespace Game.Player
 
             if (ShouldManualReload() || ShouldAutoReload())
             {
-                isReloading = true;
+                _isReloading = true;
                 OnReload?.Invoke(reloadTime);
                 if (animationReload)
                 {
@@ -114,56 +121,75 @@ namespace Game.Player
             
             Look();
             Inputs();
-            if (autoJump && jumpCooldownTimer > 0)
+            if (autoJump && _jumpCooldownTimer > 0)
             {
-                jumpCooldownTimer -= Time.deltaTime;
+                _jumpCooldownTimer -= Time.deltaTime;
             }
             Jump();
-            if (grounded)
-            {
-                _playerBody.drag = groundDrag;
-            }
-            else
-            {
-                _playerBody.drag = airDrag;
-            }
+            
+            playerBody.drag = grounded ? groundDrag : airDrag;
 
-            var velocity = _playerBody.velocity;
+            StateHandler();
+
+            var velocity = playerBody.velocity;
             OnSpeedUpdate?.Invoke(Math.Round(new Vector3(velocity.x, 0f, velocity.z).magnitude, 3).ToString());
+        }
+
+        private void StateHandler()
+        {
+            switch (grounded)
+            {
+                case true when Input.GetKey(KeyCode.LeftShift):
+                    state = MovementState.Sprinting;
+                    _currentSpeed = _modifiedBaseSpeed * sprintSpeedMultiplier;
+                    return;
+                case true:
+                    state = MovementState.Walking;
+                    _currentSpeed = _modifiedBaseSpeed;
+                    return;
+                case false when Input.GetKey(KeyCode.LeftShift):
+                    state = MovementState.MidAirSprinting;
+                    _currentSpeed = _modifiedBaseSpeed * midAirMoveSpeedMultiplier * sprintSpeedMultiplier;
+                    return;
+                case false:
+                    state = MovementState.MidAir;
+                    _currentSpeed = _modifiedBaseSpeed * midAirMoveSpeedMultiplier;
+                    return;
+            }
         }
 
         private void Jump()
         {
             if (autoJump)
             {
-                if (Input.GetKey(KeyCode.Space) && grounded && jumpCooldownTimer <= 0)
+                if (Input.GetKey(KeyCode.Space) && grounded && _jumpCooldownTimer <= 0)
                 {
-                    var velocity = _playerBody.velocity;
+                    var velocity = playerBody.velocity;
                     velocity = new(velocity.x, 0f, velocity.z);
-                    _playerBody.velocity = velocity;
-                    _playerBody.AddForce(transform.up * jumpForce, ForceMode.Impulse); 
-                    jumpCooldownTimer = jumpCooldown;
+                    playerBody.velocity = velocity;
+                    playerBody.AddForce(transform.up * jumpForce, ForceMode.Impulse); 
+                    _jumpCooldownTimer = jumpCooldown;
                 }
             }
             else
             {
                 if (Input.GetKeyDown(KeyCode.Space) && grounded)
                 {
-                    var velocity = _playerBody.velocity;
+                    var velocity = playerBody.velocity;
                     velocity = new(velocity.x, 0f, velocity.z);
-                    _playerBody.velocity = velocity;
-                    _playerBody.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+                    playerBody.velocity = velocity;
+                    playerBody.AddForce(transform.up * jumpForce, ForceMode.Impulse);
                 }
             }
         }
 
         private void Inputs()
         {
-            horizontalInput = Input.GetAxisRaw("Horizontal");
-            verticalInput = Input.GetAxisRaw("Vertical");
+            _horizontalInput = Input.GetAxisRaw("Horizontal");
+            _verticalInput = Input.GetAxisRaw("Vertical");
         }
 
-        void Look()
+        private void Look()
         {
             transform.Rotate(Vector3.up * (Input.GetAxisRaw("Mouse X") * mouseSensitivityX));
 
@@ -185,27 +211,40 @@ namespace Game.Player
         {
             if (!_photonView.IsMine)
                 return;
-            
-            var moveDir = transform.forward * verticalInput + transform.right * horizontalInput;
 
-            if (grounded)
+            var gameObjectTransform = transform;
+            var moveDir = gameObjectTransform.forward * _verticalInput + gameObjectTransform.right * _horizontalInput;
+
+            if (grounded && _onSlope)
             {
-                _playerBody.AddForce(moveDir.normalized * ((Input.GetKey(KeyCode.LeftShift) ? sprintSpeed : walkSpeed) * 10f), ForceMode.Force);
+                playerBody.AddForce(GetSlopeMoveDirection(moveDir).normalized * (_currentSpeed * 10f), ForceMode.Force);
             }
-            else
+
+            if (grounded && !_onSlope)
             {
-                _playerBody.AddForce(moveDir.normalized * ((Input.GetKey(KeyCode.LeftShift) ? sprintSpeed : walkSpeed) * 10f * midAirMoveSpeedMultiplier), ForceMode.Force);   
+                playerBody.AddForce(moveDir.normalized * (_currentSpeed * 10f), ForceMode.Force);
             }
+            
+            if (!grounded)
+            {
+                playerBody.AddForce(moveDir.normalized * (_currentSpeed * 10f * midAirMoveSpeedMultiplier), ForceMode.Force);   
+            }
+        }
+
+        public void SetOnSlopeState(bool onSlope, RaycastHit slopeHit)
+        {
+            _onSlope = onSlope;
+            _slopeHit = slopeHit;
         }
 
         private bool ShouldAutoReload()
         {
-            return !isReloading && autoReload &&  itemSelector.ActiveGun.AmmoConfig.currentClipAmmo == 0 && itemSelector.ActiveGun.CanReload();
+            return !_isReloading && autoReload &&  itemSelector.ActiveGun.AmmoConfig.currentClipAmmo == 0 && itemSelector.ActiveGun.CanReload();
         }
 
         private bool ShouldManualReload()
         {
-            return !isReloading && Input.GetKeyDown(KeyCode.R) && itemSelector.ActiveGun.CanReload();
+            return !_isReloading && Input.GetKeyDown(KeyCode.R) && itemSelector.ActiveGun.CanReload();
         }
 
         private void EndReload()
@@ -213,7 +252,7 @@ namespace Game.Player
             if (!_photonView.IsMine) return;
             
             itemSelector.ActiveGun.EndReload();
-            isReloading = false;
+            _isReloading = false;
             OnAmmunitionUpdate?.Invoke(itemSelector.ActiveGun.AmmoConfig.currentClipAmmo, itemSelector.ActiveGun.AmmoConfig.currentAmmo);
         }
 
@@ -235,29 +274,27 @@ namespace Game.Player
 
         private void CalculateSlowPercent(float movementMultiplier)
         {
-            if (slowStacks == 1) currentMovementMultiplier =  movementMultiplier;
-            else currentMovementMultiplier +=  movementMultiplier / slowStacks;
+            if (_slowStacks == 1) _currentMovementMultiplier =  movementMultiplier;
+            else _currentMovementMultiplier +=  movementMultiplier / _slowStacks;
         }
 
         private IEnumerator SlowDown(float slowTime)
         {
-            walkSpeed = baseSpeed * currentMovementMultiplier;
-            sprintSpeed = walkSpeed * sprintSpeedMultiplier;
+            _modifiedBaseSpeed = baseSpeed * _currentMovementMultiplier;
             yield return new WaitForSeconds(slowTime);
 
-            slowStacks = 0;
-            currentMovementMultiplier = 1;
-            walkSpeed = baseSpeed;
-            sprintSpeed = walkSpeed * sprintSpeedMultiplier;
+            _slowStacks = 0;
+            _currentMovementMultiplier = 1;
+            _modifiedBaseSpeed = baseSpeed;
         }
 
         [PunRPC]
         void RPC_Slow(float movementMultiplier, float slowTime, bool isStackable)
         {
-            slowStacks++;
+            _slowStacks++;
 
             if (isStackable) CalculateSlowPercent(movementMultiplier);
-            else currentMovementMultiplier = movementMultiplier;
+            else _currentMovementMultiplier = movementMultiplier;
             
             if (_slowCoroutine != null)
             {
@@ -265,6 +302,11 @@ namespace Game.Player
             }
 
             _slowCoroutine = StartCoroutine(SlowDown(slowTime));
+        }
+        
+        private Vector3 GetSlopeMoveDirection(Vector3 moveDir)
+        {
+            return Vector3.ProjectOnPlane(moveDir, _slopeHit.normal);
         }
     }
 }

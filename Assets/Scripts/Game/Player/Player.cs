@@ -29,7 +29,7 @@ namespace Game.Player
 
         private void Die(Vector3 position)
         {
-            Input._playerBody.constraints = RigidbodyConstraints.None;
+            Input.playerBody.constraints = RigidbodyConstraints.None;
             _playerManager.AddDeathToCounter();
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
