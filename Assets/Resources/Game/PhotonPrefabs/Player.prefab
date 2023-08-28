@@ -526,8 +526,16 @@ MonoBehaviour:
   mouseSensitivityY: 1
   baseSpeed: 5
   sprintSpeedMultiplier: 2
-  jumpForce: 200
-  smoothTime: 0.1
+  jumpForce: 6
+  smoothTime: 0.2
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 128
+  groundDrag: 7
+  airDrag: 0
+  jumpCooldown: 0.25
+  midAirMoveSpeedMultiplier: 0.2
+  autoJump: 1
   itemSelector: {fileID: 4033566859376298457}
   cameraHolderTransform: {fileID: 3190553507045204539}
   cameraHolder: {fileID: 1517172624990357396}

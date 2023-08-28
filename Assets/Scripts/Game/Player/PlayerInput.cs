@@ -3,6 +3,7 @@ using System.Collections;
 using Game.Player.PlayerInterfaces;
 using Photon.Pun;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Game.Player
 {
@@ -11,10 +12,17 @@ namespace Game.Player
         [Header("Player")]
         public float mouseSensitivityX;
         public float mouseSensitivityY;
+        [Header("Movement")]
         public float baseSpeed;
         public float sprintSpeedMultiplier;
         public float jumpForce;
         public float smoothTime;
+        public LayerMask groundMask;
+        public float groundDrag;
+        public float airDrag;
+        public float jumpCooldown;
+        [FormerlySerializedAs("airMultiplier")] public float midAirMoveSpeedMultiplier;
+        public bool autoJump;
         [Header("Items and camera")]
         public PlayerItemSelector itemSelector;
         [SerializeField] private Transform cameraHolderTransform;
@@ -29,11 +37,13 @@ namespace Game.Player
         [SerializeField] private bool animationReload;
         [Header("Needed only if animationReload = false")]
         [SerializeField] private float reloadTime;
-        
+
 
         private float _verticalLookRotation;
         private Vector3 _smoothMoveVelocity;
         private Vector3 _moveAmount;
+        private float horizontalInput;
+        private float verticalInput;
         public Rigidbody _playerBody;
         private PhotonView _photonView;
         private bool isReloading;
@@ -41,6 +51,7 @@ namespace Game.Player
         private float sprintSpeed;
         private int slowStacks;
         private float currentMovementMultiplier = 1;
+        private float jumpCooldownTimer;
 
         private Coroutine _slowCoroutine;
 
@@ -48,6 +59,7 @@ namespace Game.Player
 
         public event Action<float> OnReload;
         public event Action<int, int> OnAmmunitionUpdate;
+        public event Action<string> OnSpeedUpdate; 
 
         private void Awake()
         {
@@ -101,24 +113,54 @@ namespace Game.Player
             }
             
             Look();
-            Move();
+            Inputs();
+            if (autoJump && jumpCooldownTimer > 0)
+            {
+                jumpCooldownTimer -= Time.deltaTime;
+            }
             Jump();
+            if (grounded)
+            {
+                _playerBody.drag = groundDrag;
+            }
+            else
+            {
+                _playerBody.drag = airDrag;
+            }
+
+            var velocity = _playerBody.velocity;
+            OnSpeedUpdate?.Invoke(Math.Round(new Vector3(velocity.x, 0f, velocity.z).magnitude, 3).ToString());
         }
 
         private void Jump()
         {
-            if (Input.GetKeyDown(KeyCode.Space) && grounded)
+            if (autoJump)
             {
-                _playerBody.AddForce(transform.up * jumpForce);
+                if (Input.GetKey(KeyCode.Space) && grounded && jumpCooldownTimer <= 0)
+                {
+                    var velocity = _playerBody.velocity;
+                    velocity = new(velocity.x, 0f, velocity.z);
+                    _playerBody.velocity = velocity;
+                    _playerBody.AddForce(transform.up * jumpForce, ForceMode.Impulse); 
+                    jumpCooldownTimer = jumpCooldown;
+                }
+            }
+            else
+            {
+                if (Input.GetKeyDown(KeyCode.Space) && grounded)
+                {
+                    var velocity = _playerBody.velocity;
+                    velocity = new(velocity.x, 0f, velocity.z);
+                    _playerBody.velocity = velocity;
+                    _playerBody.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+                }
             }
         }
 
-        private void Move()
+        private void Inputs()
         {
-            Vector3 moveDir = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized;
-
-            _moveAmount =
-                Vector3.SmoothDamp(_moveAmount, moveDir * (Input.GetKey(KeyCode.LeftShift) ? sprintSpeed : walkSpeed), ref _smoothMoveVelocity, smoothTime);
+            horizontalInput = Input.GetAxisRaw("Horizontal");
+            verticalInput = Input.GetAxisRaw("Vertical");
         }
 
         void Look()
@@ -143,8 +185,17 @@ namespace Game.Player
         {
             if (!_photonView.IsMine)
                 return;
-        
-            _playerBody.MovePosition(_playerBody.position + transform.TransformDirection(_moveAmount) * Time.fixedDeltaTime);
+            
+            var moveDir = transform.forward * verticalInput + transform.right * horizontalInput;
+
+            if (grounded)
+            {
+                _playerBody.AddForce(moveDir.normalized * ((Input.GetKey(KeyCode.LeftShift) ? sprintSpeed : walkSpeed) * 10f), ForceMode.Force);
+            }
+            else
+            {
+                _playerBody.AddForce(moveDir.normalized * ((Input.GetKey(KeyCode.LeftShift) ? sprintSpeed : walkSpeed) * 10f * midAirMoveSpeedMultiplier), ForceMode.Force);   
+            }
         }
 
         private bool ShouldAutoReload()

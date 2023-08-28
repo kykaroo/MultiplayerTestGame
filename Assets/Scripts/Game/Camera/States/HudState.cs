@@ -23,6 +23,7 @@ namespace Game.Camera.States
             _player.Health.OnDeath += OnDeath;
             _player.Input.OnReload += WeaponReload;
             _player.Input.OnAmmunitionUpdate += UpdateAmmunitionDisplay;
+            _player.Input.OnSpeedUpdate += UpdateSpeedDisplay;
         }
 
         protected override void OnExit()
@@ -31,6 +32,7 @@ namespace Game.Camera.States
             _player.Health.OnDeath -= OnDeath;
             _player.Input.OnReload -= WeaponReload;
             _player.Input.OnAmmunitionUpdate -= UpdateAmmunitionDisplay;
+            _player.Input.OnSpeedUpdate -= UpdateSpeedDisplay;
 
             Object.Destroy(_hudGui.gameObject);
         }
@@ -81,6 +83,11 @@ namespace Game.Camera.States
         {
             _hudGui.HealthBarImage.fillAmount = currentHealth / maxHealth;
             _hudGui.HealthBarGameObject.SetActive(maxHealth - currentHealth != 0);
+        }
+
+        private void UpdateSpeedDisplay(string speed)
+        {
+            _hudGui.SpeedDisplay.text = speed;
         }
     }
 }
