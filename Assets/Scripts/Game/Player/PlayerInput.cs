@@ -65,7 +65,6 @@ namespace Game.Player
         private float _actualSpeed;
         private Vector3 _moveDirection;
         private float _timerToGetVelocityBoostFromSlideMove;
-        private float _topVelocity;
 
         private Coroutine _slowCoroutine;
 
@@ -77,6 +76,7 @@ namespace Game.Player
 
         public MovementState state;
         private static readonly int IsSliding = Animator.StringToHash("IsSliding");
+        private static readonly int IsCrouching = Animator.StringToHash("IsCrouching");
 
         private void Awake()
         {
@@ -110,7 +110,8 @@ namespace Game.Player
             Sprinting,
             MidAir,
             MidAirSprinting,
-            Crouching
+            Crouching,
+            MidAirCrouch
         }
 
         private void Update()
@@ -166,22 +167,32 @@ namespace Game.Player
             {
                 case true when Input.GetKey(KeyCode.LeftShift):
                     state = MovementState.Sprinting;
+                    playerBodyAnimator.SetBool(IsCrouching, false);
                     _currentSpeed = _modifiedBaseSpeed * sprintSpeedMultiplier;
                     return;
                 case true when Input.GetKey(KeyCode.LeftControl):
                     state = MovementState.Crouching;
+                    playerBodyAnimator.SetBool(IsCrouching, true);
                     _currentSpeed = _modifiedBaseSpeed * crouchSpeedMultiplier;
                     return;
                 case true:
                     state = MovementState.Walking;
+                    playerBodyAnimator.SetBool(IsCrouching, false);
                     _currentSpeed = _modifiedBaseSpeed;
                     return;
                 case false when Input.GetKey(KeyCode.LeftShift):
                     state = MovementState.MidAirSprinting;
+                    playerBodyAnimator.SetBool(IsCrouching, false);
                     _currentSpeed = _modifiedBaseSpeed * midAirMoveSpeedMultiplier * sprintSpeedMultiplier;
+                    return;
+                case false when Input.GetKey(KeyCode.LeftControl):
+                    state = MovementState.MidAirCrouch;
+                    playerBodyAnimator.SetBool(IsCrouching, true);
+                    _currentSpeed = _modifiedBaseSpeed * midAirMoveSpeedMultiplier;
                     return;
                 case false:
                     state = MovementState.MidAir;
+                    playerBodyAnimator.SetBool(IsCrouching, false);
                     _currentSpeed = _modifiedBaseSpeed * midAirMoveSpeedMultiplier;
                     return;
             }
@@ -242,8 +253,11 @@ namespace Game.Player
         {
             if (!_photonView.IsMine)
                 return;
-
-            playerBody.AddForce(Vector3.up * (Gravity * gravityScale), ForceMode.Force);
+            
+            if (!grounded)
+            {
+                playerBody.AddForce(Vector3.up * (Gravity * gravityScale), ForceMode.Force);
+            }
 
             if (grounded && _onSlope && !_isSliding)
             {
