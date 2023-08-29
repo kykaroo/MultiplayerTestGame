@@ -401,6 +401,12 @@ GameObject:
   - component: {fileID: 2616879553531085620}
   - component: {fileID: 6453041631635206590}
   - component: {fileID: 2699483418850657836}
+  - component: {fileID: 2310273046013011524}
+  - component: {fileID: 2477877406981815230}
+  - component: {fileID: 2010890280589821674}
+  - component: {fileID: 7112600321368896416}
+  - component: {fileID: 7236763982070474337}
+  - component: {fileID: 1368190131306456720}
   - component: {fileID: 5459022053153529090}
   - component: {fileID: 4233246947938232490}
   - component: {fileID: 4033566859376298457}
@@ -487,31 +493,121 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mouseSensitivityX: 1
   mouseSensitivityY: 1
-  baseSpeed: 5
-  speedScale: 10
-  jumpForce: 6
-  sprintSpeedMultiplier: 2
-  midAirMoveSpeedMultiplier: 0.2
-  groundDrag: 8
-  airDrag: 0
-  gravityScale: 1
-  jumpCooldown: 0.25
-  autoJump: 1
-  minimumSpeedToSlide: 7
-  slideInitialForce: 2
-  timeToGetVelocityBoostFromSlideMove: 3
-  playerBodyAnimator: {fileID: 8943253652417284881}
-  crouchSpeedMultiplier: 0.5
+  _photonView: {fileID: 6453041631635206590}
+  baseMovement: {fileID: 1368190131306456720}
+  jumpHandler: {fileID: 7112600321368896416}
+  reloadHandler: {fileID: 2010890280589821674}
+  slideMovement: {fileID: 2477877406981815230}
+  crouchHandler: {fileID: 7236763982070474337}
+  cameraHolder: {fileID: 1517172624990357396}
   itemSelector: {fileID: 4033566859376298457}
   cameraHolderTransform: {fileID: 3190553507045204539}
-  cameraHolder: {fileID: 1517172624990357396}
-  autoReload: 1
-  handsAnimator: {fileID: 4210696850110772839}
-  animationReload: 1
-  reloadTime: 0
   playerBody: {fileID: 5459022053153529090}
   grounded: 1
   state: 0
+--- !u!114 &2310273046013011524
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3531804449454473998}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1939b279a88d4f17a2aeab4ed85aadfc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2477877406981815230
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3531804449454473998}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b3fd2e899084612b7f98bfb7edef1ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerBody: {fileID: 5459022053153529090}
+  playerBodyAnimator: {fileID: 8943253652417284881}
+  playerSurfaceCheck: {fileID: 2139314560458716516}
+  minimumSpeedToSlide: 4
+  slideInitialForce: 2
+  timeToGetVelocityBoostFromSlideMove: 4
+  groundDrag: 8
+  airDrag: 0
+--- !u!114 &2010890280589821674
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3531804449454473998}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 364ef2ebe5d642aca5655c1d8e9512bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _photonView: {fileID: 6453041631635206590}
+  autoReload: 1
+  handsAnimator: {fileID: 4210696850110772839}
+  animationReload: 1
+  cameraHolder: {fileID: 1517172624990357396}
+  reloadTime: 0
+  itemSelector: {fileID: 4033566859376298457}
+--- !u!114 &7112600321368896416
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3531804449454473998}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e5800add9d24b03985cc946fe9dc971, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerBody: {fileID: 5459022053153529090}
+  playerSurfaceCheck: {fileID: 2139314560458716516}
+  jumpCooldown: 0.25
+  autoJump: 1
+  jumpForce: 2
+--- !u!114 &7236763982070474337
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3531804449454473998}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37f097ad33184c01a4acbc0bbd009ee8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerBodyAnimator: {fileID: 8943253652417284881}
+--- !u!114 &1368190131306456720
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3531804449454473998}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 635717300bf648b2be011b0e11ba7136, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  photonView: {fileID: 6453041631635206590}
+  playerBody: {fileID: 5459022053153529090}
+  playerSurfaceCheck: {fileID: 2139314560458716516}
+  slideMovement: {fileID: 2477877406981815230}
+  gravityScale: 1
+  baseSpeed: 5
+  speedScale: 10
+  sprintSpeedMultiplier: 2
+  crouchSpeedMultiplier: 0.5
+  midAirMoveSpeedMultiplier: 0.2
 --- !u!54 &5459022053153529090
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -579,6 +675,7 @@ MonoBehaviour:
   Health: {fileID: 3852570639306101726}
   Input: {fileID: 2699483418850657836}
   Controller: {fileID: 2616879553531085620}
+  ReloadHandler: {fileID: 2010890280589821674}
 --- !u!114 &3852570639306101726
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -627,7 +724,6 @@ MonoBehaviour:
   groundLayerMask:
     serializedVersion: 2
     m_Bits: 128
-  _playerInput: {fileID: 2699483418850657836}
   maxSlopeAngle: 50
 --- !u!1 &3595506509183320736
 GameObject:

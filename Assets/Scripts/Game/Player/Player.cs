@@ -1,4 +1,5 @@
-﻿using Photon.Pun;
+﻿using Game.Player.Movement;
+using Photon.Pun;
 using UnityEngine;
 
 namespace Game.Player
@@ -15,6 +16,7 @@ namespace Game.Player
         public PlayerHealth Health;
         public PlayerInput Input;
         public PlayerController Controller;
+        public ReloadHandler ReloadHandler;
         private PlayerManager _playerManager;
 
         private void Start()

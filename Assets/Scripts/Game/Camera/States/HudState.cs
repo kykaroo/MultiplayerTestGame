@@ -21,8 +21,8 @@ namespace Game.Camera.States
             // _playerController.OnItemChange += ItemChange;
             _player.Health.OnHealthChange += UpdateHealth;
             _player.Health.OnDeath += OnDeath;
-            _player.Input.OnReload += WeaponReload;
-            _player.Input.OnAmmunitionUpdate += UpdateAmmunitionDisplay;
+            _player.ReloadHandler.OnReload += WeaponReload;
+            _player.ReloadHandler.OnAmmunitionUpdate += UpdateAmmunitionDisplay;
             _player.Input.OnSpeedUpdate += UpdateSpeedDisplay;
         }
 
@@ -30,8 +30,8 @@ namespace Game.Camera.States
         {
             _player.Health.OnHealthChange -= UpdateHealth;
             _player.Health.OnDeath -= OnDeath;
-            _player.Input.OnReload -= WeaponReload;
-            _player.Input.OnAmmunitionUpdate -= UpdateAmmunitionDisplay;
+            _player.ReloadHandler.OnReload -= WeaponReload;
+            _player.ReloadHandler.OnAmmunitionUpdate -= UpdateAmmunitionDisplay;
             _player.Input.OnSpeedUpdate -= UpdateSpeedDisplay;
 
             Object.Destroy(_hudGui.gameObject);

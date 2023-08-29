@@ -26,6 +26,13 @@ namespace Game.Guns.Modifiers
                     0, 0.5f, 1, false, 1)
             };
 
+            DamageModifier damageModifier = new()
+            {
+                Amount = 1.2f,
+                AttributeName = "DamageConfig/damageCurve"
+            };
+            damageModifier.Apply(itemSelector.ActiveGun);
+
             // DamageModifier damageModifier = new()
             // {
             //     Amount = 1.5f,

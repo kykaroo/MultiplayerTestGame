@@ -42,7 +42,7 @@ namespace Game.Guns.Configs
 
         public event Action<int, int> OnAmmunitionUpdate;
 
-        public void EntryPoint(string modelPrefabPath, MonoBehaviour activeMonoBehaviour, ItemHolder itemHolder)
+        public void Initialize(string modelPrefabPath, MonoBehaviour activeMonoBehaviour, ItemHolder itemHolder)
         {
             ActiveMonoBehaviour = activeMonoBehaviour;
 

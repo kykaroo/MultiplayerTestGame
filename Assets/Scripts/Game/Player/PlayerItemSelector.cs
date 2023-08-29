@@ -37,7 +37,7 @@ namespace Game.Player
 
             ActiveGun = gun.Clone() as GunScriptableObject;
             
-            ActiveGun.EntryPoint(modelPrefabPath, this, itemHolder);
+            ActiveGun.Initialize(modelPrefabPath, this, itemHolder);
         }
         
         // TODO Доделать смену оружия игроков

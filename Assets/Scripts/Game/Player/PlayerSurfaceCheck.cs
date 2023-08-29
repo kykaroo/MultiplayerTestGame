@@ -1,3 +1,5 @@
+using System;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Game.Player
@@ -9,13 +11,15 @@ namespace Game.Player
         [SerializeField] private GameObject legs;
         [SerializeField] private SphereCollider legsCollider;
         [SerializeField] private LayerMask groundLayerMask;
-        [SerializeField] private PlayerInput _playerInput;
         [SerializeField] private float maxSlopeAngle;
 
         private bool onSlopeTouch;
         private RaycastHit slopeHit;
         private float playerHeight;
         private Vector3 slopeMoveDirection;
+
+        public event Action<bool> OnGrounded; 
+        public event Action<bool, RaycastHit> OnSlopeGround; 
 
         private void Awake()
         {
@@ -24,22 +28,22 @@ namespace Game.Player
         
         private void Update()
         {
-            _playerInput.SetGroundedState(Physics.CheckSphere(legs.transform.position, legsCollider.radius + 0.001f, groundLayerMask));
-            _playerInput.SetOnSlopeState(OnSlope(), slopeHit);
+            OnGrounded?.Invoke(Physics.CheckSphere(legs.transform.position, legsCollider.radius + 0.001f, groundLayerMask));
+            OnSlope();
         }
 
-        private bool OnSlope()
+        private void OnSlope()
         {
             if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, playerHeight * 0.5f + 0.3f, groundLayerMask))
             {
                 if (slopeHit.normal != Vector3.up)
                 {
                     float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
-                    return angle < maxSlopeAngle && angle != 0;
+                    OnSlopeGround?.Invoke(angle < maxSlopeAngle && angle != 0, slopeHit);
                 }
             }
             
-            return false;
+            OnSlopeGround?.Invoke(false, slopeHit);
         }
         
         private float GetPlayerHeight()
