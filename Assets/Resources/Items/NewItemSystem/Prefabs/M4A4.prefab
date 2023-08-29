@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3925705098970539489}
   - component: {fileID: 2116671920535197484}
   - component: {fileID: 5201377082818961199}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Muzzle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -97,7 +97,7 @@ GameObject:
   - component: {fileID: -4503172071572622764}
   - component: {fileID: 3677347183567224135}
   - component: {fileID: -2441559225946257658}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: M4A4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -238,7 +238,7 @@ GameObject:
   - component: {fileID: 8645808983119598732}
   - component: {fileID: 2270035780609235522}
   - component: {fileID: 9071153195807458049}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Particle System
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5108,7 +5108,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2133697767850404602}
   - component: {fileID: 8756235483542387606}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Point Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5203,7 +5203,7 @@ GameObject:
   - component: {fileID: 2645247152359660210}
   - component: {fileID: 8251001885554022030}
   - component: {fileID: 5173420587549309852}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Club
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5286,7 +5286,7 @@ GameObject:
   - component: {fileID: 7042643496286255482}
   - component: {fileID: 3573208060633297200}
   - component: {fileID: 2942400314828729782}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Magazine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5369,7 +5369,7 @@ GameObject:
   - component: {fileID: 2883974205103350847}
   - component: {fileID: 2139676202891032569}
   - component: {fileID: 24109755648362840}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Handle
   m_TagString: Untagged
   m_Icon: {fileID: 0}

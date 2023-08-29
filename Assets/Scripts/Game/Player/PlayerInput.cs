@@ -11,22 +11,31 @@ namespace Game.Player
         [Header("Player")]
         public float mouseSensitivityX;
         public float mouseSensitivityY;
-        [Header("Movement")]
+        [Header("Base movement")]
         public float baseSpeed;
-        public float sprintSpeedMultiplier;
+        [Tooltip("Умножается на скорость игрока для избежания огромных значений базовой скорости. Стандартно 10f.")]
+        public float speedScale;
         public float jumpForce;
+        public float sprintSpeedMultiplier;
+        public float midAirMoveSpeedMultiplier;
+        [Header("Anti-force")]
         public float groundDrag;
         public float airDrag;
+        public float gravityScale;
+        [Header("Jumping")]
         public float jumpCooldown;
-        public float midAirMoveSpeedMultiplier;
         public bool autoJump;
+        [Header("Sliding")] 
+        public float minimumSpeedToSlide;
+        public float slideInitialForce;
+        public float timeToGetVelocityBoostFromSlideMove;
+        public Animator playerBodyAnimator;
+        [Header("Crouch")] 
+        public float crouchSpeed;
         [Header("Items and camera")]
         public PlayerItemSelector itemSelector;
         [SerializeField] private Transform cameraHolderTransform;
         [SerializeField] private CameraHolder cameraHolder;
-        [Header("Hands")]
-        [SerializeField] private Transform leftHand;
-        [SerializeField] private Transform rightHand;
         [Header("Reload")]
         [SerializeField] private bool autoReload = true;
         [SerializeField] private Animator handsAnimator;
@@ -50,6 +59,11 @@ namespace Game.Player
         private float _modifiedBaseSpeed;
         private RaycastHit _slopeHit;
         private bool _onSlope;
+        private const float Gravity = -9.81f;
+        private bool _isSliding;
+        private float _actualSpeed;
+        private Vector3 _moveDirection;
+        private float _timerToGetVelocityBoostFromSlideMove;
 
         private Coroutine _slowCoroutine;
 
@@ -60,11 +74,13 @@ namespace Game.Player
         public event Action<string> OnSpeedUpdate;
 
         public MovementState state;
+        private static readonly int IsSliding = Animator.StringToHash("IsSliding");
 
         private void Awake()
         {
             _photonView = GetComponent<PhotonView>();
             playerBody = GetComponent<Rigidbody>();
+            playerBody.useGravity = false;
             
             _modifiedBaseSpeed = baseSpeed;
             
@@ -126,13 +142,19 @@ namespace Game.Player
                 _jumpCooldownTimer -= Time.deltaTime;
             }
             Jump();
-            
-            playerBody.drag = grounded ? groundDrag : airDrag;
+
+            if (!_isSliding)
+            {
+                playerBody.drag = grounded ? groundDrag : airDrag;
+            }
 
             StateHandler();
 
             var velocity = playerBody.velocity;
-            OnSpeedUpdate?.Invoke(Math.Round(new Vector3(velocity.x, 0f, velocity.z).magnitude, 3).ToString());
+            _actualSpeed = new Vector3(velocity.x, 0f, velocity.z).magnitude;
+            OnSpeedUpdate?.Invoke(Math.Round(_actualSpeed, 3).ToString());
+
+            _timerToGetVelocityBoostFromSlideMove -= Time.deltaTime;
         }
 
         private void StateHandler()
@@ -167,7 +189,7 @@ namespace Game.Player
                     var velocity = playerBody.velocity;
                     velocity = new(velocity.x, 0f, velocity.z);
                     playerBody.velocity = velocity;
-                    playerBody.AddForce(transform.up * jumpForce, ForceMode.Impulse); 
+                    playerBody.AddForce(transform.up * jumpForce, ForceMode.VelocityChange); 
                     _jumpCooldownTimer = jumpCooldown;
                 }
             }
@@ -187,6 +209,10 @@ namespace Game.Player
         {
             _horizontalInput = Input.GetAxisRaw("Horizontal");
             _verticalInput = Input.GetAxisRaw("Vertical");
+            
+            var gameObjectTransform = transform;
+            _moveDirection = gameObjectTransform.forward * _verticalInput +
+                             gameObjectTransform.right * _horizontalInput;
         }
 
         private void Look()
@@ -195,9 +221,7 @@ namespace Game.Player
 
             _verticalLookRotation += Input.GetAxisRaw("Mouse Y") * mouseSensitivityY;
             _verticalLookRotation = Mathf.Clamp(_verticalLookRotation, -80f, 80f);
-
-            leftHand.transform.localEulerAngles = Vector3.left * _verticalLookRotation;
-            rightHand.transform.localEulerAngles = Vector3.left * _verticalLookRotation;
+            
             cameraHolderTransform.transform.localEulerAngles = Vector3.left * _verticalLookRotation;
         }
         
@@ -212,22 +236,49 @@ namespace Game.Player
             if (!_photonView.IsMine)
                 return;
 
-            var gameObjectTransform = transform;
-            var moveDir = gameObjectTransform.forward * _verticalInput + gameObjectTransform.right * _horizontalInput;
+            playerBody.AddForce(Vector3.up * (Gravity * gravityScale), ForceMode.Force);
 
-            if (grounded && _onSlope)
+            if (grounded && _onSlope && !_isSliding)
             {
-                playerBody.AddForce(GetSlopeMoveDirection(moveDir).normalized * (_currentSpeed * 10f), ForceMode.Force);
+                playerBody.AddForce(GetSlopeMoveDirection(_moveDirection).normalized * (_currentSpeed * speedScale), ForceMode.Acceleration);    
             }
 
-            if (grounded && !_onSlope)
+            if (grounded && !_onSlope && !_isSliding)
             {
-                playerBody.AddForce(moveDir.normalized * (_currentSpeed * 10f), ForceMode.Force);
+                playerBody.AddForce(_moveDirection.normalized * (_currentSpeed * speedScale), ForceMode.Acceleration);
             }
             
             if (!grounded)
             {
-                playerBody.AddForce(moveDir.normalized * (_currentSpeed * 10f * midAirMoveSpeedMultiplier), ForceMode.Force);   
+                playerBody.AddForce(_moveDirection.normalized * (_currentSpeed * speedScale * midAirMoveSpeedMultiplier), ForceMode.Acceleration);   
+            }
+            
+            if (grounded && Input.GetKey(KeyCode.LeftControl) && _actualSpeed >= minimumSpeedToSlide && !_isSliding)
+            {
+                StartSlide(_moveDirection);
+            }
+
+            if ((!Input.GetKey(KeyCode.LeftControl) || _actualSpeed <= crouchSpeed) && _isSliding)
+            {
+                StopSlide();
+            }
+        }
+
+        private void StopSlide()
+        {
+            _isSliding = false;
+            playerBodyAnimator.SetBool(IsSliding, false);
+        }
+
+        private void StartSlide(Vector3 moveDir)
+        {
+            _isSliding = true;
+            playerBody.drag = 1f;
+            playerBodyAnimator.SetBool(IsSliding, true);
+            if (_timerToGetVelocityBoostFromSlideMove <= 0)
+            {
+                playerBody.AddForce(moveDir.normalized * (_actualSpeed * slideInitialForce), ForceMode.VelocityChange);
+                _timerToGetVelocityBoostFromSlideMove = timeToGetVelocityBoostFromSlideMove;
             }
         }
 
