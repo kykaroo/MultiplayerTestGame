@@ -501,7 +501,7 @@ MonoBehaviour:
   slideInitialForce: 2
   timeToGetVelocityBoostFromSlideMove: 3
   playerBodyAnimator: {fileID: 8943253652417284881}
-  crouchSpeed: 2
+  crouchSpeedMultiplier: 0.5
   itemSelector: {fileID: 4033566859376298457}
   cameraHolderTransform: {fileID: 3190553507045204539}
   cameraHolder: {fileID: 1517172624990357396}

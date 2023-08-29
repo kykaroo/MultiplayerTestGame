@@ -3,6 +3,7 @@ using System.Collections;
 using Game.Player.PlayerInterfaces;
 using Photon.Pun;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Game.Player
 {
@@ -30,8 +31,8 @@ namespace Game.Player
         public float slideInitialForce;
         public float timeToGetVelocityBoostFromSlideMove;
         public Animator playerBodyAnimator;
-        [Header("Crouch")] 
-        public float crouchSpeed;
+        [FormerlySerializedAs("crouchSpeed")] [Header("Crouch")] 
+        public float crouchSpeedMultiplier;
         [Header("Items and camera")]
         public PlayerItemSelector itemSelector;
         [SerializeField] private Transform cameraHolderTransform;
@@ -64,6 +65,7 @@ namespace Game.Player
         private float _actualSpeed;
         private Vector3 _moveDirection;
         private float _timerToGetVelocityBoostFromSlideMove;
+        private float _topVelocity;
 
         private Coroutine _slowCoroutine;
 
@@ -107,7 +109,8 @@ namespace Game.Player
             Walking,
             Sprinting,
             MidAir,
-            MidAirSprinting
+            MidAirSprinting,
+            Crouching
         }
 
         private void Update()
@@ -164,6 +167,10 @@ namespace Game.Player
                 case true when Input.GetKey(KeyCode.LeftShift):
                     state = MovementState.Sprinting;
                     _currentSpeed = _modifiedBaseSpeed * sprintSpeedMultiplier;
+                    return;
+                case true when Input.GetKey(KeyCode.LeftControl):
+                    state = MovementState.Crouching;
+                    _currentSpeed = _modifiedBaseSpeed * crouchSpeedMultiplier;
                     return;
                 case true:
                     state = MovementState.Walking;
@@ -258,7 +265,7 @@ namespace Game.Player
                 StartSlide(_moveDirection);
             }
 
-            if ((!Input.GetKey(KeyCode.LeftControl) || _actualSpeed <= crouchSpeed) && _isSliding)
+            if ((!Input.GetKey(KeyCode.LeftControl) || _actualSpeed <= baseSpeed * crouchSpeedMultiplier) && _isSliding)
             {
                 StopSlide();
             }
