@@ -1,6 +1,9 @@
-﻿using Game.Player.Movement;
+﻿using System.Collections;
+using Game.Player.Movement;
+using Game.Spawn;
 using Photon.Pun;
 using UnityEngine;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 namespace Game.Player
 {
@@ -10,20 +13,24 @@ namespace Game.Player
     [RequireComponent(typeof(PlayerController))]
     [RequireComponent(typeof(PhotonView))]
     [RequireComponent(typeof(PhotonTransformView))]
-    public class Player : MonoBehaviour
+    public class Player : MonoBehaviourPunCallbacks
     {
-        private PhotonView photonView;
+        [SerializeField] private PhotonView photonView;
         public PlayerHealth Health;
         public PlayerInput Input;
         public PlayerController Controller;
         public ReloadHandler ReloadHandler;
+        public float timeToDisableAfterDeath;
+        public GameObject lobbyCamera;
+        
+        
         private PlayerManager _playerManager;
 
         private void Start()
         {
-            photonView = GetComponent<PhotonView>();
             if (!photonView.IsMine) return;
-            
+
+            photonView.RPC(nameof(RPC_DisablePlayerGameObject), RpcTarget.All);
             _playerManager = PhotonView.Find((int)photonView.InstantiationData[0]).GetComponent<PlayerManager>();
             Health.OnDeath += Die;
             Controller.OnFallOffMap += () => Health.TakeDamage(float.MaxValue, default);
@@ -36,8 +43,9 @@ namespace Game.Player
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
             Input.Dead();
-            photonView.RPC(nameof(Controller.RPC_DisableHands), RpcTarget.All);
+            Controller.DisableHands();
             photonView.RPC(nameof(RPC_DisablePlayer), RpcTarget.All);
+            StartCoroutine(DisableCoroutine());
         }
 
         [PunRPC]
@@ -48,6 +56,44 @@ namespace Game.Player
             Health.enabled = false;
             Controller.enabled = false;
             enabled = false;
+        }
+
+        public void Respawn()
+        {
+            Input.playerBody.constraints = RigidbodyConstraints.FreezeRotation;
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+            Input.Respawn();
+            Health.Respawn();
+            Controller.EnableHands();
+            gameObject.transform.rotation = Quaternion.identity;
+            gameObject.transform.position = SpawnManager.Instance.GetSpawnPoint().position;
+            photonView.RPC(nameof(RPC_EnablePlayer), RpcTarget.All);
+            lobbyCamera.SetActive(false);
+        }
+        
+        [PunRPC]
+        void RPC_EnablePlayer()
+        {
+            Input.enabled = true;
+            Health.isDead = false;
+            Health.enabled = true;
+            Controller.enabled = true;
+            enabled = true;
+            gameObject.SetActive(true);
+        }
+
+        private IEnumerator DisableCoroutine()
+        {
+            yield return new WaitForSeconds(timeToDisableAfterDeath);
+            lobbyCamera.SetActive(true);
+            photonView.RPC(nameof(RPC_DisablePlayerGameObject), RpcTarget.All);
+        }
+
+        [PunRPC]
+        void RPC_DisablePlayerGameObject()
+        {
+            gameObject.SetActive(false);
         }
     }
 }

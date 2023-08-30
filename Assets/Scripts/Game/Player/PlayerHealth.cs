@@ -80,5 +80,16 @@ namespace Game.Player
             if (killer._photonView.IsMine) return;
             killer.GetKill();
         }
+
+        public void Respawn()
+        {
+            _photonView.RPC(nameof(RPC_Respawn), RpcTarget.All);
+        }
+
+        [PunRPC]
+        void RPC_Respawn()
+        {
+            _currentHealth = maxHealth;
+        }
     }
 }

@@ -55,6 +55,12 @@ MonoBehaviour:
   - RPC_Dead
   - RPC_BulletRotationUpdate
   - RPC_Slow
+  - RPC_EnableHands
+  - RPC_EnablePlayer
+  - RPC_Respawn
+  - RPC_DisablePlayerGameObject
+  - RPC_PlayCrouchAnimation
+  - RPC_PlaySlideAnimation
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

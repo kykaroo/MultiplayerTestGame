@@ -137,5 +137,10 @@ namespace Game.Player
         {
             cameraHolder.Dead();
         }
+
+        public void Respawn()
+        {
+            cameraHolder.Respawn();
+        }
     }
 }

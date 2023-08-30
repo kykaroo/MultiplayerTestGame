@@ -21,7 +21,7 @@ namespace Game.Player
         
         private float _currentReloadTime;
 
-        private PhotonView PV;
+        private PhotonView _photonView;
 
         public event Action OnFallOffMap;
 
@@ -29,12 +29,12 @@ namespace Game.Player
         private void Awake()
         {
             playerBody = GetComponent<Rigidbody>();
-            PV = GetComponent<PhotonView>();
+            _photonView = GetComponent<PhotonView>();
         }
 
         private void Start()
         {
-            if (PV.IsMine)
+            if (_photonView.IsMine)
             {
                 nickNameCanvas.SetActive(false);
                 Instantiate(playerCameraPrefab, cameraHolder);
@@ -42,16 +42,12 @@ namespace Game.Player
             else
             {
                 Destroy(playerBody);
-                return;
             }
-        
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
         }
 
         private void Update()
         {
-            if (!PV.IsMine) return;
+            if (!_photonView.IsMine) return;
 
             FallOffMapCheck();
         }
@@ -65,10 +61,30 @@ namespace Game.Player
         }
 
         [PunRPC]
-        public void RPC_DisableHands()
+        private void RPC_DisableHands()
         {
             itemHolder.SetActive(false);
             nickNameCanvas.SetActive(false);
+        }
+        
+        [PunRPC]
+        private void RPC_EnableHands()
+        {
+            itemHolder.SetActive(true);
+            nickNameCanvas.SetActive(true);
+        }
+
+        public void DisableHands()
+        {
+            _photonView.RPC(nameof(RPC_DisableHands), RpcTarget.All);
+        }
+        
+        public void EnableHands()
+        {
+            photonView.RPC(nameof(RPC_EnableHands), RpcTarget.All);
+            if (!_photonView.IsMine) return;
+            nickNameCanvas.SetActive(false);
+            cameraHolder.rotation = Quaternion.identity;
         }
     }
 }

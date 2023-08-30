@@ -2,10 +2,8 @@ using System;
 using System.Linq;
 using ExitGames.Client.Photon;
 using Game.Camera.GUIs;
-using Game.Spawn;
 using Photon.Pun;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Game.Player
 {
@@ -33,8 +31,7 @@ namespace Game.Player
 
         internal Player CreatePlayer()
         {
-            Transform spawnPoint = SpawnManager.Instance.GetSpawnPoint();
-            return PhotonNetwork.Instantiate("Game/PhotonPrefabs/Player", spawnPoint.position, spawnPoint.rotation, 0,
+            return PhotonNetwork.Instantiate("Game/PhotonPrefabs/Player", Vector3.zero, Quaternion.identity, 0,
                 new object[] { _photonView.ViewID }).GetComponent<Player>();
         }
 

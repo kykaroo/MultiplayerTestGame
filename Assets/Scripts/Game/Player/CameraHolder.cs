@@ -29,6 +29,11 @@ public class CameraHolder : MonoBehaviour
         _photonView.RPC(nameof(RPC_Dead), RpcTarget.All);
     }
 
+    public void Respawn()
+    {
+        _photonView.RPC(nameof(RPC_Respawn), RpcTarget.All);
+    }
+
     private void EndReload()
     {
         OnReloadEnded?.Invoke();
@@ -44,5 +49,11 @@ public class CameraHolder : MonoBehaviour
     void RPC_Dead()
     {
         handsAnimator.SetBool(IsDead, true);
+    }
+    
+    [PunRPC]
+    void RPC_Respawn()
+    {
+        handsAnimator.SetBool(IsDead, false);
     }
 }

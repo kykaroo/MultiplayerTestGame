@@ -4,19 +4,20 @@ using UnityEngine;
 namespace Game.Camera.States
 {
     using Player = Game.Player.Player;
-    public class HudState : GuiBaseStateWithPayload<Player>
+    public class HudState : GuiStateBase
     {
         private HudGui _hudGui;
         // private UsableItem _item;
         private Player _player;
 
-        public HudState(GuiFactory guiFactory) : base(guiFactory) { }
+        public HudState(GuiFactory guiFactory, Player player) : base(guiFactory)
+        {
+            _player = player;
+        }
         
-        protected override void OnEnter(Player player)
+        protected override void OnEnter()
         {
             _hudGui = GuiFactory.CreateGUI<HudGui>();
-
-            _player = player;
 
             // _playerController.OnItemChange += ItemChange;
             _player.Health.OnHealthChange += UpdateHealth;
@@ -60,7 +61,7 @@ namespace Game.Camera.States
 
         private void OnDeath(Vector3 vector3)
         {
-            StateMachine.SetState<DeathGuiState, Player>(_player);
+            StateMachine.SetState<DeathGuiState>();
         }
         
         private void WeaponReload(float reloadTime)

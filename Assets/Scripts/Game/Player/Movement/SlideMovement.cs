@@ -1,4 +1,5 @@
 ﻿using System;
+using Photon.Pun;
 using UnityEngine;
 
 namespace Game.Player.Movement
@@ -8,6 +9,7 @@ namespace Game.Player.Movement
         [SerializeField] private Rigidbody playerBody;
         [SerializeField] private Animator playerBodyAnimator;
         [SerializeField] private PlayerSurfaceCheck playerSurfaceCheck;
+        [SerializeField] private PhotonView _photonView;
         [Header("Sliding")] 
         public float minimumSpeedToSlide;
         public float slideInitialForce;
@@ -33,6 +35,8 @@ namespace Game.Player.Movement
 
         private void Update()
         {
+            if (!_photonView.IsMine) return;
+
             _timerToGetVelocityBoostFromSlideMove -= Time.deltaTime;
             if (!_isSliding)
             {
@@ -59,7 +63,7 @@ namespace Game.Player.Movement
         private void StopSlide()
         {
             _isSliding = false;
-            playerBodyAnimator.SetBool(IsSliding, false);
+            _photonView.RPC(nameof(RPC_PlaySlideAnimation), RpcTarget.All, _isSliding);
             OnSlide?.Invoke(_isSliding);
         }
 
@@ -67,7 +71,7 @@ namespace Game.Player.Movement
         {
             _isSliding = true;
             playerBody.drag = 1f;
-            playerBodyAnimator.SetBool(IsSliding, true);
+            _photonView.RPC(nameof(RPC_PlaySlideAnimation), RpcTarget.All, _isSliding);
             OnSlide?.Invoke(_isSliding);
             if (_timerToGetVelocityBoostFromSlideMove <= 0)
             {
@@ -79,6 +83,12 @@ namespace Game.Player.Movement
         public void UpdateActualSpeed(float actualSpeed)
         {
             _actualSpeed = actualSpeed;
+        }
+
+        [PunRPC]
+        void RPC_PlaySlideAnimation(bool isSliding)
+        {
+            playerBodyAnimator.SetBool(IsSliding, isSliding);
         }
     }
 }

@@ -532,6 +532,7 @@ MonoBehaviour:
   playerBody: {fileID: 5459022053153529090}
   playerBodyAnimator: {fileID: 8943253652417284881}
   playerSurfaceCheck: {fileID: 2139314560458716516}
+  _photonView: {fileID: 6453041631635206590}
   minimumSpeedToSlide: 4
   slideInitialForce: 2
   timeToGetVelocityBoostFromSlideMove: 4
@@ -572,7 +573,7 @@ MonoBehaviour:
   playerSurfaceCheck: {fileID: 2139314560458716516}
   jumpCooldown: 0.25
   autoJump: 1
-  jumpForce: 2
+  jumpForce: 10
 --- !u!114 &7236763982070474337
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -586,6 +587,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerBodyAnimator: {fileID: 8943253652417284881}
+  _photonView: {fileID: 6453041631635206590}
 --- !u!114 &1368190131306456720
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -672,10 +674,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a463a537c868456d81ba4e21f6d94111, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  photonView: {fileID: 6453041631635206590}
   Health: {fileID: 3852570639306101726}
   Input: {fileID: 2699483418850657836}
   Controller: {fileID: 2616879553531085620}
   ReloadHandler: {fileID: 2010890280589821674}
+  timeToDisableAfterDeath: 5
+  lobbyCamera: {fileID: 0}
 --- !u!114 &3852570639306101726
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -950,7 +955,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 646f121388b56f34998161d415c5f6ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerPv: {fileID: 6453041631635206590}
+  _photonView: {fileID: 6453041631635206590}
   text: {fileID: 9221468959623639743}
 --- !u!1 &5555717406549720239
 GameObject:

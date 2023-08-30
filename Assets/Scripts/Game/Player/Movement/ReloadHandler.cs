@@ -38,6 +38,8 @@ namespace Game.Player.Movement
 
         private void Update()
         {
+            if(!_photonView.IsMine) return;
+            
             itemSelector.ActiveGun.OnAmmunitionUpdate += AmmunitionUpdate; // TODO исправить костыль
         }
 

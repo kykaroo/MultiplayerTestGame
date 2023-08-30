@@ -12,11 +12,13 @@ namespace Game.Camera.States
         private PreGameGui _preGameGui;
         private readonly PlayerManager _playerManager;
         private UnityEngine.Camera _camera;
+        private Player _player;
 
-        public PreGameState(GuiFactory guiFactory, PlayerManager playerManager, UnityEngine.Camera camera) : base(guiFactory)
+        public PreGameState(GuiFactory guiFactory, PlayerManager playerManager, UnityEngine.Camera camera, Player player) : base(guiFactory)
         {
             _playerManager = playerManager;
             _camera = camera;
+            _player = player;
         }
         
         protected override void OnEnter()
@@ -49,7 +51,8 @@ namespace Game.Camera.States
         
         private void Spawn()
         {
-            StateMachine.SetState<HudState, Player>(_playerManager.CreatePlayer());
+            _player.Respawn();
+            StateMachine.SetState<HudState>();
         }
         
         private void EnableButton()
