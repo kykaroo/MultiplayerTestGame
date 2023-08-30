@@ -12,6 +12,7 @@ namespace Game.Camera.GUIs
         [SerializeField] private Image reloadIndicator;
         [SerializeField] private TextMeshProUGUI ammunitionDisplay;
         [SerializeField] private TextMeshProUGUI speedDisplay;
+        [SerializeField] private TextMeshProUGUI targetPlayerName;
 
         public float currentReloadTime;
         
@@ -24,6 +25,8 @@ namespace Game.Camera.GUIs
         public TextMeshProUGUI AmmunitionDisplay => ammunitionDisplay;
         
         public TextMeshProUGUI SpeedDisplay => speedDisplay;
+
+        public TextMeshProUGUI TargetPlayerName => targetPlayerName;
 
 
         private void Update()

@@ -25,6 +25,7 @@ namespace Game.Camera.States
             _player.ReloadHandler.OnReload += WeaponReload;
             _player.ReloadHandler.OnAmmunitionUpdate += UpdateAmmunitionDisplay;
             _player.Input.OnSpeedUpdate += UpdateSpeedDisplay;
+            _player.Controller.OnPlayerOnCrosshair += DisplayNickName;
         }
 
         protected override void OnExit()
@@ -34,6 +35,7 @@ namespace Game.Camera.States
             _player.ReloadHandler.OnReload -= WeaponReload;
             _player.ReloadHandler.OnAmmunitionUpdate -= UpdateAmmunitionDisplay;
             _player.Input.OnSpeedUpdate -= UpdateSpeedDisplay;
+            _player.Controller.OnPlayerOnCrosshair -= DisplayNickName;
 
             Object.Destroy(_hudGui.gameObject);
         }
@@ -89,6 +91,11 @@ namespace Game.Camera.States
         private void UpdateSpeedDisplay(string speed)
         {
             _hudGui.SpeedDisplay.text = speed;
+        }
+
+        private void DisplayNickName(string targetedPlayerName)
+        {
+            _hudGui.TargetPlayerName.text = targetedPlayerName;
         }
     }
 }

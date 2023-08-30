@@ -1,8 +1,7 @@
 using System;
-using Unity.VisualScripting;
 using UnityEngine;
 
-namespace Game.Player
+namespace Game.Player.Movement
 {
     public class PlayerSurfaceCheck : MonoBehaviour
     {

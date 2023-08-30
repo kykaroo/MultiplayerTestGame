@@ -22,8 +22,8 @@ namespace Game.Player
         public ReloadHandler ReloadHandler;
         public float timeToDisableAfterDeath;
         public GameObject lobbyCamera;
-        
-        
+
+
         private PlayerManager _playerManager;
 
         private void Start()
