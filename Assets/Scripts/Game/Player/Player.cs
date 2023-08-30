@@ -28,9 +28,19 @@ namespace Game.Player
 
         private void Start()
         {
-            if (!photonView.IsMine) return;
+            if (photonView.IsMine)
+            {
+                photonView.RPC(nameof(RPC_DisablePlayerGameObject), RpcTarget.All);
+                UpdateGameObjectCurrentState();
+            }
 
-            photonView.RPC(nameof(RPC_DisablePlayerGameObject), RpcTarget.All);
+            if (!photonView.IsMine)
+            {
+                if(photonView.Owner.CustomProperties.TryGetValue("playerGameObjectState", out var playerState))
+                    gameObject.SetActive((bool)playerState);
+                return;
+            }
+            
             _playerManager = PhotonView.Find((int)photonView.InstantiationData[0]).GetComponent<PlayerManager>();
             Health.OnDeath += Die;
             Controller.OnFallOffMap += () => Health.TakeDamage(float.MaxValue, default);
@@ -69,6 +79,7 @@ namespace Game.Player
             gameObject.transform.rotation = Quaternion.identity;
             gameObject.transform.position = SpawnManager.Instance.GetSpawnPoint().position;
             photonView.RPC(nameof(RPC_EnablePlayer), RpcTarget.All);
+            UpdateGameObjectCurrentState();
             lobbyCamera.SetActive(false);
         }
         
@@ -87,6 +98,7 @@ namespace Game.Player
         {
             yield return new WaitForSeconds(timeToDisableAfterDeath);
             lobbyCamera.SetActive(true);
+            UpdateGameObjectCurrentState();
             photonView.RPC(nameof(RPC_DisablePlayerGameObject), RpcTarget.All);
         }
 
@@ -94,6 +106,12 @@ namespace Game.Player
         void RPC_DisablePlayerGameObject()
         {
             gameObject.SetActive(false);
+        }
+        
+        private void UpdateGameObjectCurrentState()
+        {
+            var hash = new Hashtable { { "playerGameObjectState", gameObject.activeSelf } };
+            PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
         }
     }
 }
