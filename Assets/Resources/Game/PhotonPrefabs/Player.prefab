@@ -540,8 +540,7 @@ MonoBehaviour:
   playerSurfaceCheck: {fileID: 2139314560458716516}
   photonView: {fileID: 6453041631635206590}
   baseMovement: {fileID: 1368190131306456720}
-  playerSlidingAnimation: {fileID: 0}
-  playerBodyGO: {fileID: 0}
+  maxSlopeAngleToSlide: 50
   minimumSpeedToSlide: 4
   slideInitialForce: 1.4
   timeToGetVelocityBoostFromSlideMove: 2
@@ -690,13 +689,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 643ca6da00c2b324b9d39a25634d0335, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Gun: 0
-  Guns:
-  - {fileID: 11400000, guid: 2a016decd0a5a3c4d87bd3e4bad4f1d5, type: 2}
+  gun: 0
+  guns:
   - {fileID: 11400000, guid: dbe4922bb0ac87a4e99643488b5373d4, type: 2}
   itemHolder: {fileID: 1675801058744744507}
   modelPrefabPath: Items/NewItemSystem/Prefabs/M4A4
-  ActiveGun: {fileID: 0}
 --- !u!114 &8588219719379731189
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -764,8 +761,6 @@ MonoBehaviour:
   groundLayerMask:
     serializedVersion: 2
     m_Bits: 128
-  minSlopeAngle: 0.5
-  maxSlopeAngle: 50
   photonView: {fileID: 6453041631635206590}
 --- !u!1 &3595506509183320736
 GameObject:

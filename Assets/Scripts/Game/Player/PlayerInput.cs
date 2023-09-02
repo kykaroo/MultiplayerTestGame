@@ -55,7 +55,7 @@ namespace Game.Player
         {
             if (!_photonView.IsMine) return;
             
-            itemSelector.ActiveGun.Tick(Input.GetMouseButton(0));
+            itemSelector.activeGun.Tick(Input.GetMouseButton(0));
 
             Look();
             Inputs();

@@ -1,4 +1,3 @@
-using System;
 using Photon.Pun;
 using UnityEngine;
 
@@ -11,8 +10,6 @@ namespace Game.Player.Movement
         [SerializeField] private GameObject legs;
         [SerializeField] private SphereCollider legsCollider;
         [SerializeField] private LayerMask groundLayerMask;
-        [SerializeField] private float minSlopeAngle;
-        [SerializeField] private float maxSlopeAngle;
         [SerializeField] private PhotonView photonView;
 
         private bool onSlopeTouch;

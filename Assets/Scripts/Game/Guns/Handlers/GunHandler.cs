@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace Game.Guns.Handlers
 {
-    public class GunHandler : MonoBehaviour
+    public class GunHandler
     {
         public ImpactType impactType;
         public GunType type;

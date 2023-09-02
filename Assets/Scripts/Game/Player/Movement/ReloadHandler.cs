@@ -40,7 +40,7 @@ namespace Game.Player.Movement
         {
             if(!_photonView.IsMine) return;
             
-            itemSelector.ActiveGun.OnAmmunitionUpdate += AmmunitionUpdate; // TODO исправить костыль
+            itemSelector.activeGun.OnAmmunitionUpdate += AmmunitionUpdate; // TODO исправить костыль
         }
 
         public void TryToReload()
@@ -63,9 +63,9 @@ namespace Game.Player.Movement
         {
             if (!_photonView.IsMine) return;
             
-            itemSelector.ActiveGun.EndReload();
+            itemSelector.activeGun.EndReload();
             _isReloading = false;
-            OnAmmunitionUpdate?.Invoke(itemSelector.ActiveGun.AmmoHandler.CurrentClipAmmo, itemSelector.ActiveGun.AmmoHandler.CurrentAmmo);
+            OnAmmunitionUpdate?.Invoke(itemSelector.activeGun.AmmoHandler.CurrentClipAmmo, itemSelector.activeGun.AmmoHandler.CurrentAmmo);
         }
 
         private IEnumerator ReloadTimer()
@@ -76,17 +76,17 @@ namespace Game.Player.Movement
         
         private bool ShouldAutoReload()
         {
-            return !_isReloading && autoReload &&  itemSelector.ActiveGun.AmmoHandler.CurrentClipAmmo == 0 && itemSelector.ActiveGun.CanReload();
+            return !_isReloading && autoReload &&  itemSelector.activeGun.AmmoHandler.CurrentClipAmmo == 0 && itemSelector.activeGun.CanReload();
         }
 
         private bool ShouldManualReload()
         {
-            return !_isReloading && Input.GetKeyDown(KeyCode.R) && itemSelector.ActiveGun.CanReload();
+            return !_isReloading && Input.GetKeyDown(KeyCode.R) && itemSelector.activeGun.CanReload();
         }
         
         private void AmmunitionUpdate(int currentAmmo, int maxAmmo)
         {
-            OnAmmunitionUpdate?.Invoke(itemSelector.ActiveGun.AmmoHandler.CurrentClipAmmo, itemSelector.ActiveGun.AmmoHandler.CurrentAmmo);
+            OnAmmunitionUpdate?.Invoke(itemSelector.activeGun.AmmoHandler.CurrentClipAmmo, itemSelector.activeGun.AmmoHandler.CurrentAmmo);
         }
     }
 }

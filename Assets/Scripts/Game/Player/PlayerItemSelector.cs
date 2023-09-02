@@ -4,13 +4,14 @@ using Game.Guns.Configs;
 using Game.Guns.Handlers;
 using Photon.Pun;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Game.Player
 {
     public class PlayerItemSelector : MonoBehaviour
     {
-        [SerializeField] private GunType Gun;
-        [SerializeField] private List<GunScriptableObject> Guns;
+        [SerializeField] private GunType gun;
+        [SerializeField] private List<GunScriptableObject> guns;
         [SerializeField] private ItemHolder itemHolder;
         [SerializeField] private string modelPrefabPath;
 
@@ -18,7 +19,7 @@ namespace Game.Player
 
         private PhotonView _photonView;
 
-        [Space] [Header("Runtime Filled")] public GunHandler ActiveGun;
+        [Space] [Header("Runtime Filled")] public GunHandler activeGun;
 
         private void Awake()
         {
@@ -29,15 +30,15 @@ namespace Game.Player
         {
             if (!_photonView.IsMine) return;
         
-            GunScriptableObject gun = Guns.Find(gun => gun.Type == Gun);
+            GunScriptableObject currentGun = guns.Find(currentGun => currentGun.Type == gun);
 
-            if (gun == null)
+            if (currentGun == null)
             {
-                Debug.LogError($"No GunScriptableObject found fo GunType: {gun}");
+                Debug.LogError($"No GunScriptableObject found fo GunType: {currentGun}");
                 return;
             }
             
-            ActiveGun = new GunHandler(gun, modelPrefabPath, this, itemHolder);
+            activeGun = new(currentGun, modelPrefabPath, this, itemHolder);
         }
         
         // TODO Доделать смену оружия игроков

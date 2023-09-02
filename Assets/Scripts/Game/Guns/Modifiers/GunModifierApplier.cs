@@ -18,9 +18,9 @@ namespace Game.Guns.Modifiers
             new ImpactTypeModifier
             {
                 Amount = impactTypeOverride
-            }.Apply(itemSelector.ActiveGun);
+            }.Apply(itemSelector.activeGun);
             
-            itemSelector.ActiveGun.BulletImpactEffects = new ICollisionHandler[]
+            itemSelector.activeGun.BulletImpactEffects = new ICollisionHandler[]
             {
                 new FrostModifier(2f, new(new Keyframe(0, 1), new Keyframe(1, 0.25f)), 
                     0, 0.5f, 1, false, 1)

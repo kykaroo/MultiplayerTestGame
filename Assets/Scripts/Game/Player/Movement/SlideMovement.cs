@@ -10,8 +10,7 @@ namespace Game.Player.Movement
         [SerializeField] private PlayerSurfaceCheck playerSurfaceCheck;
         [SerializeField] private PhotonView photonView;
         [SerializeField] private BaseMovement baseMovement;
-        [SerializeField] private Animation playerSlidingAnimation;
-        [SerializeField] private GameObject playerBodyGO;
+        [SerializeField] private float maxSlopeAngleToSlide;
         [Header("Sliding")] 
         public float minimumSpeedToSlide;
         public float slideInitialForce;
@@ -28,6 +27,7 @@ namespace Game.Player.Movement
         public bool isSliding { get; private set; }
 
         private static readonly int IsSliding = Animator.StringToHash("IsSliding");
+        private static readonly int SlideAngle = Animator.StringToHash("SlideAngle");
 
         private void Update()
         {
@@ -38,6 +38,19 @@ namespace Game.Player.Movement
             {
                 playerBody.drag = playerSurfaceCheck.Grounded ? groundDrag : airDrag;
             }
+            
+            playerBodyAnimator.SetFloat(SlideAngle, GetSlideAngle());
+        }
+
+        private float GetSlideAngle()
+        {
+            var slideAngle = playerSurfaceCheck.SurfaceAngle;
+            if (slideAngle < 10)
+            {
+                slideAngle = 10;
+            }
+
+            return slideAngle;
         }
 
         public void TryToStopSlide(float baseSpeed, float crouchSpeedMultiplier)
@@ -50,7 +63,8 @@ namespace Game.Player.Movement
 
         public void TryToSlide()
         {
-            if (playerSurfaceCheck.Grounded && Input.GetKey(KeyCode.LeftControl) && _actualSpeed >= minimumSpeedToSlide && !isSliding)
+            if (playerSurfaceCheck.Grounded && Input.GetKey(KeyCode.LeftControl) &&
+                _actualSpeed >= minimumSpeedToSlide && !isSliding && playerSurfaceCheck.SurfaceAngle > maxSlopeAngleToSlide)
             {
                 StartSlide();
             }
@@ -80,7 +94,7 @@ namespace Game.Player.Movement
 
         [PunRPC]
         void RPC_PlaySlideAnimation(bool isSliding)
-        { 
+        {
             playerBodyAnimator.SetBool(IsSliding, isSliding);
         }
 
