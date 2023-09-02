@@ -1,5 +1,4 @@
-﻿using Game.Guns.Configs;
-using Game.Player;
+﻿using Game.Guns.Handlers;
 using Game.Player.PlayerInterfaces;
 using UnityEngine;
 
@@ -23,7 +22,7 @@ namespace Game.Guns.Modifiers.ProjectileCollisionEffects
             hitMask = LayerMask.GetMask("AreaOfEffectCollider", "DestructibleObjects");
         }
 
-        public virtual void HandleImpact(Collider impactedObject, Vector3 hitPosition, Vector3 hitNormal, GunScriptableObject gun)
+        public virtual void HandleImpact(Collider impactedObject, Vector3 hitPosition, Vector3 hitNormal, GunHandler gun)
         {
             Hits = Physics.OverlapSphereNonAlloc(hitPosition, AreaRadius, _hitObjects,
                 hitMask);

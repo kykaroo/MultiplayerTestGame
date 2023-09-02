@@ -94,9 +94,9 @@ GameObject:
   - component: {fileID: 3953739476940427585}
   - component: {fileID: 715143034337652468}
   - component: {fileID: 4566366484353520556}
-  - component: {fileID: -4503172071572622764}
   - component: {fileID: 3677347183567224135}
   - component: {fileID: -2441559225946257658}
+  - component: {fileID: 6325162292023336209}
   m_Layer: 14
   m_Name: M4A4
   m_TagString: Untagged
@@ -174,20 +174,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &-4503172071572622764
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1615621099556364170}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e7d1a484f0e24b42826ee6ae655b6e74, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _photonView: {fileID: 0}
-  ShootSystem: {fileID: 2270035780609235522}
 --- !u!114 &3677347183567224135
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -227,6 +213,19 @@ MonoBehaviour:
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
   m_UseLocal: 1
+--- !u!114 &6325162292023336209
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1615621099556364170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 139d7c69dfe94f27afe341db50ee7a52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  particleSystem: {fileID: 2270035780609235522}
 --- !u!1 &1922754878684364535
 GameObject:
   m_ObjectHideFlags: 0

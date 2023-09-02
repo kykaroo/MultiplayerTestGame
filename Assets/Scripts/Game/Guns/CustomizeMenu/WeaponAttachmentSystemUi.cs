@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Game.Guns.CustomizeMenu.ScriptableObjects;
+﻿using Game.Guns.CustomizeMenu.ScriptableObjects;
 using TMPro;
 using UnityEngine;
 
@@ -45,14 +44,22 @@ namespace Game.Guns.CustomizeMenu
         
         private void AddListenersToDropdowns()
         {
-            muzzleDropdown.onValueChanged.AddListener(partIndex => WeaponAttachmentSystem.Instance.ChangePart(WeaponPartScriptableObject.PartType.Muzzle, partIndex) );
-            barrelDropdown.onValueChanged.AddListener(partIndex => WeaponAttachmentSystem.Instance.ChangePart(WeaponPartScriptableObject.PartType.Barrel, partIndex) );
-            underbarrelDropdown.onValueChanged.AddListener(partIndex => WeaponAttachmentSystem.Instance.ChangePart(WeaponPartScriptableObject.PartType.Underbarrel, partIndex) );
-            stockDropdown.onValueChanged.AddListener(partIndex => WeaponAttachmentSystem.Instance.ChangePart(WeaponPartScriptableObject.PartType.Stock, partIndex) );
-            gripDropdown.onValueChanged.AddListener(partIndex => WeaponAttachmentSystem.Instance.ChangePart(WeaponPartScriptableObject.PartType.Grip, partIndex) );
-            scopeDropdown.onValueChanged.AddListener(partIndex => WeaponAttachmentSystem.Instance.ChangePart(WeaponPartScriptableObject.PartType.Scope, partIndex) );
-            magazineDropdown.onValueChanged.AddListener(partIndex => WeaponAttachmentSystem.Instance.ChangePart(WeaponPartScriptableObject.PartType.Magazine, partIndex) );
-            ammunitionDropdown.onValueChanged.AddListener(partIndex => WeaponAttachmentSystem.Instance.ChangePart(WeaponPartScriptableObject.PartType.Ammunition, partIndex) );
+            muzzleDropdown.onValueChanged.AddListener(partIndex =>
+                WeaponAttachmentSystem.Instance.ChangePart(WeaponPartScriptableObject.PartType.Muzzle, partIndex));
+            barrelDropdown.onValueChanged.AddListener(partIndex =>
+                WeaponAttachmentSystem.Instance.ChangePart(WeaponPartScriptableObject.PartType.Barrel, partIndex));
+            underbarrelDropdown.onValueChanged.AddListener(partIndex =>
+                WeaponAttachmentSystem.Instance.ChangePart(WeaponPartScriptableObject.PartType.Underbarrel, partIndex));
+            stockDropdown.onValueChanged.AddListener(partIndex =>
+                WeaponAttachmentSystem.Instance.ChangePart(WeaponPartScriptableObject.PartType.Stock, partIndex));
+            gripDropdown.onValueChanged.AddListener(partIndex =>
+                WeaponAttachmentSystem.Instance.ChangePart(WeaponPartScriptableObject.PartType.Grip, partIndex));
+            scopeDropdown.onValueChanged.AddListener(partIndex =>
+                WeaponAttachmentSystem.Instance.ChangePart(WeaponPartScriptableObject.PartType.Scope, partIndex));
+            magazineDropdown.onValueChanged.AddListener(partIndex =>
+                WeaponAttachmentSystem.Instance.ChangePart(WeaponPartScriptableObject.PartType.Magazine, partIndex));
+            ammunitionDropdown.onValueChanged.AddListener(partIndex =>
+                WeaponAttachmentSystem.Instance.ChangePart(WeaponPartScriptableObject.PartType.Ammunition, partIndex));
         }
     }
 }

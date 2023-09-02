@@ -65,7 +65,7 @@ namespace Game.Player.Movement
             
             itemSelector.ActiveGun.EndReload();
             _isReloading = false;
-            OnAmmunitionUpdate?.Invoke(itemSelector.ActiveGun.AmmoConfig.currentClipAmmo, itemSelector.ActiveGun.AmmoConfig.currentAmmo);
+            OnAmmunitionUpdate?.Invoke(itemSelector.ActiveGun.AmmoHandler.CurrentClipAmmo, itemSelector.ActiveGun.AmmoHandler.CurrentAmmo);
         }
 
         private IEnumerator ReloadTimer()
@@ -76,7 +76,7 @@ namespace Game.Player.Movement
         
         private bool ShouldAutoReload()
         {
-            return !_isReloading && autoReload &&  itemSelector.ActiveGun.AmmoConfig.currentClipAmmo == 0 && itemSelector.ActiveGun.CanReload();
+            return !_isReloading && autoReload &&  itemSelector.ActiveGun.AmmoHandler.CurrentClipAmmo == 0 && itemSelector.ActiveGun.CanReload();
         }
 
         private bool ShouldManualReload()
@@ -86,7 +86,7 @@ namespace Game.Player.Movement
         
         private void AmmunitionUpdate(int currentAmmo, int maxAmmo)
         {
-            OnAmmunitionUpdate?.Invoke(itemSelector.ActiveGun.AmmoConfig.currentClipAmmo, itemSelector.ActiveGun.AmmoConfig.currentAmmo);
+            OnAmmunitionUpdate?.Invoke(itemSelector.ActiveGun.AmmoHandler.CurrentClipAmmo, itemSelector.ActiveGun.AmmoHandler.CurrentAmmo);
         }
     }
 }

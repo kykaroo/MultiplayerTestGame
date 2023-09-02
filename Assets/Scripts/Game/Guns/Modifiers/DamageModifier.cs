@@ -1,13 +1,12 @@
-﻿using System;
-using System.Reflection;
-using Game.Guns.Configs;
+﻿using System.Reflection;
+using Game.Guns.Handlers;
 using UnityEngine;
 
 namespace Game.Guns.Modifiers
 {
     public class DamageModifier : AbstractValueModifier<float>
     {
-        public override void Apply(GunScriptableObject gun)
+        public override void Apply(GunHandler gun)
         {
             try
             {

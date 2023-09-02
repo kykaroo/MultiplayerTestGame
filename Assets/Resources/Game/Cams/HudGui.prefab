@@ -147,7 +147,7 @@ GameObject:
   - component: {fileID: 3181453825449486331}
   - component: {fileID: 1378549190247505472}
   m_Layer: 5
-  m_Name: Speed
+  m_Name: SpeedText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -704,6 +704,7 @@ MonoBehaviour:
   reloadIndicator: {fileID: 5260844947927643938}
   ammunitionDisplay: {fileID: 3329502016990473489}
   speedDisplay: {fileID: 1378549190247505472}
+  maxSpeedDisplay: {fileID: 0}
   targetPlayerName: {fileID: 6074075603339173254}
   currentReloadTime: 0
 --- !u!1 &8917250217131492529

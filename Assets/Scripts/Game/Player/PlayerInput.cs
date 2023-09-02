@@ -48,9 +48,7 @@ namespace Game.Player
             Walking,
             Sprinting,
             MidAir,
-            MidAirSprinting,
-            Crouching,
-            MidAirCrouch
+            Crouching
         }
 
         private void Update()
@@ -68,42 +66,37 @@ namespace Game.Player
             var velocity = playerBody.velocity;
             _actualSpeed = new Vector3(velocity.x, 0f, velocity.z).magnitude;
             OnSpeedUpdate?.Invoke(Math.Round(_actualSpeed, 3).ToString());
-            
+
             slideMovement.UpdateActualSpeed(_actualSpeed);
-            slideMovement.TryToSlide(_moveDirection);
+            slideMovement.TryToSlide();
             slideMovement.TryToStopSlide(baseMovement.baseSpeed, baseMovement.crouchSpeedMultiplier);
             
             StateHandler();
         }
-        
+
         private void StateHandler()
         {
             switch (grounded)
             {
-                case true when Input.GetKey(KeyCode.LeftShift):
-                    state = MovementState.Sprinting;
-                    crouchHandler.SetCrouchState(false);
-                    baseMovement.SetSpeed(MovementState.Sprinting);
-                    return;
                 case true when Input.GetKey(KeyCode.LeftControl):
                     state = MovementState.Crouching;
                     crouchHandler.SetCrouchState(true);
                     baseMovement.SetSpeed(MovementState.Crouching);
+                    return;
+                case true when Input.GetKey(KeyCode.LeftShift) && !Input.GetKey(KeyCode.LeftControl):
+                    state = MovementState.Sprinting;
+                    crouchHandler.SetCrouchState(false);
+                    baseMovement.SetSpeed(MovementState.Sprinting);
                     return;
                 case true:
                     state = MovementState.Walking;
                     crouchHandler.SetCrouchState(false);
                     baseMovement.SetSpeed(MovementState.Walking);
                     return;
-                case false when Input.GetKey(KeyCode.LeftShift):
-                    state = MovementState.MidAirSprinting;
-                    crouchHandler.SetCrouchState(false);
-                    baseMovement.SetSpeed(MovementState.MidAirSprinting);
-                    return;
                 case false when Input.GetKey(KeyCode.LeftControl):
-                    state = MovementState.MidAirCrouch;
+                    state = MovementState.Crouching;
                     crouchHandler.SetCrouchState(true);
-                    baseMovement.SetSpeed(MovementState.MidAirCrouch);
+                    baseMovement.SetSpeed(MovementState.MidAir);
                     return;
                 case false:
                     state = MovementState.MidAir;

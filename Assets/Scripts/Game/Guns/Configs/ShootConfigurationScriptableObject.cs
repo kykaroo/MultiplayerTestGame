@@ -1,92 +1,47 @@
-using System;
-using System.Linq;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace Game.Guns.Configs
 {
     [CreateAssetMenu(fileName = "Shoot Config", menuName = "Guns/Shoot Configuration", order = 2)]
-    public class ShootConfigurationScriptableObject : ScriptableObject, ICloneable
+    public class ShootConfigurationScriptableObject : ScriptableObject
     {
-        public bool IsHitScan;
-        public Bullet BulletPrefab;
-        public string bulletPrefabPath;
-        public float BulletSpawnForce = 1000;
-        public float FireRate = 0.25f;
-        public float RecoilRecoverySpeed = 1f;
-        public float MaxSpreadTime = 1f;
-        public BulletSpreadType SpreaType = BulletSpreadType.Simple;
+        [SerializeField] private bool isHitScan;
+        [SerializeField] private string bulletPrefabPath;
+        [SerializeField] private float bulletSpawnForce = 1000;
+        [SerializeField] private float fireRate = 0.25f;
+        [SerializeField] private float recoilRecoverySpeed = 1f;
+        [SerializeField] private float maxSpreadTime = 1f;
+        [SerializeField] private BulletSpreadType spreadType = BulletSpreadType.Simple;
         [Header("Simple Spread")]
-        public Vector3 Spread = new(0.1f, 0.1f, 0.1f);
+        [SerializeField] private Vector3 spread = new(0.01f, 0.01f, 0.01f);
 
         [Header("Texture-Based spread")] [Range(0.001f, 5f)]
-        public float SpreadMultiplier = 0.1f;
-        public Texture2D SpreatTexture;
+        [SerializeField] private float spreadMultiplier = 0.1f;
+        [SerializeField] private Texture2D spreadTexture;
         
         [Header("Only for raycast (disabled)")]
-        public LayerMask HitMask;
+        [SerializeField] private LayerMask hitMask;
         
+        public bool IsHitScan => isHitScan;
 
-        public Vector3 GetSpread(float ShootTime = 0)
-        {
-            Vector3 spread = Vector3.zero;
+        public string BulletPrefabPath => bulletPrefabPath;
 
-            if (SpreaType == BulletSpreadType.Simple)
-            {
-                spread = Vector3.Lerp(Vector3.zero,
-                    new(Random.Range(-Spread.x, Spread.x), Random.Range(-Spread.y, Spread.y),
-                        Random.Range(-Spread.z, Spread.z)), Mathf.Clamp01(ShootTime / MaxSpreadTime));
-            }
-            else
-            {
-                if (SpreaType == BulletSpreadType.TextureBased)
-                {
-                    spread = GetTextureDirection(ShootTime);
-                    spread *= SpreadMultiplier;
-                }
-            }
-        
-            return spread;
-        }
+        public float BulletSpawnForce => bulletSpawnForce;
 
-        private Vector3 GetTextureDirection(float shootTime)
-        {
-            Vector2 halfSize = new(SpreatTexture.width / 2f, SpreatTexture.height / 2f);
-            int halfSquareExtents = Mathf.CeilToInt(Mathf.Lerp(0.01f, halfSize.x, Mathf.Clamp01(shootTime / MaxSpreadTime)));
-        
-            int minX = Mathf.FloorToInt(halfSize.x) - halfSquareExtents;
-            int minY = Mathf.FloorToInt(halfSize.y) - halfSquareExtents;
+        public float FireRate => fireRate;
 
-            Color[] sampleColors = SpreatTexture.GetPixels(minX, minY, halfSquareExtents * 2, halfSquareExtents * 2);
+        public float RecoilRecoverySpeed => recoilRecoverySpeed;
 
-            float[] coloursAsGrey = Array.ConvertAll(sampleColors, color => color.grayscale);
-            float totalGreyValue = coloursAsGrey.Sum();
+        public float MaxSpreadTime => maxSpreadTime;
 
-            float grey = Random.Range(0, totalGreyValue);
-            int i = 0;
-            for (; i < coloursAsGrey.Length; i++)
-            {
-                grey -= coloursAsGrey[i];
-                if (grey <= 0)
-                {
-                    break;
-                }
-            }
+        public BulletSpreadType SpreadType => spreadType;
 
-            int x = minX + i % (halfSquareExtents * 2);
-            int y = minY + i / (halfSquareExtents * 2);
+        public Vector3 Spread => spread;
 
-            Vector2 targetPosition = new(x, y);
-            Vector2 direction = (targetPosition - halfSize) / halfSize.x;
+        public float SpreadMultiplier => spreadMultiplier;
 
-            return direction;
-        }
+        public Texture2D SpreadTexture => spreadTexture;
 
-        public object Clone()
-        {
-            ShootConfigurationScriptableObject config = CreateInstance<ShootConfigurationScriptableObject>();
-            CloneCreator.CopyValues(this, config);
-            return config;
-        }
+        public LayerMask HitMask => hitMask;
     }
 }

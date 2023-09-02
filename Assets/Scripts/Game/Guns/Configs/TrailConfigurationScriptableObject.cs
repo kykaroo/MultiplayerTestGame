@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Game.Guns.Configs
 {
     [CreateAssetMenu(fileName = "Trail Config", menuName = "Guns/Gun Trail Config", order = 4)]
-    public class TrailConfigurationScriptableObject : ScriptableObject, ICloneable
+    public class TrailConfigurationScriptableObject : ScriptableObject
     {
         public Material Material;
         public AnimationCurve WidthCurve;
@@ -14,11 +14,5 @@ namespace Game.Guns.Configs
 
         public float MissDistance = 100f;
         public float SimulationSpeed = 100f;
-        public object Clone()
-        {
-            TrailConfigurationScriptableObject config = CreateInstance<TrailConfigurationScriptableObject>();
-            CloneCreator.CopyValues(this, config);
-            return config;
-        }
     }
 }

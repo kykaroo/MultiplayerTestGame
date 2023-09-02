@@ -1,9 +1,9 @@
-﻿using Game.Guns.Configs;
+﻿using Game.Guns.Handlers;
 
 namespace Game.Guns.Modifiers
 {
     public interface IModifier
     {
-        void Apply(GunScriptableObject gun);
+        void Apply(GunHandler gun);
     }
 }

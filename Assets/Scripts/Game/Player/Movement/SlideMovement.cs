@@ -1,5 +1,4 @@
-﻿using System;
-using Photon.Pun;
+﻿using Photon.Pun;
 using UnityEngine;
 
 namespace Game.Player.Movement
@@ -9,75 +8,69 @@ namespace Game.Player.Movement
         [SerializeField] private Rigidbody playerBody;
         [SerializeField] private Animator playerBodyAnimator;
         [SerializeField] private PlayerSurfaceCheck playerSurfaceCheck;
-        [SerializeField] private PhotonView _photonView;
+        [SerializeField] private PhotonView photonView;
+        [SerializeField] private BaseMovement baseMovement;
+        [SerializeField] private Animation playerSlidingAnimation;
+        [SerializeField] private GameObject playerBodyGO;
         [Header("Sliding")] 
         public float minimumSpeedToSlide;
         public float slideInitialForce;
         public float timeToGetVelocityBoostFromSlideMove;
         public float groundDrag;
         public float airDrag;
-        
+        public AnimationCurve angleAcceleration;
+
         private float _timerToGetVelocityBoostFromSlideMove;
-        private bool _isSliding;
         private float _currentSpeed;
         private float _currentMovementMultiplier = 1f;
-        private bool grounded;
         private float _actualSpeed;
-        
+
+        public bool isSliding { get; private set; }
+
         private static readonly int IsSliding = Animator.StringToHash("IsSliding");
-
-        public event Action<bool> OnSlide;
-
-        private void Awake()
-        {
-            playerSurfaceCheck.OnGrounded += b => grounded = b;
-        }
 
         private void Update()
         {
-            if (!_photonView.IsMine) return;
+            if (!photonView.IsMine) return;
 
             _timerToGetVelocityBoostFromSlideMove -= Time.deltaTime;
-            if (!_isSliding)
+            if (!isSliding)
             {
-                playerBody.drag = grounded ? groundDrag : airDrag;
+                playerBody.drag = playerSurfaceCheck.Grounded ? groundDrag : airDrag;
             }
         }
 
         public void TryToStopSlide(float baseSpeed, float crouchSpeedMultiplier)
         {
-            if ((!Input.GetKey(KeyCode.LeftControl) || _actualSpeed <= baseSpeed * crouchSpeedMultiplier) && _isSliding)
+            if ((!Input.GetKey(KeyCode.LeftControl) || _actualSpeed <= baseSpeed * crouchSpeedMultiplier) && isSliding)
             {
                 StopSlide();
             }
         }
 
-        public void TryToSlide(Vector3 moveDirection)
+        public void TryToSlide()
         {
-            if (grounded && Input.GetKey(KeyCode.LeftControl) && _actualSpeed >= minimumSpeedToSlide && !_isSliding)
+            if (playerSurfaceCheck.Grounded && Input.GetKey(KeyCode.LeftControl) && _actualSpeed >= minimumSpeedToSlide && !isSliding)
             {
-                StartSlide(moveDirection);
+                StartSlide();
             }
         }
         
         private void StopSlide()
         {
-            _isSliding = false;
-            _photonView.RPC(nameof(RPC_PlaySlideAnimation), RpcTarget.All, _isSliding);
-            OnSlide?.Invoke(_isSliding);
+            isSliding = false;
+            photonView.RPC(nameof(RPC_PlaySlideAnimation), RpcTarget.All, isSliding);
         }
 
-        private void StartSlide(Vector3 moveDir)
+        private void StartSlide()
         {
-            _isSliding = true;
+            isSliding = true;
             playerBody.drag = 1f;
-            _photonView.RPC(nameof(RPC_PlaySlideAnimation), RpcTarget.All, _isSliding);
-            OnSlide?.Invoke(_isSliding);
-            if (_timerToGetVelocityBoostFromSlideMove <= 0)
-            {
-                playerBody.AddForce(moveDir.normalized * (_actualSpeed * slideInitialForce), ForceMode.VelocityChange);
-                _timerToGetVelocityBoostFromSlideMove = timeToGetVelocityBoostFromSlideMove;
-            }
+            photonView.RPC(nameof(RPC_PlaySlideAnimation), RpcTarget.All, isSliding);
+            if (_timerToGetVelocityBoostFromSlideMove >= 0 || playerBody.velocity.y > 0) return;
+            
+            playerBody.AddForce(baseMovement.GetMoveDirection() * (_actualSpeed * slideInitialForce), ForceMode.VelocityChange);
+            _timerToGetVelocityBoostFromSlideMove = timeToGetVelocityBoostFromSlideMove;
         }
         
         public void UpdateActualSpeed(float actualSpeed)
@@ -87,8 +80,13 @@ namespace Game.Player.Movement
 
         [PunRPC]
         void RPC_PlaySlideAnimation(bool isSliding)
-        {
+        { 
             playerBodyAnimator.SetBool(IsSliding, isSliding);
+        }
+
+        public float GetSlopeSlideAcceleration()
+        {
+            return angleAcceleration.Evaluate(playerSurfaceCheck.SurfaceAngle);
         }
     }
 }

@@ -1,48 +1,18 @@
-using System;
 using UnityEngine;
 
 namespace Game.Guns.Configs
 {
     [CreateAssetMenu(fileName = "Ammo Config", menuName = "Guns/Ammo Config", order = 3)]
-    public class AmmoConfigurationScriptableObject : ScriptableObject, ICloneable
+    public class AmmoConfigurationScriptableObject : ScriptableObject
     {
-        public bool discardClipOnReload;
-    
-        public int maxAmmo;
-        public int clipSize;
-    
-        public int currentAmmo;
-        public int currentClipAmmo;
+        [SerializeField] private bool discardClipOnReload;
+        [SerializeField] private int maxAmmo;
+        [SerializeField] private int clipSize;
 
-        public void Reload()
-        {
-            if (discardClipOnReload)
-            {
-                int reloadAmount = Mathf.Min(clipSize, currentAmmo);
-                currentClipAmmo = reloadAmount;
-                currentAmmo -= reloadAmount;
-            }
-            else
-            {
-                int maxReloadAmount = Mathf.Min(clipSize, currentAmmo);
-                int availableBulletInCurrentClip = clipSize - currentClipAmmo;
-                int reloadAmount = Mathf.Min(maxReloadAmount, availableBulletInCurrentClip);
+        public bool DiscardClipOnReload => discardClipOnReload;
 
-                currentClipAmmo += reloadAmount;
-                currentAmmo -= reloadAmount;
-            }
-        }
+        public int MaxAmmo => maxAmmo;
 
-        public bool CanReload()
-        {
-            return currentClipAmmo < clipSize && currentAmmo > 0;
-        }
-
-        public object Clone()
-        {
-            AmmoConfigurationScriptableObject config = CreateInstance<AmmoConfigurationScriptableObject>();
-            CloneCreator.CopyValues(this, config);
-            return config;
-        }
+        public int ClipSize => clipSize;
     }
 }

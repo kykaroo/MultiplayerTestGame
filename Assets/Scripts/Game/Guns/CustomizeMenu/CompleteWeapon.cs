@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Game.Guns.CustomizeMenu.ScriptableObjects;
+using Game.Guns.CustomizeMenu.ScriptableObjects.WeaponParts;
 using UnityEngine;
 using UnityEngine.Serialization;
 

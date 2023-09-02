@@ -1,4 +1,4 @@
-﻿using Game.Guns.Configs;
+﻿using Game.Guns.Handlers;
 using Game.Player.PlayerInterfaces;
 using Photon.Pun;
 using UnityEngine;
@@ -27,7 +27,7 @@ namespace Game.Guns.Modifiers.ProjectileCollisionEffects
             MaxStacks = maxStacks;
         }
 
-        public override void HandleImpact(Collider impactedObject, Vector3 hitPosition, Vector3 hitNormal, GunScriptableObject gun)
+        public override void HandleImpact(Collider impactedObject, Vector3 hitPosition, Vector3 hitNormal, GunHandler gun)
         {
             base.HandleImpact(impactedObject, hitPosition, hitNormal, gun);
 

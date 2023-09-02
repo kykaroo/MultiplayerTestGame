@@ -1,4 +1,5 @@
 using System;
+using Photon.Pun;
 using UnityEngine;
 
 namespace Game.Player.Movement
@@ -10,15 +11,21 @@ namespace Game.Player.Movement
         [SerializeField] private GameObject legs;
         [SerializeField] private SphereCollider legsCollider;
         [SerializeField] private LayerMask groundLayerMask;
+        [SerializeField] private float minSlopeAngle;
         [SerializeField] private float maxSlopeAngle;
+        [SerializeField] private PhotonView photonView;
 
         private bool onSlopeTouch;
         private RaycastHit slopeHit;
         private float playerHeight;
         private Vector3 slopeMoveDirection;
 
-        public event Action<bool> OnGrounded; 
-        public event Action<bool, RaycastHit> OnSlopeGround; 
+        public bool Grounded { get; private set; }
+
+        public float SurfaceAngle { get; private set; }
+
+        public RaycastHit SlopeHit => slopeHit;
+
 
         private void Awake()
         {
@@ -27,22 +34,20 @@ namespace Game.Player.Movement
         
         private void Update()
         {
-            OnGrounded?.Invoke(Physics.CheckSphere(legs.transform.position, legsCollider.radius + 0.001f, groundLayerMask));
-            OnSlope();
+            if (!photonView.IsMine) return;
+            
+            Grounded = Physics.CheckSphere(legs.transform.position, legsCollider.radius + 0.001f, groundLayerMask);
+            (SurfaceAngle, slopeHit) = CalculateSurfaceAngle();
         }
 
-        private void OnSlope()
+        private (float, RaycastHit) CalculateSurfaceAngle()
         {
             if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, playerHeight * 0.5f + 0.3f, groundLayerMask))
             {
-                if (slopeHit.normal != Vector3.up)
-                {
-                    float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
-                    OnSlopeGround?.Invoke(angle < maxSlopeAngle && angle != 0, slopeHit);
-                }
+                return (Vector3.Angle(Vector3.up, slopeHit.normal), slopeHit);
             }
-            
-            OnSlopeGround?.Invoke(false, slopeHit);
+
+            return (0, slopeHit);
         }
         
         private float GetPlayerHeight()
@@ -51,7 +56,7 @@ namespace Game.Player.Movement
             float min = legsCollider.radius;
             
             return Vector3.Distance(head.transform.position + new Vector3(0, max, 0),
-                legs.transform.position + new Vector3(0, -min, 0));;
+                legs.transform.position + new Vector3(0, -min, 0));
         }
     }
 }

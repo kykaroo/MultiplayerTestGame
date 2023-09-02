@@ -1,5 +1,4 @@
-﻿using Game.Player;
-using Game.Player.PlayerInterfaces;
+﻿using Game.Player.PlayerInterfaces;
 using UnityEngine;
 
 namespace Game.Guns

@@ -7,10 +7,14 @@ namespace Game.Player.Movement
     {
         [SerializeField] private Animator playerBodyAnimator;
         [SerializeField] private PhotonView _photonView;
+
+        public bool isCrouching;
+        
         private static readonly int IsCrouching = Animator.StringToHash("IsCrouching");
 
         public void SetCrouchState(bool isCrouching)
         {
+            
             _photonView.RPC(nameof(RPC_PlayCrouchAnimation), RpcTarget.All, isCrouching);
         }
 

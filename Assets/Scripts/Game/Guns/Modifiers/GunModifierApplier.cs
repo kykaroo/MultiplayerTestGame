@@ -19,19 +19,19 @@ namespace Game.Guns.Modifiers
             {
                 Amount = impactTypeOverride
             }.Apply(itemSelector.ActiveGun);
-
-            itemSelector.ActiveGun.bulletImpactEffects = new ICollisionHandler[]
+            
+            itemSelector.ActiveGun.BulletImpactEffects = new ICollisionHandler[]
             {
                 new FrostModifier(2f, new(new Keyframe(0, 1), new Keyframe(1, 0.25f)), 
                     0, 0.5f, 1, false, 1)
             };
-
-            DamageModifier damageModifier = new()
-            {
-                Amount = 1.2f,
-                AttributeName = "DamageConfig/damageCurve"
-            };
-            damageModifier.Apply(itemSelector.ActiveGun);
+            
+            // DamageModifier damageModifier = new()
+            // {
+            //     Amount = 1.2f,
+            //     AttributeName = "DamageConfig/damageCurve"
+            // };
+            // damageModifier.Apply(itemSelector.ActiveGun);
 
             // DamageModifier damageModifier = new()
             // {

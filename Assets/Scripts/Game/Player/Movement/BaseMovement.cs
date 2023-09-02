@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using Game.Player.PlayerInterfaces;
 using Photon.Pun;
 using UnityEngine;
@@ -11,6 +12,7 @@ namespace Game.Player.Movement
         [SerializeField] private Rigidbody playerBody;
         [SerializeField] private PlayerSurfaceCheck playerSurfaceCheck;
         [SerializeField] private SlideMovement slideMovement;
+        [SerializeField] private CrouchHandler crouchHandler;
         [Header("Anti-force")]
         public float gravityScale;
         public float baseSpeed;
@@ -19,26 +21,23 @@ namespace Game.Player.Movement
         public float sprintSpeedMultiplier;
         public float crouchSpeedMultiplier;
         public float midAirMoveSpeedMultiplier;
+        public float onSlopeXMoveMultiplier;
 
         private float _modifiedBaseSpeed;
         private int _slowStacks;
-        private float _currentSpeed;
+        private float _maxSpeed;
         private Vector3 _moveDirection;
         private const float Gravity = -9.81f;
         private float _currentMovementMultiplier;
         private Coroutine _slowCoroutine;
-        private bool grounded = true;
-        private bool _onSlope;
-        private RaycastHit _slopeHit;
-        private bool _isSliding;
+        private bool _isCrouching;
 
 
         private void Awake()
         {
+            if (!photonView.IsMine) return;
+            
             _modifiedBaseSpeed = baseSpeed;
-            playerSurfaceCheck.OnGrounded += b => grounded = b;
-            slideMovement.OnSlide += b => _isSliding = b;
-            playerSurfaceCheck.OnSlopeGround += SetOnSlopeState;
         }
 
         public void TryToMove(Vector3 moveDirection)
@@ -51,22 +50,16 @@ namespace Game.Player.Movement
             switch (state)
             {
                 case PlayerInput.MovementState.Sprinting:
-                    _currentSpeed = _modifiedBaseSpeed * sprintSpeedMultiplier;
+                    _maxSpeed = _modifiedBaseSpeed * sprintSpeedMultiplier;
                     break;
                 case PlayerInput.MovementState.Crouching:
-                    _currentSpeed = _modifiedBaseSpeed * crouchSpeedMultiplier;
+                    _maxSpeed = _modifiedBaseSpeed * crouchSpeedMultiplier;
                     break;
                 case PlayerInput.MovementState.Walking:
-                    _currentSpeed = _modifiedBaseSpeed;
-                    break;
-                case PlayerInput.MovementState.MidAirSprinting:
-                    _currentSpeed = _modifiedBaseSpeed * midAirMoveSpeedMultiplier * sprintSpeedMultiplier;
-                    break;
-                case PlayerInput.MovementState.MidAirCrouch:
-                    _currentSpeed = _modifiedBaseSpeed * midAirMoveSpeedMultiplier;
+                    _maxSpeed = _modifiedBaseSpeed;
                     break;
                 case PlayerInput.MovementState.MidAir:
-                    _currentSpeed = _modifiedBaseSpeed * midAirMoveSpeedMultiplier;
+                    _maxSpeed = _modifiedBaseSpeed * sprintSpeedMultiplier * midAirMoveSpeedMultiplier;
                     break;
             }
         }
@@ -113,35 +106,31 @@ namespace Game.Player.Movement
             if (!photonView.IsMine)
                 return;
             
-            if (!grounded)
-            {
-                playerBody.AddForce(Vector3.up * (Gravity * gravityScale), ForceMode.Force);
-            }
-
-            if (grounded && _onSlope && !_isSliding)
-            {
-                playerBody.AddForce(GetSlopeMoveDirection(_moveDirection).normalized * (_currentSpeed * speedScale), ForceMode.Acceleration);    
-            }
-
-            if (grounded && !_onSlope && !_isSliding)
-            {
-                playerBody.AddForce(_moveDirection.normalized * (_currentSpeed * speedScale), ForceMode.Acceleration);
-            }
+            Vector3 gravityForce = Vector3.up * (Gravity * gravityScale * playerBody.mass);
+            playerBody.AddForce(gravityForce, ForceMode.Force);
             
-            if (!grounded)
+
+            if (playerSurfaceCheck.Grounded && !slideMovement.isSliding)
             {
-                playerBody.AddForce(_moveDirection.normalized * (_currentSpeed * speedScale * midAirMoveSpeedMultiplier), ForceMode.Acceleration);   
+                playerBody.AddForce(
+                    GetMoveDirection().normalized * (_maxSpeed * speedScale), ForceMode.Acceleration);
+            }
+
+            if (slideMovement.isSliding && playerBody.velocity.y < -0.1f)
+            {
+                playerBody.AddForce(
+                    playerBody.velocity.normalized *
+                    (_maxSpeed * speedScale * slideMovement.GetSlopeSlideAcceleration()), ForceMode.Acceleration);
+            }
+
+            if (!playerSurfaceCheck.Grounded)
+            {
+                playerBody.AddForce(_moveDirection.normalized * (_maxSpeed * speedScale * midAirMoveSpeedMultiplier), ForceMode.Acceleration);
             }
         }
-        private Vector3 GetSlopeMoveDirection(Vector3 moveDir)
+        public Vector3 GetMoveDirection()
         {
-            return Vector3.ProjectOnPlane(moveDir, _slopeHit.normal);
-        }
-
-        private void SetOnSlopeState(bool onSlope, RaycastHit slopeHit)
-        {
-            _onSlope = onSlope;
-            _slopeHit = slopeHit;
+            return Vector3.ProjectOnPlane(_moveDirection, playerSurfaceCheck.SlopeHit.normal);
         }
     }
 }

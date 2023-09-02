@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Reflection;
-using Game.Guns.Configs;
+using Game.Guns.Handlers;
 
 namespace Game.Guns.Modifiers
 {
@@ -9,9 +9,9 @@ namespace Game.Guns.Modifiers
         public string AttributeName;
         public T Amount;
 
-        public abstract void Apply(GunScriptableObject gun);
+        public abstract void Apply(GunHandler gun);
 
-        protected FieldType GetAttribute<FieldType>(GunScriptableObject gun, out object targetObject, out FieldInfo Field)
+        protected FieldType GetAttribute<FieldType>(GunHandler gun, out object targetObject, out FieldInfo Field)
         {
             string[] paths = AttributeName.Split("/");
             string attribute = paths[paths.Length - 1];
