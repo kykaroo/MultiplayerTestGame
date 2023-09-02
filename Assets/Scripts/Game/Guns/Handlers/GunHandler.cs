@@ -17,7 +17,6 @@ namespace Game.Guns.Handlers
         public Vector3 spawnPoint;
         public Vector3 spawnRotation;
         
-        private MonoBehaviour _activeMonoBehaviour;
         private GameObject _model;
 
         private float _lastShootTime;
@@ -35,12 +34,11 @@ namespace Game.Guns.Handlers
         
         public event Action<int, int> OnAmmunitionUpdate;
 
-        public GunHandler(GunScriptableObject gunScriptableObject, string modelPrefabPath, PlayerItemSelector activeMonoBehaviour, ItemHolder itemHolder)
+        public GunHandler(GunScriptableObject gunScriptableObject, string modelPrefabPath, ItemHolder itemHolder)
         {
-            _activeMonoBehaviour = activeMonoBehaviour;
             impactType = gunScriptableObject.ImpactType;
             type = gunScriptableObject.Type;
-            gunName = gunScriptableObject.Name;
+            gunName = gunScriptableObject.WeaponName;
             spawnPoint = gunScriptableObject.SpawnPoint;
             spawnRotation = gunScriptableObject.SpawnRotation;
 

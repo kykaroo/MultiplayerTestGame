@@ -1,7 +1,11 @@
-﻿namespace Game.Guns.CustomizeMenu.ScriptableObjects.WeaponParts
+﻿using UnityEngine;
+
+namespace Game.Guns.CustomizeMenu.ScriptableObjects.WeaponParts
 {
     public class StockWeaponPartScriptableObject : WeaponPartScriptableObject
     {
-        public float spreadMultiplier = 1f;
+        [SerializeField] private float spreadMultiplier = 1f;
+
+        public float SpreadMultiplier => spreadMultiplier;
     }
 }

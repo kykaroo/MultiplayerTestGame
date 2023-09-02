@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Game.Guns.CustomizeMenu.ScriptableObjects;
 using Game.Guns.CustomizeMenu.ScriptableObjects.WeaponParts;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Game.Guns.CustomizeMenu
 {
@@ -71,7 +69,7 @@ namespace Game.Guns.CustomizeMenu
                 muzzlePartTypeAttachedWeaponPart.PartTypeAttachPoint.attachPointTransform.position =
                     barrelPartTypeAttachedWeaponPart.PartTypeAttachPoint.attachPointTransform.position +
                     barrelPartTypeAttachedWeaponPart.PartTypeAttachPoint.attachPointTransform.forward *
-                    barrelWeaponPartScriptableObject.muzzleOffset;
+                    barrelWeaponPartScriptableObject.MuzzleOffset;
             }
         }
 

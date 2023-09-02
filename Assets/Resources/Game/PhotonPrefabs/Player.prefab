@@ -689,11 +689,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 643ca6da00c2b324b9d39a25634d0335, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gun: 0
+  gunType: 0
   guns:
   - {fileID: 11400000, guid: dbe4922bb0ac87a4e99643488b5373d4, type: 2}
   itemHolder: {fileID: 1675801058744744507}
-  modelPrefabPath: Items/NewItemSystem/Prefabs/M4A4
+  defaultGuns:
+  - {fileID: 11400000, guid: dbe4922bb0ac87a4e99643488b5373d4, type: 2}
 --- !u!114 &8588219719379731189
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,8 +1,10 @@
-﻿namespace Game.Guns.CustomizeMenu.ScriptableObjects.WeaponParts
+﻿using UnityEngine;
+
+namespace Game.Guns.CustomizeMenu.ScriptableObjects.WeaponParts
 {
     public class MagazineWeaponPartScriptableObject : WeaponPartScriptableObject
     {
-        public int magazineCapacity = 20;
-        public float reloadTimeMultiplier = 1f;
+        [SerializeField] private int magazineCapacity = 20;
+        [SerializeField] private float reloadTimeMultiplier = 1f;
     }
 }
