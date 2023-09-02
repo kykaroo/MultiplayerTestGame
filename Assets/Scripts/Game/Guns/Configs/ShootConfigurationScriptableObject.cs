@@ -8,7 +8,7 @@ namespace Game.Guns.Configs
         [SerializeField] private bool isHitScan;
         [SerializeField] private string bulletPrefabPath;
         [SerializeField] private float bulletSpawnForce = 1000;
-        [SerializeField] private float fireRate = 0.25f;
+        [SerializeField, FireRate] private float fireRate = 0.25f;
         [SerializeField] private float recoilRecoverySpeed = 1f;
         [SerializeField] private float maxSpreadTime = 1f;
         [SerializeField] private BulletSpreadType spreadType = BulletSpreadType.Simple;
