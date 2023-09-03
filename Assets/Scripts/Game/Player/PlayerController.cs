@@ -24,6 +24,8 @@ namespace Game.Player
         [HideInInspector]
         public UnityEngine.Camera playerCamera;
 
+        public Transform CameraHolder => cameraHolder;
+
         public event Action OnFallOffMap;
         public event Action<string> OnPlayerOnCrosshair;
 
@@ -106,7 +108,6 @@ namespace Game.Player
             photonView.RPC(nameof(RPC_EnableHands), RpcTarget.All);
             if (!photonView.IsMine) return;
             // nickNameCanvas.SetActive(false);
-            cameraHolder.rotation = Quaternion.identity;
         }
     }
 }

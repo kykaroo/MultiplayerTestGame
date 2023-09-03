@@ -72,6 +72,7 @@ namespace Game.Player
         {
             Input.playerBody.constraints = RigidbodyConstraints.FreezeRotation;
             Cursor.lockState = CursorLockMode.Locked;
+            Input.playerBody.velocity = Vector3.zero;
             Cursor.visible = false;
             Input.Respawn();
             Health.Respawn();

@@ -7,7 +7,7 @@ namespace Game.Guns.Modifiers.ProjectileCollisionEffects
     {
         public override void Apply(GunHandler gun)
         {
-            gun.impactType = Amount;
+            gun.ImpactType = Amount;
         }
     }
 }

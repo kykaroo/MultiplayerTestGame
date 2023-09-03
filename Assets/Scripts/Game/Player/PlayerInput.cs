@@ -19,8 +19,10 @@ namespace Game.Player
         [SerializeField] private SlideMovement slideMovement;
         [SerializeField] private CrouchHandler crouchHandler;
         [SerializeField] private CameraHolder cameraHolder;
+        [SerializeField] private PlayerSurfaceCheck playerSurfaceCheck;
         [Header("Items and camera")]
         [SerializeField] private PlayerItemSelector itemSelector;
+        [SerializeField] private PlayerItemSelector playerItemSelector;
         [SerializeField] private Transform cameraHolderTransform;
 
 
@@ -30,8 +32,7 @@ namespace Game.Player
         public Rigidbody playerBody;
         private float _actualSpeed;
         private Vector3 _moveDirection;
-
-        public bool grounded;
+        
         public event Action<string> OnSpeedUpdate;
 
         public MovementState state;
@@ -58,7 +59,7 @@ namespace Game.Player
             itemSelector.ActiveGun.Tick(Input.GetMouseButton(0));
 
             Look();
-            Inputs();
+            _moveDirection = Inputs();
             baseMovement.TryToMove(_moveDirection);
             jumpHandler.TryToJump();
             reloadHandler.TryToReload();
@@ -67,16 +68,59 @@ namespace Game.Player
             _actualSpeed = new Vector3(velocity.x, 0f, velocity.z).magnitude;
             OnSpeedUpdate?.Invoke(Math.Round(_actualSpeed, 3).ToString());
 
+            SlideCheck();
+            StateHandler();
+            GunChangeCheck();
+        }
+
+        private void GunChangeCheck()
+        {
+            for (var i = 0; i < playerItemSelector.AllPlayerGuns.Count; i++)
+            {
+                if (Input.GetKeyDown((i + 1).ToString()))
+                {
+                    playerItemSelector.EquipItem(i);
+                    break;
+                }
+            }
+
+            if (Input.GetAxisRaw("Mouse ScrollWheel") > 0f)
+            {
+                if (playerItemSelector.currentListIndex + 1 > playerItemSelector.AllPlayerGuns.Count - 1)
+                {
+                    playerItemSelector.EquipItem(0);
+                }
+                else
+                {
+                    playerItemSelector.EquipItem(playerItemSelector.currentListIndex + 1);
+                }
+            }
+            else
+            {
+                if (Input.GetAxisRaw("Mouse ScrollWheel") < 0f)
+                {
+                    if (playerItemSelector.currentListIndex - 1 < 0)
+                    {
+                        playerItemSelector.EquipItem(playerItemSelector.AllPlayerGuns.Count - 1);
+                    }
+                    else
+                    {
+                        playerItemSelector.EquipItem(playerItemSelector.currentListIndex - 1);
+                    }
+                }
+            }
+        }
+
+        private void SlideCheck()
+        {
             slideMovement.UpdateActualSpeed(_actualSpeed);
             slideMovement.TryToSlide();
             slideMovement.TryToStopSlide(baseMovement.baseSpeed, baseMovement.crouchSpeedMultiplier);
-            
-            StateHandler();
         }
 
         private void StateHandler()
         {
-            switch (grounded)
+            switch (playerSurfaceCheck.Grounded)
             {
                 case true when Input.GetKey(KeyCode.LeftControl):
                     state = MovementState.Crouching;
@@ -106,13 +150,13 @@ namespace Game.Player
             }
         }
 
-        private void Inputs()
+        private Vector3 Inputs()
         {
             _horizontalInput = Input.GetAxisRaw("Horizontal");
             _verticalInput = Input.GetAxisRaw("Vertical");
             
             var gameObjectTransform = transform;
-            _moveDirection = gameObjectTransform.forward * _verticalInput +
+            return gameObjectTransform.forward * _verticalInput +
                              gameObjectTransform.right * _horizontalInput;
         }
 
@@ -134,6 +178,7 @@ namespace Game.Player
         public void Respawn()
         {
             cameraHolder.Respawn();
+            _verticalLookRotation = 0;
         }
     }
 }

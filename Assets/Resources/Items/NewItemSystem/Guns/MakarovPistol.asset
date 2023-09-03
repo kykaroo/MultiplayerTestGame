@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 732df351cd7033c4aab559dc63b1d5bb, type: 3}
+  m_Name: MakarovPistol
+  m_EditorClassIdentifier: 
+  impactType: {fileID: 11400000, guid: 66b356ae916725947a85cfa39d39001a, type: 2}
+  type: 1
+  prefabPath: Items/NewItemSystem/Prefabs/MakarovPistol
+  weaponName: Makarov Pistol
+  modelPrefab: {fileID: 1615621099556364170, guid: 1ea4e201a7bf3c140b69c32060a8caf7, type: 3}
+  spawnPoint: {x: 0.391, y: -0.174, z: 1.043}
+  spawnRotation: {x: 0, y: 0, z: 0}
+  damageConfig: {fileID: 11400000, guid: dcced32aeb4b82f48bdcf33f7daf4cc3, type: 2}
+  shootConfig: {fileID: 11400000, guid: 7159c4831c0e2fd43b12e2ab32ce720c, type: 2}
+  ammoConfig: {fileID: 11400000, guid: 8af5fe87cb477f5459e0668c709d049d, type: 2}

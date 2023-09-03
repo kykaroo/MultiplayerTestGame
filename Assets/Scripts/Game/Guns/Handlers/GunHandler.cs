@@ -11,11 +11,11 @@ namespace Game.Guns.Handlers
 {
     public class GunHandler
     {
-        public ImpactType impactType;
-        public GunType type;
-        public string gunName;
-        public Vector3 spawnPoint;
-        public Vector3 spawnRotation;
+        public ImpactType ImpactType;
+        public GunType Type;
+        public string GunName;
+        public Vector3 SpawnPoint;
+        public Vector3 SpawnRotation;
         
         private GameObject _model;
 
@@ -36,13 +36,13 @@ namespace Game.Guns.Handlers
 
         public GunHandler(GunScriptableObject gunScriptableObject, string modelPrefabPath, ItemHolder itemHolder)
         {
-            impactType = gunScriptableObject.ImpactType;
-            type = gunScriptableObject.Type;
-            gunName = gunScriptableObject.WeaponName;
-            spawnPoint = gunScriptableObject.SpawnPoint;
-            spawnRotation = gunScriptableObject.SpawnRotation;
+            ImpactType = gunScriptableObject.ImpactType;
+            Type = gunScriptableObject.Type;
+            GunName = gunScriptableObject.WeaponName;
+            SpawnPoint = gunScriptableObject.SpawnPoint;
+            SpawnRotation = gunScriptableObject.SpawnRotation;
 
-            _model = itemHolder.CreateGun(modelPrefabPath, spawnPoint, spawnRotation);
+            _model = itemHolder.CreateGun(modelPrefabPath, SpawnPoint, SpawnRotation);
             _shootSystem = _model.GetComponent<GunPartsHandler>().ParticleSystem;
 
             DamageHandler = new(gunScriptableObject.DamageConfig);
@@ -52,7 +52,7 @@ namespace Game.Guns.Handlers
         public void Tick(bool wantToShoot)
         {
             _model.transform.localRotation = Quaternion.Lerp(_model.transform.localRotation,
-                Quaternion.Euler(spawnRotation), Time.deltaTime * ShootHandler.RecoilRecoverySpeed);
+                Quaternion.Euler(SpawnRotation), Time.deltaTime * ShootHandler.RecoilRecoverySpeed);
         
             if (wantToShoot)
             {
@@ -145,7 +145,7 @@ namespace Game.Guns.Handlers
 
         private void HandleBulletImpact(float distanceTraveled, Vector3 hitLocation, Vector3 hitNormal, Collider hitCollider)
         {
-            SurfaceManager.SurfaceManager.Instance.HandleImpact(hitCollider.gameObject, hitLocation, hitNormal, impactType, 0);
+            SurfaceManager.SurfaceManager.Instance.HandleImpact(hitCollider.gameObject, hitLocation, hitNormal, ImpactType, 0);
 
             if (hitCollider.transform.root.TryGetComponent(out IDamageable damageable))
             {
@@ -166,6 +166,11 @@ namespace Game.Guns.Handlers
         public void EndReload()
         { 
             AmmoHandler.Reload();
+        }
+
+        public void ChangeState(bool isActive)
+        {
+            _model.SetActive(isActive);
         }
 
         /*private void DoHitscanShoot(Vector3 shootDirection)

@@ -1,10 +1,9 @@
 ﻿using Game.Guns.Configs;
 using UnityEditor;
-using UnityEngine;
 
 namespace Editor
 {
-    [CustomPropertyDrawer(typeof(FireRateAttribute))]
+    /*[CustomPropertyDrawer(typeof(FireRateAttribute))]
     public class FireRatePropertyDrawer : PropertyDrawer
     {
         public enum FireRateType
@@ -12,5 +11,5 @@ namespace Editor
             SecondsToAttack,
             AttacksPerSeconds
         }
-    }
+    }*/
 }

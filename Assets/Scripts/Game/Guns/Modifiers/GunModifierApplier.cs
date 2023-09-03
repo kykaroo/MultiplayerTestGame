@@ -15,16 +15,16 @@ namespace Game.Guns.Modifiers
         {
             if(!photonView.IsMine) return;
 
-            new ImpactTypeModifier
-            {
-                Amount = impactTypeOverride
-            }.Apply(itemSelector.ActiveGun);
-            
-            itemSelector.ActiveGun.BulletImpactEffects = new ICollisionHandler[]
-            {
-                new FrostModifier(2f, new(new Keyframe(0, 1), new Keyframe(1, 0.25f)), 
-                    0, 0.5f, 1, false, 1)
-            };
+            // new ImpactTypeModifier
+            // {
+            //     Amount = impactTypeOverride
+            // }.Apply(itemSelector.ActiveGun);
+            //
+            // itemSelector.ActiveGun.BulletImpactEffects = new ICollisionHandler[]
+            // {
+            //     new FrostModifier(2f, new(new Keyframe(0, 1), new Keyframe(1, 0.25f)), 
+            //         0, 0.5f, 1, false, 1)
+            // };
             
             // DamageModifier damageModifier = new()
             // {

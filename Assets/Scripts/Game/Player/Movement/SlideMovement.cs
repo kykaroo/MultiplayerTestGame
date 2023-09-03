@@ -64,7 +64,7 @@ namespace Game.Player.Movement
         public void TryToSlide()
         {
             if (playerSurfaceCheck.Grounded && Input.GetKey(KeyCode.LeftControl) &&
-                _actualSpeed >= minimumSpeedToSlide && !isSliding && playerSurfaceCheck.SurfaceAngle > maxSlopeAngleToSlide)
+                _actualSpeed >= minimumSpeedToSlide && !isSliding && playerSurfaceCheck.SurfaceAngle < maxSlopeAngleToSlide)
             {
                 StartSlide();
             }

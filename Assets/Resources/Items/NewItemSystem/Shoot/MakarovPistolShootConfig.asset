@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf2affe9ea155c643ad0ef7d8087f90a, type: 3}
+  m_Name: MakarovPistolShootConfig
+  m_EditorClassIdentifier: 
+  isHitScan: 0
+  bulletPrefabPath: Items/NewItemSystem/Prefabs/Bullet
+  bulletSpawnForce: 200
+  fireRate: 0.25
+  recoilRecoverySpeed: 2
+  maxSpreadTime: 5
+  spreadType: 1
+  spread: {x: 0.01, y: 0.01, z: 0.01}
+  spreadMultiplier: 0.1
+  spreadTexture: {fileID: 0}
+  hitMask:
+    serializedVersion: 2
+    m_Bits: 0
