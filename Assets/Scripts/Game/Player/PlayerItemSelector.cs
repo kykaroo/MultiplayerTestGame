@@ -14,9 +14,9 @@ namespace Game.Player
         [SerializeField] private List<GunScriptableObject> defaultGuns;
         [SerializeField] private PhotonView PhotonView;
         
-        [HideInInspector] public GunHandler ActiveGun;
-        [HideInInspector] public List<GunHandler> AllPlayerGuns;
-        [HideInInspector] public int currentListIndex;
+        public GunHandler ActiveGun;
+        public List<GunHandler> AllPlayerGuns;
+        public int currentListIndex;
         
         private void Awake()
         {
@@ -26,16 +26,16 @@ namespace Game.Player
 
         private void Start()
         {
-            if (!photonView.IsMine) return;
-            
             foreach (var gun in defaultGuns)
             {
                 AllPlayerGuns.Add(new(gun, gun.PrefabPath, itemHolder));
             }
+            
+            if (!photonView.IsMine) return;
 
             EquipItem(0);
         }
-        
+
         public void EquipItem(int index)
         {
             if (index == currentListIndex)
@@ -50,14 +50,16 @@ namespace Game.Player
             
             AllPlayerGuns[currentListIndex].ChangeState(true);
             ActiveGun = AllPlayerGuns[currentListIndex];
-            
+
+            if (!PhotonView.IsMine) return;
+
             var hash = new Hashtable { { "itemIndex", currentListIndex } };
             PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
         }
 
         public override void OnPlayerPropertiesUpdate(Photon.Realtime.Player targetPlayer, Hashtable changedProps)
         {
-            if (changedProps.ContainsKey("itemIndex") && !photonView.IsMine && Equals(targetPlayer, photonView.Owner))
+            if (changedProps.ContainsKey("itemIndex") && !PhotonView.IsMine && Equals(targetPlayer, PhotonView.Owner))
             {
                 EquipItem((int)changedProps["itemIndex"]);
             }

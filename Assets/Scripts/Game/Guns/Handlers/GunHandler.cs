@@ -16,8 +16,9 @@ namespace Game.Guns.Handlers
         public string GunName;
         public Vector3 SpawnPoint;
         public Vector3 SpawnRotation;
-        
+
         private GameObject _model;
+        private GunPartsHandler _gunPartsHandler;
 
         private float _lastShootTime;
         private float _initialClickTime;
@@ -43,11 +44,14 @@ namespace Game.Guns.Handlers
             SpawnRotation = gunScriptableObject.SpawnRotation;
 
             _model = itemHolder.CreateGun(modelPrefabPath, SpawnPoint, SpawnRotation);
-            _shootSystem = _model.GetComponent<GunPartsHandler>().ParticleSystem;
+            _gunPartsHandler = _model.GetComponent<GunPartsHandler>();
+            _shootSystem = _gunPartsHandler.ParticleSystem;
 
             DamageHandler = new(gunScriptableObject.DamageConfig);
             ShootHandler = new(gunScriptableObject.ShootConfig);
             AmmoHandler = new(gunScriptableObject.AmmoConfig);
+            
+            ChangeState(false);
         }
         public void Tick(bool wantToShoot)
         {
@@ -170,7 +174,7 @@ namespace Game.Guns.Handlers
 
         public void ChangeState(bool isActive)
         {
-            _model.SetActive(isActive);
+            _gunPartsHandler.SetSelfActive(isActive);
         }
 
         /*private void DoHitscanShoot(Vector3 shootDirection)

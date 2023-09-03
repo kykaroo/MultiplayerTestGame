@@ -711,7 +711,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a463a537c868456d81ba4e21f6d94111, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  photonView: {fileID: 6453041631635206590}
+  _photonView: {fileID: 6453041631635206590}
   Health: {fileID: 3852570639306101726}
   Input: {fileID: 2699483418850657836}
   Controller: {fileID: 2616879553531085620}

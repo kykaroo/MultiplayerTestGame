@@ -32,7 +32,9 @@ namespace Game.Player
         public Rigidbody playerBody;
         private float _actualSpeed;
         private Vector3 _moveDirection;
-        
+
+        public PlayerItemSelector ItemSelector => itemSelector;
+
         public event Action<string> OnSpeedUpdate;
 
         public MovementState state;

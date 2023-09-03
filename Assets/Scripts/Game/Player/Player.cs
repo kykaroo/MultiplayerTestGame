@@ -15,7 +15,7 @@ namespace Game.Player
     [RequireComponent(typeof(PhotonTransformView))]
     public class Player : MonoBehaviourPunCallbacks
     {
-        [SerializeField] private PhotonView photonView;
+        [SerializeField] private PhotonView _photonView;
         public PlayerHealth Health;
         public PlayerInput Input;
         public PlayerController Controller;
@@ -28,20 +28,22 @@ namespace Game.Player
 
         private void Start()
         {
-            if (photonView.IsMine)
+            if (_photonView.IsMine)
             {
-                photonView.RPC(nameof(RPC_DisablePlayerGameObject), RpcTarget.All);
+                _photonView.RPC(nameof(RPC_DisablePlayerGameObject), RpcTarget.All);
                 UpdateGameObjectCurrentState();
             }
 
-            if (!photonView.IsMine)
+            if (!_photonView.IsMine)
             {
-                if(photonView.Owner.CustomProperties.TryGetValue("playerGameObjectState", out var playerState))
+                if(_photonView.Owner.CustomProperties.TryGetValue("playerGameObjectState", out var playerState))
                     gameObject.SetActive((bool)playerState);
+                // if(_photonView.Owner.CustomProperties.TryGetValue("itemIndex", out var currentGun))
+                //     Input.ItemSelector.EquipItem((int)currentGun);
                 return;
             }
             
-            _playerManager = PhotonView.Find((int)photonView.InstantiationData[0]).GetComponent<PlayerManager>();
+            _playerManager = PhotonView.Find((int)_photonView.InstantiationData[0]).GetComponent<PlayerManager>();
             Health.OnDeath += Die;
             Controller.OnFallOffMap += () => Health.TakeDamage(float.MaxValue, default);
         }
@@ -54,7 +56,7 @@ namespace Game.Player
             Cursor.visible = true;
             Input.Dead();
             Controller.DisableHands();
-            photonView.RPC(nameof(RPC_DisablePlayer), RpcTarget.All);
+            _photonView.RPC(nameof(RPC_DisablePlayer), RpcTarget.All);
             StartCoroutine(DisableCoroutine());
         }
 
@@ -79,7 +81,7 @@ namespace Game.Player
             Controller.EnableHands();
             gameObject.transform.rotation = Quaternion.identity;
             gameObject.transform.position = SpawnManager.Instance.GetSpawnPoint().position;
-            photonView.RPC(nameof(RPC_EnablePlayer), RpcTarget.All);
+            _photonView.RPC(nameof(RPC_EnablePlayer), RpcTarget.All);
             UpdateGameObjectCurrentState();
             lobbyCamera.SetActive(false);
         }
@@ -100,7 +102,7 @@ namespace Game.Player
             yield return new WaitForSeconds(timeToDisableAfterDeath);
             lobbyCamera.SetActive(true);
             UpdateGameObjectCurrentState();
-            photonView.RPC(nameof(RPC_DisablePlayerGameObject), RpcTarget.All);
+            _photonView.RPC(nameof(RPC_DisablePlayerGameObject), RpcTarget.All);
         }
 
         [PunRPC]

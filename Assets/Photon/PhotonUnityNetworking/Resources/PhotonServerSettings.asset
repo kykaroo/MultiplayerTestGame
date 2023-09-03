@@ -61,6 +61,7 @@ MonoBehaviour:
   - RPC_DisablePlayerGameObject
   - RPC_PlayCrouchAnimation
   - RPC_PlaySlideAnimation
+  - RPC_SetSelfActive
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

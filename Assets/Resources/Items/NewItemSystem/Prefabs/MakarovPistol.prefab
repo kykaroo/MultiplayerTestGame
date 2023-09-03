@@ -224,6 +224,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   particleSystem: {fileID: 2270035780609235522}
+  photonView: {fileID: 3677347183567224135}
 --- !u!1 &1829644149881864778
 GameObject:
   m_ObjectHideFlags: 0
@@ -358,7 +359,7 @@ ParticleSystem:
   emitterVelocityMode: 1
   looping: 0
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:
@@ -5267,7 +5268,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: -1.5751624e-36, y: 4.5e-44, z: 5.51013e-40, w: 4.591775e-39}
+  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: -2.691166e-36}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
